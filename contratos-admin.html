@@ -184,6 +184,19 @@ nav{
   <h1>Gerador de contratos</h1>
   <p class="sub">Ferramenta interna: preenche os dados e gera a minuta em PDF pelo botão de imprimir do navegador.</p>
 
+  <div id="entrada" class="caixa">
+    <div class="campo" style="max-width:320px">
+      <label for="senha">Senha de acesso</label>
+      <input id="senha" type="password" autocomplete="current-password">
+    </div>
+    <button class="btn" id="entrar" type="button" style="margin-top:12px">Entrar</button>
+    <p class="recado ruim" id="erroEntrada" hidden></p>
+    <p style="font-size:13px; color:var(--text-3); margin-top:14px">
+      A senha é a variável <code>CONTRATOS_SENHA</code> do painel do Netlify.</p>
+  </div>
+
+  <main id="painel" hidden>
+
   <div class="aviso">
     <strong>Isto é uma minuta inicial, não é aconselhamento jurídico.</strong>
     As cláusulas abaixo foram redigidas como ponto de partida e precisam ser revisadas por um advogado
@@ -299,6 +312,7 @@ nav{
     <p class="recado" id="recado" hidden></p>
   </div>
 
+  </main>
 </div>
 
 <!-- fora do .wrap de propósito: a impressão só mostra os filhos diretos do
@@ -312,6 +326,49 @@ nav{
   "use strict";
   var el = function(id){ return document.getElementById(id); };
   var tipoAtual = 'pj';
+  var API = '/.netlify/functions/contratos';
+  var senha = '';
+
+  /* Aberta como arquivo do computador (file://), a chamada '/.netlify/...'
+     vira 'file:///.netlify/...' e a verificação de senha falha calada. */
+  if (location.protocol === 'file:'){
+    el('entrada').innerHTML =
+      '<p class="recado ruim" style="display:block">Abra esta página pelo site, não pelo arquivo do seu computador.</p>' +
+      '<p style="margin-top:12px; line-height:1.6">A verificação de senha fica no servidor. Abrindo o arquivo direto ' +
+      'do PC, a página não tem como conversar com ele, e por isso a senha nunca é aceita.</p>';
+    return;
+  }
+
+  /* ---------- entrar ---------- */
+  function pedirAcesso(){
+    return fetch(API, { headers: { 'x-astro-contratos-senha': senha } }).then(function(r){
+      return r.json().then(function(b){ return { status: r.status, b: b }; });
+    }).catch(function(){
+      return { status: 0, b: { mensagem: 'Não consegui falar com o servidor. Confira sua conexão e se abriu a página pelo endereço do site.' } };
+    });
+  }
+
+  function entrar(){
+    senha = el('senha').value;
+    pedirAcesso().then(function(r){
+      if (r.status !== 200 || !r.b.ok){
+        el('erroEntrada').textContent = r.b.mensagem || 'Não consegui entrar.';
+        el('erroEntrada').hidden = false;
+        return;
+      }
+      try { sessionStorage.setItem('astro-contratos-senha', senha); } catch(e){}
+      el('entrada').hidden = true;
+      el('painel').hidden = false;
+    });
+  }
+  el('entrar').addEventListener('click', entrar);
+  el('senha').addEventListener('keydown', function(e){ if (e.key === 'Enter') entrar(); });
+
+  /* senha guardada só na aba, some ao fechar */
+  try {
+    var senhaGuardada = sessionStorage.getItem('astro-contratos-senha');
+    if (senhaGuardada){ el('senha').value = senhaGuardada; entrar(); }
+  } catch(e){}
 
   /* ---------- dados da Astro: fica salvo no navegador de quem usa ---------- */
   var CAMPOS_ASTRO = ['astroRazao','astroCnpj','astroEndereco','astroRepresentante','astroRepresentanteCpf','cidadeForo'];
