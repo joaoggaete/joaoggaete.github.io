@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23070D1A'/%3E%3Cpath d='M16 5.5 19.2 13 27 16l-7.8 3L16 26.5 12.8 19 5 16l7.8-3z' fill='%233B8FE0'/%3E%3C/svg%3E" type="image/svg+xml">
+<title>Gerador de contratos — Astro Consórcios</title>
+<meta name="robots" content="noindex, nofollow">
+<script>
+(function(){try{
+  var t=localStorage.getItem("astro-tema");
+  if(t==="claro"||t==="escuro") document.documentElement.setAttribute("data-tema",t);
+  var claro = t==="claro" || (t!=="escuro" && window.matchMedia("(prefers-color-scheme: light)").matches);
+  document.documentElement.classList.toggle("t-claro", claro);
+  document.documentElement.style.colorScheme = claro ? "light" : "dark";
+}catch(e){}})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Manrope:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --canvas:#03060F; --panel-2:#0B1526;
+  --accent:#3B8FE0; --accent-hi:#7FD4FF;
+  --accent-soft:rgba(59,143,224,.16);
+  --verde:#2EDB70; --vermelho:#E8825C; --amarelo:#E0B23B;
+  --text:#F2F6FC; --text-2:#93A9C9; --text-3:#7C90B4;
+  --line:rgba(147,169,201,.16); --line-2:rgba(147,169,201,.6);
+  --f-display:'Sora',ui-sans-serif,system-ui,sans-serif;
+  --f-text:'Manrope',ui-sans-serif,system-ui,sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,monospace;
+  --r:14px; --r-l:22px;
+}
+:root[data-tema="claro"], :root:not([data-tema="escuro"]).t-claro{
+  --canvas:#FFFFFF; --panel-2:#F7FAFF;
+  --accent:#0E56AE; --accent-hi:#0E4F9E; --accent-soft:rgba(18,100,196,.08);
+  --vermelho:#B3492A; --amarelo:#8A6110;
+  --text:#0A1524; --text-2:#35465C; --text-3:#46586F;
+  --line:rgba(10,21,36,.09); --line-2:rgba(10,21,36,.52);
+}
+*{ box-sizing:border-box }
+body{ margin:0; background:var(--canvas); color:var(--text);
+      font-family:var(--f-text); font-size:15px; line-height:1.6 }
+.wrap{ max-width:900px; margin:0 auto; padding:30px 20px 90px }
+h1{ font-family:var(--f-display); font-size:30px; letter-spacing:-.025em; margin:0 0 4px }
+.sub{ color:var(--text-2); margin:0 0 20px }
+h2{ font-family:var(--f-mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent-hi); margin:32px 0 12px }
+.caixa{ background:var(--panel-2); border:1px solid var(--line); border-radius:var(--r-l); padding:18px 20px }
+
+.aviso{ background:rgba(224,178,59,.12); border:1px solid rgba(224,178,59,.4); border-radius:var(--r);
+  padding:14px 16px; font-size:13.5px; color:var(--text); margin-bottom:24px }
+.aviso strong{ color:var(--amarelo) }
+
+label{ display:block; font-size:13px; color:var(--text-2); margin-bottom:5px }
+input, select{ width:100%; padding:10px 13px; border-radius:10px; background:rgba(2,4,10,.4);
+  border:1px solid rgba(147,169,201,.55); color:var(--text); font-family:var(--f-text); font-size:14.5px }
+:root[data-tema="claro"] input, :root:not([data-tema="escuro"]).t-claro input,
+:root[data-tema="claro"] select, :root:not([data-tema="escuro"]).t-claro select{
+  background:#F2F6FC; border-color:rgba(10,21,36,.52); color:#0A1524 }
+input:focus, select:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft) }
+
+.grade{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px }
+.campo{ margin-bottom:2px }
+.campo.largo{ grid-column:1 / -1 }
+
+.btn{ padding:11px 18px; border:none; border-radius:100px; cursor:pointer; font-weight:700; font-size:14.5px;
+  font-family:var(--f-text); color:#04101F; background:linear-gradient(135deg,var(--accent-hi),var(--accent)) }
+:root[data-tema="claro"] .btn, :root:not([data-tema="escuro"]).t-claro .btn{ color:#fff }
+.btn:hover{ filter:brightness(1.07) }
+.btn.fantasma{ background:none; color:var(--text-2); border:1px solid var(--line-2) }
+.btn.fantasma:hover{ color:var(--text) }
+
+.abas{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px }
+.aba{ padding:9px 16px; border-radius:100px; border:1px solid var(--line-2); background:none;
+  color:var(--text-2); font-family:var(--f-text); font-weight:600; font-size:13.5px; cursor:pointer }
+.aba.ativa{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent-hi) }
+
+.recado{ margin-top:14px; font-size:14px }
+.recado.bom{ color:var(--verde) } .recado.ruim{ color:var(--vermelho) }
+[hidden]{ display:none !important }
+
+/* ---------- pré-visualização do contrato, na tela ---------- */
+#previa{ margin-top:36px }
+.folha{ background:#fff; color:#111; border-radius:6px; padding:56px 60px;
+  font-family:Georgia,'Times New Roman',serif; font-size:14.5px; line-height:1.65;
+  box-shadow:0 10px 40px rgba(0,0,0,.35); max-width:760px; margin:0 auto }
+.folha h3{ text-align:center; font-size:16.5px; letter-spacing:.02em; margin:0 0 26px; text-transform:uppercase }
+.folha p{ text-align:justify; margin:0 0 14px }
+.folha p.clausula-titulo{ font-weight:700; text-align:left; margin:22px 0 8px }
+.folha .assinaturas{ margin-top:56px }
+.folha .linha-assinatura{ display:flex; gap:40px; flex-wrap:wrap; margin-top:46px }
+.folha .bloco-assinatura{ flex:1; min-width:220px; text-align:center }
+.folha .bloco-assinatura .linha{ border-top:1px solid #111; margin-bottom:6px; padding-top:6px }
+.folha .testemunhas{ margin-top:46px }
+.folha .testemunhas .linha-assinatura{ margin-top:30px }
+
+/* ---------- a barra do topo, igual a das outras paginas ---------- */
+nav{
+  position:sticky; top:0; z-index:60;
+  height:74px; display:flex; align-items:center;
+  background:rgba(3,6,15,.9);
+  backdrop-filter:blur(16px) saturate(1.4); -webkit-backdrop-filter:blur(16px) saturate(1.4);
+  border-bottom:1px solid var(--line);
+}
+:root[data-tema="claro"] nav, :root:not([data-tema="escuro"]).t-claro nav{
+  background:rgba(255,255,255,.86);
+}
+.nav-inner{
+  width:100%; max-width:1180px; margin:0 auto; padding:0 20px;
+  display:flex; align-items:center; gap:20px;
+}
+.nav-logo{ height:44px; width:auto; display:inline-flex; align-items:center; gap:11px }
+.nav-cracha{ position:relative; flex:none; height:86%; aspect-ratio:400 / 252; }
+.nav-marca{ position:absolute; inset:0; width:100%; height:100%; display:block; color:#0B2149; visibility:hidden; }
+.nav-gira{
+  position:absolute; inset:0;
+  background-image:url('img/marca-estatica-prata.webp');
+  background-repeat:no-repeat; background-size:contain; background-position:center;
+}
+.nav-palavra{ height:66%; width:auto; display:block; flex:none }
+:root[data-tema="claro"] .nav-gira, :root:not([data-tema="escuro"]).t-claro .nav-gira{
+  background-image:url('img/marca-estatica-navy.webp');
+}
+:root[data-tema="claro"] .nav-palavra, :root:not([data-tema="escuro"]).t-claro .nav-palavra{
+  filter:brightness(0) saturate(100%) invert(6%) sepia(30%) saturate(1800%) hue-rotate(186deg);
+}
+.nav-volta{
+  margin-left:auto; font-size:14.5px; font-weight:600; color:var(--text-2);
+  text-decoration:none; padding:8px 0;
+}
+.nav-volta:hover{ color:var(--text) }
+@media (max-width:640px){
+  nav{ height:62px }
+  .nav-logo{ height:36px }
+  .nav-inner{ padding:0 14px }
+  .folha{ padding:34px 22px }
+}
+
+/* ---------- impressão: só a folha do contrato sai no PDF ---------- */
+@media print{
+  body > *:not(.imprimir-raiz){ display:none !important }
+  nav, .aviso, .abas, .caixa, h1, .sub, #areaBotoes{ display:none !important }
+  .imprimir-raiz{ display:block !important }
+  #previa{ margin:0 }
+  .folha{ box-shadow:none; border-radius:0; max-width:none; padding:0; margin:0 }
+  @page{ margin:20mm 18mm }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="marcaAstro" viewBox="0 0 400 252">
+    <defs>
+        <linearGradient id="anelOuro" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0%"   stop-color="#A8712C"/>
+          <stop offset="28%"  stop-color="#DCAF56"/>
+          <stop offset="52%"  stop-color="#F5DC9A"/>
+          <stop offset="78%"  stop-color="#CE9A4C"/>
+          <stop offset="100%" stop-color="#8A5A22"/>
+        </linearGradient>
+      </defs>
+      <path d="M196.74 11.5 L205.35 11.5 L314.57 240 L261.66 240 L200.95 103.96 L140.42 240 L87.42 240 Z" fill="currentColor"/>
+      <path d="M13.2 193L12.7 191.3L12.7 189.4L13 187.2L13.7 184.7L15 181.9L16.7 178.9L18.9 175.7L21.6 172.4L24.9 169L28.8 165.5L33.1 162L37.8 158.3L43 154.6L48.6 150.9L54.6 147L61 143.2L67.7 139.4L74.8 135.5L82.2 131.7L90 127.8L98 124L106.3 120.2L114.9 116.6L123.6 113L132.6 109.5L141.8 106L151 102.7L160.4 99.4L169.9 96.2L179.5 93.2L189.1 90.3L198.7 87.5L208.3 84.8L217.8 82.3L227.3 80L236.7 77.8L246 75.8L255.1 74L264.1 72.3L272.8 70.8L281.4 69.5L289.7 68.4L297.7 67.5L305.4 66.8L312.9 66.3L320 66L326.7 65.8L333.1 65.9L339.1 66.2L344.6 66.6L349.8 67.3L354.5 68.1L358.7 69.2L362.5 70.4L365.7 71.7L368.5 73.3L370.8 74.9L372.6 76.5L374.1 78.3L375.1 80.3L375.6 82.4L375.6 84.8L375.1 87.3L374.2 90L372.7 92.9L370.7 95.8L368.2 98.9L365.2 102.2L361.8 105.5L357.9 108.9L353.5 112.4L348.7 116L343.4 119.5L337.7 123.2L331.7 126.9L325.2 130.6L318.4 134.3L311.2 137.9L303.7 141.6L295.9 145.3L287.8 149L279.5 152.6L270.9 156.2L262.1 159.7L253.1 163.2L244 166.5L234.7 169.8L225.3 173.1L215.8 176.2L206.3 179.2L196.7 182.1L187.1 184.7L177.5 187.3L168 189.8L158.5 192.2L149.2 194.4L139.9 196.3L130.8 198L121.8 199.6L113.1 201L104.6 202.3L96.3 203.4L88.3 204.4L80.7 205.2L73.3 205.9L66.2 206.3L59.5 206.5L53.2 206.4L47.3 206.2L41.8 205.7L36.7 205.1L32.1 204.3L27.9 203.3L24.3 202.1L21.2 200.7L18.6 199.3L16.6 197.7L15.1 196.2L13.9 194.6L13.2 193Z M6.8 195L8 198L9.9 200.6L12.3 202.9L15.2 204.9L18.5 206.5L22.2 207.9L26.4 209.2L30.9 210.2L35.8 211.1L41.2 211.7L46.9 212.1L53.1 212.3L59.6 212.3L66.5 212.2L73.7 211.8L81.2 211.4L89 210.7L97.1 209.8L105.5 208.7L114.1 207.3L122.9 205.7L131.9 203.8L141.1 201.8L150.4 199.7L159.8 197.4L169.3 195.1L178.9 192.6L188.5 189.8L198.1 186.9L207.8 183.9L217.3 180.8L226.9 177.6L236.3 174.3L245.6 170.9L254.8 167.4L263.7 163.8L272.5 160.1L281.1 156.4L289.5 152.6L297.6 148.8L305.3 145L312.8 141.1L320 137.2L326.8 133.3L333.2 129.5L339.3 125.6L345 121.8L350.2 118.1L355 114.4L359.4 110.8L363.4 107.2L366.9 103.8L369.9 100.4L372.5 97.1L374.5 93.9L376.1 90.9L377.2 87.9L377.8 85L377.8 82.2L377.4 79.5L376.5 77L374.9 74.6L372.8 72.4L370.2 70.5L367.1 68.9L363.5 67.5L359.5 66.3L355 65.3L350.2 64.5L344.9 63.9L339.2 63.5L333.1 63.3L326.7 63.3L319.9 63.5L312.7 63.9L305.2 64.5L297.4 65.3L289.4 66.3L281.1 67.5L272.5 68.8L263.7 70.4L254.7 72.1L245.6 74L236.3 76.1L226.9 78.3L217.4 80.7L207.8 83.2L198.2 85.8L188.6 88.6L179 91.6L169.4 94.6L159.9 97.8L150.5 101.1L141.2 104.4L132 107.9L123 111.4L114.2 115L105.6 118.7L97.2 122.3L89.1 126L81.2 129.7L73.7 133.4L66.5 137.1L59.6 140.8L53.1 144.5L46.9 148.2L41.2 151.9L35.8 155.5L30.9 159.1L26.4 162.7L22.4 166.2L18.7 169.6L15.5 172.8L12.7 176L10.3 179.2L8.5 182.4L7.2 185.5L6.5 188.7L6.3 191.9L6.8 195Z" fill="url(#anelOuro)" fill-rule="evenodd"/>
+  </symbol>
+</svg>
+<nav>
+  <div class="nav-inner">
+    <a href="/" aria-label="Astro Consórcios, ir para a página inicial">
+      <span class="nav-logo">
+        <span class="nav-cracha" aria-hidden="true">
+          <svg class="nav-marca" viewBox="0 0 400 252" focusable="false"><use href="#marcaAstro"/></svg>
+          <span class="nav-gira"></span>
+        </span>
+        <img class="nav-palavra" src="img/astro-palavra.webp" width="612" height="250" decoding="async" alt="Astro Consórcios">
+      </span>
+    </a>
+    <a class="nav-volta" href="/">Voltar ao site</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <h1>Gerador de contratos</h1>
+  <p class="sub">Ferramenta interna: preenche os dados e gera a minuta em PDF pelo botão de imprimir do navegador.</p>
+
+  <div class="aviso">
+    <strong>Isto é uma minuta inicial, não é aconselhamento jurídico.</strong>
+    As cláusulas abaixo foram redigidas como ponto de partida e precisam ser revisadas por um advogado
+    antes de qualquer contrato ser assinado ou usado com vendedor, administradora ou cliente de verdade.
+  </div>
+
+  <h2>Dados da Astro (contratante em todos os contratos)</h2>
+  <div class="caixa">
+    <div class="grade">
+      <div class="campo campo largo"><label for="astroRazao">Razão social da Astro</label>
+        <input id="astroRazao" type="text" placeholder="Astro Consórcios Ltda."></div>
+      <div class="campo"><label for="astroCnpj">CNPJ da Astro</label>
+        <input id="astroCnpj" type="text" placeholder="00.000.000/0001-00"></div>
+      <div class="campo campo largo"><label for="astroEndereco">Endereço da Astro</label>
+        <input id="astroEndereco" type="text" placeholder="Rua Exemplo, 123, sala 4, Cidade/UF, CEP 00000-000"></div>
+      <div class="campo"><label for="astroRepresentante">Representante legal da Astro</label>
+        <input id="astroRepresentante" type="text" placeholder="Nome completo"></div>
+      <div class="campo"><label for="astroRepresentanteCpf">CPF do representante</label>
+        <input id="astroRepresentanteCpf" type="text" placeholder="000.000.000-00"></div>
+      <div class="campo"><label for="cidadeForo">Cidade/comarca (foro e local de assinatura)</label>
+        <input id="cidadeForo" type="text" placeholder="Maringá/PR"></div>
+    </div>
+  </div>
+
+  <h2>Tipo de contrato</h2>
+  <div class="abas" id="abas">
+    <button type="button" class="aba ativa" data-tipo="pj">Astro ↔ Vendedor PJ</button>
+    <button type="button" class="aba" data-tipo="adm">Astro ↔ Administradora</button>
+    <button type="button" class="aba" data-tipo="cli">Astro ↔ Cliente</button>
+  </div>
+
+  <!-- ---------------- Vendedor PJ ---------------- -->
+  <div class="caixa" id="painel-pj">
+    <div class="grade">
+      <div class="campo campo largo"><label for="pjRazao">Razão social do vendedor (PJ)</label>
+        <input id="pjRazao" type="text" placeholder="Nome da empresa parceira"></div>
+      <div class="campo"><label for="pjCnpj">CNPJ do vendedor</label>
+        <input id="pjCnpj" type="text" placeholder="00.000.000/0001-00"></div>
+      <div class="campo campo largo"><label for="pjEndereco">Endereço do vendedor</label>
+        <input id="pjEndereco" type="text" placeholder="Endereço completo"></div>
+      <div class="campo"><label for="pjRepresentante">Representante legal</label>
+        <input id="pjRepresentante" type="text" placeholder="Nome completo"></div>
+      <div class="campo"><label for="pjRepresentanteCpf">CPF do representante</label>
+        <input id="pjRepresentanteCpf" type="text" placeholder="000.000.000-00"></div>
+      <div class="campo"><label for="pjComissao">Comissão (%)</label>
+        <input id="pjComissao" type="number" min="0" max="100" step="0.1" placeholder="10"></div>
+      <div class="campo"><label for="pjPrazoPagamento">Prazo de pagamento da comissão (dias)</label>
+        <input id="pjPrazoPagamento" type="number" min="0" step="1" placeholder="10"></div>
+      <div class="campo"><label for="pjAvisoPrevio">Aviso prévio para rescisão (dias)</label>
+        <input id="pjAvisoPrevio" type="number" min="0" step="1" placeholder="30"></div>
+      <div class="campo"><label for="pjExclusividade">Exclusividade de território</label>
+        <select id="pjExclusividade"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
+      <div class="campo" id="campoPjTerritorio" hidden><label for="pjTerritorio">Território exclusivo</label>
+        <input id="pjTerritorio" type="text" placeholder="Cidade/região"></div>
+      <div class="campo"><label for="pjData">Data do contrato</label>
+        <input id="pjData" type="date"></div>
+    </div>
+  </div>
+
+  <!-- ---------------- Administradora ---------------- -->
+  <div class="caixa" id="painel-adm" hidden>
+    <div class="grade">
+      <div class="campo campo largo"><label for="admRazao">Razão social da administradora</label>
+        <input id="admRazao" type="text" placeholder="Nome da administradora"></div>
+      <div class="campo"><label for="admCnpj">CNPJ da administradora</label>
+        <input id="admCnpj" type="text" placeholder="00.000.000/0001-00"></div>
+      <div class="campo campo largo"><label for="admEndereco">Endereço da administradora</label>
+        <input id="admEndereco" type="text" placeholder="Endereço completo"></div>
+      <div class="campo"><label for="admRepresentante">Representante legal</label>
+        <input id="admRepresentante" type="text" placeholder="Nome completo"></div>
+      <div class="campo"><label for="admRepresentanteCpf">CPF do representante</label>
+        <input id="admRepresentanteCpf" type="text" placeholder="000.000.000-00"></div>
+      <div class="campo campo largo"><label for="admSegmentos">Segmentos de consórcio</label>
+        <input id="admSegmentos" type="text" placeholder="Imóveis, veículos, maquinário..."></div>
+      <div class="campo campo largo"><label for="admComissaoDescricao">Descrição da comissão/repasse</label>
+        <input id="admComissaoDescricao" type="text" placeholder="Ex.: conforme tabela de comissionamento vigente da administradora"></div>
+      <div class="campo"><label for="admPrazoPagamento">Prazo de pagamento (dias)</label>
+        <input id="admPrazoPagamento" type="number" min="0" step="1" placeholder="15"></div>
+      <div class="campo"><label for="admVigenciaMeses">Vigência (meses, renovação automática)</label>
+        <input id="admVigenciaMeses" type="number" min="1" step="1" placeholder="12"></div>
+      <div class="campo"><label for="admAvisoPrevio">Aviso prévio para rescisão (dias)</label>
+        <input id="admAvisoPrevio" type="number" min="0" step="1" placeholder="60"></div>
+      <div class="campo"><label for="admData">Data do contrato</label>
+        <input id="admData" type="date"></div>
+    </div>
+  </div>
+
+  <!-- ---------------- Cliente ---------------- -->
+  <div class="caixa" id="painel-cli" hidden>
+    <div class="grade">
+      <div class="campo campo largo"><label for="cliNome">Nome do cliente</label>
+        <input id="cliNome" type="text" placeholder="Nome completo"></div>
+      <div class="campo"><label for="cliCpf">CPF do cliente</label>
+        <input id="cliCpf" type="text" placeholder="000.000.000-00"></div>
+      <div class="campo campo largo"><label for="cliEndereco">Endereço do cliente</label>
+        <input id="cliEndereco" type="text" placeholder="Endereço completo"></div>
+      <div class="campo"><label for="cliAdministradora">Administradora indicada</label>
+        <input id="cliAdministradora" type="text" placeholder="Nome da administradora (se já definida)"></div>
+      <div class="campo"><label for="cliGrupoCota">Grupo/cota (se já definido)</label>
+        <input id="cliGrupoCota" type="text" placeholder="Ex.: Grupo 123, cota 45"></div>
+      <div class="campo"><label for="cliValorCarta">Valor da carta de crédito (R$)</label>
+        <input id="cliValorCarta" type="number" min="0" step="0.01" placeholder="50000"></div>
+      <div class="campo"><label for="cliPrazoVigenciaDias">Vigência da assessoria (dias)</label>
+        <input id="cliPrazoVigenciaDias" type="number" min="1" step="1" placeholder="90"></div>
+      <div class="campo"><label for="cliData">Data do contrato</label>
+        <input id="cliData" type="date"></div>
+    </div>
+  </div>
+
+  <div id="areaBotoes" style="margin-top:20px; display:flex; gap:12px; flex-wrap:wrap; align-items:center">
+    <button class="btn" id="gerar" type="button">Gerar minuta</button>
+    <button class="btn fantasma" id="imprimir" type="button" hidden>Imprimir / salvar PDF</button>
+    <p class="recado" id="recado" hidden></p>
+  </div>
+
+</div>
+
+<!-- fora do .wrap de propósito: a impressão só mostra os filhos diretos do
+     body com a classe imprimir-raiz, e o .wrap inteiro fica escondido -->
+<div id="previa" class="imprimir-raiz" hidden>
+  <div class="folha" id="folha"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var el = function(id){ return document.getElementById(id); };
+  var tipoAtual = 'pj';
+
+  /* ---------- dados da Astro: fica salvo no navegador de quem usa ---------- */
+  var CAMPOS_ASTRO = ['astroRazao','astroCnpj','astroEndereco','astroRepresentante','astroRepresentanteCpf','cidadeForo'];
+  function carregarAstro(){
+    try {
+      var s = JSON.parse(localStorage.getItem('astro-contrato-dados-astro') || '{}');
+      CAMPOS_ASTRO.forEach(function(id){ if (s[id] != null) el(id).value = s[id]; });
+    } catch(e){}
+  }
+  function salvarAstro(){
+    var s = {};
+    CAMPOS_ASTRO.forEach(function(id){ s[id] = el(id).value; });
+    try { localStorage.setItem('astro-contrato-dados-astro', JSON.stringify(s)); } catch(e){}
+  }
+  CAMPOS_ASTRO.forEach(function(id){ el(id).addEventListener('change', salvarAstro); });
+  carregarAstro();
+
+  /* ---------- abas ---------- */
+  var PAINEIS = { pj:'painel-pj', adm:'painel-adm', cli:'painel-cli' };
+  el('abas').addEventListener('click', function(e){
+    var b = e.target.closest('.aba');
+    if (!b) return;
+    tipoAtual = b.getAttribute('data-tipo');
+    document.querySelectorAll('.aba').forEach(function(x){ x.classList.toggle('ativa', x === b); });
+    Object.keys(PAINEIS).forEach(function(t){ el(PAINEIS[t]).hidden = (t !== tipoAtual); });
+    el('previa').hidden = true;
+    el('imprimir').hidden = true;
+  });
+
+  el('pjExclusividade').addEventListener('change', function(){
+    el('campoPjTerritorio').hidden = (this.value !== 'sim');
+  });
+
+  var hoje = new Date().toISOString().slice(0, 10);
+  el('pjData').value = hoje; el('admData').value = hoje; el('cliData').value = hoje;
+
+  /* ---------- utilidades de texto ---------- */
+  function escapa(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c];
+    });
+  }
+  var MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  function dataExtenso(iso){
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(iso || '')) return '____/____/______';
+    var p = iso.split('-');
+    return (+p[2]) + ' de ' + MESES[(+p[1]) - 1] + ' de ' + p[0];
+  }
+  function formatarMoeda(v){
+    v = +v || 0;
+    return v.toLocaleString('pt-BR', { style:'currency', currency:'BRL' });
+  }
+
+  /* ---------- número por extenso (para o valor da carta) ---------- */
+  var UN = ['zero','um','dois','três','quatro','cinco','seis','sete','oito','nove','dez','onze','doze','treze',
+            'quatorze','quinze','dezesseis','dezessete','dezoito','dezenove'];
+  var DEZ = ['','','vinte','trinta','quarenta','cinquenta','sessenta','setenta','oitenta','noventa'];
+  var CEM = ['','cento','duzentos','trezentos','quatrocentos','quinhentos','seiscentos','setecentos','oitocentos','novecentos'];
+  function ateNoveNoveNove(n){
+    if (n === 0) return '';
+    if (n === 100) return 'cem';
+    var c = Math.floor(n / 100), r = n % 100, partes = [];
+    if (c) partes.push(CEM[c]);
+    if (r){
+      if (r < 20) partes.push(UN[r]);
+      else {
+        var d = Math.floor(r / 10), u = r % 10;
+        partes.push(DEZ[d] + (u ? ' e ' + UN[u] : ''));
+      }
+    }
+    return partes.join(' e ');
+  }
+  function numeroPorExtenso(n){
+    n = Math.floor(n);
+    if (n === 0) return 'zero';
+    var milhoes = Math.floor(n / 1000000);
+    var milhares = Math.floor((n % 1000000) / 1000);
+    var unidades = n % 1000;
+    var partes = [];
+    if (milhoes) partes.push(ateNoveNoveNove(milhoes) + (milhoes === 1 ? ' milhão' : ' milhões'));
+    if (milhares) partes.push(milhares === 1 ? 'mil' : ateNoveNoveNove(milhares) + ' mil');
+    if (unidades || !partes.length) partes.push(ateNoveNoveNove(unidades));
+    if (partes.length <= 1) return partes[0] || 'zero';
+    var last = partes[partes.length - 1], head = partes.slice(0, -1);
+    if (unidades === 0) return head.join(', ');
+    var precisaE = unidades < 100 || unidades % 100 === 0;
+    return head.join(', ') + (precisaE ? ' e ' : ', ') + last;
+  }
+  function moedaPorExtenso(v){
+    v = Math.round((+v || 0) * 100) / 100;
+    var reais = Math.floor(v), centavos = Math.round((v - reais) * 100);
+    var out = numeroPorExtenso(reais) + (reais === 1 ? ' real' : ' reais');
+    if (centavos > 0) out += ' e ' + numeroPorExtenso(centavos) + (centavos === 1 ? ' centavo' : ' centavos');
+    return out;
+  }
+
+  function recado(texto, bom){
+    var e = el('recado');
+    e.textContent = texto;
+    e.className = 'recado ' + (bom ? 'bom' : 'ruim');
+    e.hidden = false;
+    setTimeout(function(){ e.hidden = true; }, 5000);
+  }
+
+  function v(id){ return (el(id).value || '').trim(); }
+
+  /* ---------- monta o cabeçalho, preâmbulo e bloco de assinaturas comuns ---------- */
+  function folha(titulo, preambulo, clausulas, blocoB, apelidoB, dataIso){
+    var partes = [];
+    partes.push('<h3>' + escapa(titulo) + '</h3>');
+    partes.push('<p>' + preambulo + '</p>');
+    clausulas.forEach(function(c){
+      partes.push('<p class="clausula-titulo">' + escapa(c.titulo) + '</p>');
+      c.paragrafos.forEach(function(p){ partes.push('<p>' + p + '</p>'); });
+    });
+    partes.push('<p style="margin-top:34px">' + escapa(v('cidadeForo') || '[cidade]') + ', ' +
+      dataExtenso(dataIso) + '.</p>');
+    partes.push('<div class="assinaturas">');
+    partes.push('<div class="linha-assinatura">');
+    partes.push('<div class="bloco-assinatura"><div class="linha">' +
+      escapa(v('astroRazao') || 'ASTRO') + '<br>' + escapa(v('astroRepresentante')) + '</div></div>');
+    partes.push('<div class="bloco-assinatura"><div class="linha">' + blocoB + '</div></div>');
+    partes.push('</div>');
+    partes.push('<div class="testemunhas"><p class="clausula-titulo">Testemunhas</p>');
+    partes.push('<div class="linha-assinatura">');
+    partes.push('<div class="bloco-assinatura"><div class="linha">Nome:<br>CPF:</div></div>');
+    partes.push('<div class="bloco-assinatura"><div class="linha">Nome:<br>CPF:</div></div>');
+    partes.push('</div></div>');
+    partes.push('</div>');
+    return partes.join('\n');
+  }
+
+  /* ---------- Contrato 1: Astro x Vendedor PJ ---------- */
+  function gerarPJ(){
+    var d = {
+      razao: v('pjRazao'), cnpj: v('pjCnpj'), endereco: v('pjEndereco'),
+      rep: v('pjRepresentante'), repCpf: v('pjRepresentanteCpf'),
+      comissao: v('pjComissao') || '0', prazoPag: v('pjPrazoPagamento') || '0',
+      aviso: v('pjAvisoPrevio') || '30', exclusivo: v('pjExclusividade'), territorio: v('pjTerritorio'),
+      data: v('pjData')
+    };
+    if (!d.razao || !d.cnpj || !d.rep){ recado('Preencha ao menos razão social, CNPJ e representante do vendedor.', false); return null; }
+
+    var preambulo =
+      'Pelo presente instrumento particular, de um lado <strong>' + escapa(v('astroRazao') || '[Astro]') +
+      '</strong>, pessoa jurídica de direito privado, inscrita no CNPJ sob o nº ' + escapa(v('astroCnpj')) +
+      ', com sede em ' + escapa(v('astroEndereco')) + ', neste ato representada por ' +
+      escapa(v('astroRepresentante')) + ', portador(a) do CPF nº ' + escapa(v('astroRepresentanteCpf')) +
+      ', doravante denominada simplesmente <strong>“ASTRO”</strong>; e, de outro lado, <strong>' + escapa(d.razao) +
+      '</strong>, pessoa jurídica de direito privado, inscrita no CNPJ sob o nº ' + escapa(d.cnpj) +
+      ', com sede em ' + escapa(d.endereco) + ', neste ato representada por ' + escapa(d.rep) +
+      ', portador(a) do CPF nº ' + escapa(d.repCpf) + ', doravante denominada simplesmente <strong>“PARCEIRA”</strong>' +
+      ' (ASTRO e PARCEIRA, em conjunto, “Partes”), têm entre si justo e contratado o presente Contrato de Parceria ' +
+      'Comercial e Intermediação de Vendas, que se regerá pelas cláusulas seguintes.';
+
+    var territorioTexto = d.exclusivo === 'sim'
+      ? ('com exclusividade de atuação no território de ' + escapa(d.territorio || '[território]') + '.')
+      : 'sem exclusividade de território, podendo a ASTRO manter outros parceiros comerciais na mesma praça.';
+
+    var clausulas = [
+      { titulo: 'Cláusula 1ª – Do Objeto', paragrafos: [
+        'O presente contrato tem por objeto a prestação, pela PARCEIRA, de serviços independentes de prospecção e ' +
+        'intermediação de potenciais clientes interessados na aquisição de cotas de consórcio comercializadas por ' +
+        'administradoras parceiras da ASTRO, observadas as diretrizes, materiais e regras de compliance fornecidas ' +
+        'pela ASTRO, ' + territorioTexto
+      ]},
+      { titulo: 'Cláusula 2ª – Da Natureza da Relação', paragrafos: [
+        'As Partes reconhecem que este contrato é de natureza estritamente civil e comercial, celebrado entre pessoas ' +
+        'jurídicas independentes, não gerando qualquer vínculo empregatício, societário ou de subordinação hierárquica ' +
+        'entre ASTRO e PARCEIRA, ou entre ASTRO e eventuais sócios, prepostos ou colaboradores da PARCEIRA.',
+        'A PARCEIRA organiza, por sua conta e risco, os meios necessários à execução de sua atividade, respondendo ' +
+        'com exclusividade pelos encargos trabalhistas, previdenciários, fiscais e comerciais relativos a si própria ' +
+        'e a quem quer que utilize para o cumprimento deste contrato.'
+      ]},
+      { titulo: 'Cláusula 3ª – Das Obrigações da PARCEIRA', paragrafos: [
+        'A PARCEIRA obriga-se a: (i) observar a legislação aplicável, incluindo as normas do Banco Central do Brasil ' +
+        'relativas a consórcios e a Lei Geral de Proteção de Dados (Lei nº 13.709/2018); (ii) não fazer promessa de ' +
+        'contemplação, prazo, aprovação de crédito ou qualquer resultado a clientes; (iii) utilizar exclusivamente ' +
+        'materiais, scripts e tabelas aprovados pela ASTRO; (iv) manter sigilo sobre dados de clientes e informações ' +
+        'comerciais da ASTRO; e (v) emitir nota fiscal correspondente às comissões recebidas.'
+      ]},
+      { titulo: 'Cláusula 4ª – Das Obrigações da ASTRO', paragrafos: [
+        'A ASTRO obriga-se a fornecer à PARCEIRA acesso a materiais e tabelas oficiais atualizados, orientação sobre ' +
+        'os produtos comercializados e a pagar a comissão pactuada nas condições e prazos previstos neste contrato.'
+      ]},
+      { titulo: 'Cláusula 5ª – Da Remuneração', paragrafos: [
+        'Pelos serviços prestados, a PARCEIRA fará jus a comissão de <strong>' + escapa(d.comissao) + '%</strong> ' +
+        'sobre o valor efetivamente recebido pela ASTRO em razão de venda formalizada e paga pela administradora, ' +
+        'a ser repassada em até <strong>' + escapa(d.prazoPag) + ' dias</strong> do recebimento pela ASTRO, condicionado ' +
+        'à emissão de nota fiscal pela PARCEIRA.',
+        'Não será devida comissão em caso de cancelamento, desistência ou inadimplemento do cliente perante a ' +
+        'administradora, hipótese em que eventual comissão já paga poderá ser objeto de estorno proporcional.'
+      ]},
+      { titulo: 'Cláusula 6ª – Da Vigência e Rescisão', paragrafos: [
+        'Este contrato vigora por prazo indeterminado, podendo ser rescindido por qualquer das Partes, sem justificativa, ' +
+        'mediante aviso prévio por escrito de <strong>' + escapa(d.aviso) + ' dias</strong>.',
+        'É facultada a rescisão imediata, sem aviso prévio, em caso de descumprimento de obrigação legal ou contratual, ' +
+        'quebra de confidencialidade ou prática que cause dano à imagem de qualquer das Partes ou de clientes.',
+        'Comissões relativas a vendas concluídas antes do término do contrato permanecem devidas nas condições da Cláusula 5ª.'
+      ]},
+      { titulo: 'Cláusula 7ª – Da Confidencialidade e Proteção de Dados', paragrafos: [
+        'As Partes obrigam-se a manter sigilo sobre dados de clientes e informações comerciais a que tiverem acesso em ' +
+        'razão deste contrato, tratando dados pessoais exclusivamente para a finalidade aqui prevista e em conformidade ' +
+        'com a Lei nº 13.709/2018 (LGPD).'
+      ]},
+      { titulo: 'Cláusula 8ª – Das Disposições Gerais', paragrafos: [
+        'Este contrato não poderá ser cedido a terceiros sem anuência prévia e por escrito da outra Parte. A tolerância ' +
+        'de qualquer das Partes quanto ao descumprimento de obrigações não implica novação ou renúncia de direitos.'
+      ]},
+      { titulo: 'Cláusula 9ª – Do Foro', paragrafos: [
+        'Fica eleito o foro da comarca de ' + escapa(v('cidadeForo') || '[cidade]') +
+        ' para dirimir quaisquer controvérsias oriundas deste contrato, com renúncia a qualquer outro, por mais ' +
+        'privilegiado que seja.'
+      ]}
+    ];
+
+    var blocoB = escapa(d.razao) + '<br>' + escapa(d.rep);
+    return folha('Contrato de Parceria Comercial e Intermediação de Vendas', preambulo, clausulas, blocoB, 'PARCEIRA', d.data);
+  }
+
+  /* ---------- Contrato 2: Astro x Administradora ---------- */
+  function gerarAdm(){
+    var d = {
+      razao: v('admRazao'), cnpj: v('admCnpj'), endereco: v('admEndereco'),
+      rep: v('admRepresentante'), repCpf: v('admRepresentanteCpf'),
+      segmentos: v('admSegmentos') || '[segmentos]', comissaoDesc: v('admComissaoDescricao') || '[a definir]',
+      prazoPag: v('admPrazoPagamento') || '0', vigencia: v('admVigenciaMeses') || '12',
+      aviso: v('admAvisoPrevio') || '60', data: v('admData')
+    };
+    if (!d.razao || !d.cnpj || !d.rep){ recado('Preencha ao menos razão social, CNPJ e representante da administradora.', false); return null; }
+
+    var preambulo =
+      'Pelo presente instrumento particular, de um lado <strong>' + escapa(v('astroRazao') || '[Astro]') +
+      '</strong>, pessoa jurídica de direito privado, inscrita no CNPJ sob o nº ' + escapa(v('astroCnpj')) +
+      ', com sede em ' + escapa(v('astroEndereco')) + ', neste ato representada por ' +
+      escapa(v('astroRepresentante')) + ', portador(a) do CPF nº ' + escapa(v('astroRepresentanteCpf')) +
+      ', doravante denominada simplesmente <strong>“ASTRO”</strong>; e, de outro lado, <strong>' + escapa(d.razao) +
+      '</strong>, pessoa jurídica de direito privado, inscrita no CNPJ sob o nº ' + escapa(d.cnpj) +
+      ', com sede em ' + escapa(d.endereco) + ', neste ato representada por ' + escapa(d.rep) +
+      ', portador(a) do CPF nº ' + escapa(d.repCpf) + ', doravante denominada simplesmente <strong>“ADMINISTRADORA”</strong>' +
+      ' (ASTRO e ADMINISTRADORA, em conjunto, “Partes”), têm entre si justo e contratado o presente Convênio de ' +
+      'Parceria Comercial para Distribuição de Cotas de Consórcio, que se regerá pelas cláusulas seguintes.';
+
+    var clausulas = [
+      { titulo: 'Cláusula 1ª – Do Objeto', paragrafos: [
+        'O presente instrumento tem por objeto estabelecer parceria comercial pela qual a ASTRO atuará na promoção e ' +
+        'intermediação da comercialização de cotas de grupos de consórcio nos segmentos de <strong>' +
+        escapa(d.segmentos) + '</strong>, administrados pela ADMINISTRADORA, sem que a ASTRO assuma, em nenhuma ' +
+        'hipótese, o papel de administradora de consórcio nos termos da Lei nº 11.795/2008.'
+      ]},
+      { titulo: 'Cláusula 2ª – Da Regulação Aplicável', paragrafos: [
+        'As Partes reconhecem que a ADMINISTRADORA é entidade autorizada a funcionar e fiscalizada pelo Banco Central ' +
+        'do Brasil para a administração de grupos de consórcio, e que a atuação da ASTRO observará a regulamentação ' +
+        'do Banco Central do Brasil aplicável a correspondentes e representantes de vendas de administradoras de ' +
+        'consórcio, cabendo à ASTRO obter e manter os cadastros e registros eventualmente exigidos para essa atuação.'
+      ]},
+      { titulo: 'Cláusula 3ª – Das Obrigações da ASTRO', paragrafos: [
+        'A ASTRO obriga-se a: (i) prospectar e orientar clientes com base em informações verídicas e atualizadas ' +
+        'fornecidas pela ADMINISTRADORA; (ii) não fazer promessa de contemplação, prazo ou aprovação de crédito; ' +
+        '(iii) observar as tabelas de venda e políticas de compliance e prevenção à lavagem de dinheiro vigentes; e ' +
+        '(iv) tratar dados pessoais de consorciados em conformidade com a Lei nº 13.709/2018 (LGPD).'
+      ]},
+      { titulo: 'Cláusula 4ª – Das Obrigações da ADMINISTRADORA', paragrafos: [
+        'A ADMINISTRADORA obriga-se a fornecer materiais oficiais e tabelas atualizadas de taxas e prazos, manter a ' +
+        'ASTRO informada sobre alterações regulatórias relevantes e efetuar o pagamento da comissão pactuada.'
+      ]},
+      { titulo: 'Cláusula 5ª – Da Remuneração', paragrafos: [
+        'A ASTRO fará jus à comissão ' + escapa(d.comissaoDesc) + ', a ser paga em até <strong>' +
+        escapa(d.prazoPag) + ' dias</strong> após a confirmação da venda e recebimento pela ADMINISTRADORA das ' +
+        'parcelas correspondentes, sujeita a estorno proporcional em caso de desistência, cancelamento ou ' +
+        'inadimplemento do consorciado, na forma da regulamentação aplicável.'
+      ]},
+      { titulo: 'Cláusula 6ª – Da Vigência e Rescisão', paragrafos: [
+        'Este contrato vigora pelo prazo de <strong>' + escapa(d.vigencia) + ' meses</strong>, renovando-se ' +
+        'automaticamente por períodos iguais e sucessivos caso nenhuma das Partes manifeste, por escrito, intenção ' +
+        'contrária com antecedência mínima de 30 (trinta) dias do término da vigência corrente.',
+        'Qualquer das Partes poderá rescindir este contrato mediante aviso prévio de <strong>' + escapa(d.aviso) +
+        ' dias</strong>, ou imediatamente em caso de descumprimento de obrigação regulatória, fraude ou risco à ' +
+        'reputação de qualquer das Partes.'
+      ]},
+      { titulo: 'Cláusula 7ª – Da Confidencialidade e Proteção de Dados', paragrafos: [
+        'As Partes tratarão dados pessoais de consorciados exclusivamente para os fins deste contrato e em ' +
+        'conformidade com a Lei nº 13.709/2018 (LGPD), definindo entre si, conforme o caso, seus papéis de ' +
+        'controlador e/ou operador de dados, e manterão sigilo sobre informações comerciais recíprocas.'
+      ]},
+      { titulo: 'Cláusula 8ª – Das Responsabilidades', paragrafos: [
+        'Cada Parte responde por seus próprios atos e pelas informações que prestar. A ASTRO não responde por ' +
+        'decisões de aprovação, contemplação ou gestão dos grupos de consórcio, que são de responsabilidade ' +
+        'exclusiva da ADMINISTRADORA.'
+      ]},
+      { titulo: 'Cláusula 9ª – Do Foro', paragrafos: [
+        'Fica eleito o foro da comarca de ' + escapa(v('cidadeForo') || '[cidade]') +
+        ' para dirimir quaisquer controvérsias oriundas deste contrato, com renúncia a qualquer outro, por mais ' +
+        'privilegiado que seja.'
+      ]}
+    ];
+
+    var blocoB = escapa(d.razao) + '<br>' + escapa(d.rep);
+    return folha('Convênio de Parceria Comercial para Distribuição de Cotas de Consórcio', preambulo, clausulas, blocoB, 'ADMINISTRADORA', d.data);
+  }
+
+  /* ---------- Contrato 3: Astro x Cliente ---------- */
+  function gerarCli(){
+    var d = {
+      nome: v('cliNome'), cpf: v('cliCpf'), endereco: v('cliEndereco'),
+      administradora: v('cliAdministradora'), grupoCota: v('cliGrupoCota'),
+      valor: v('cliValorCarta') || '0', prazoDias: v('cliPrazoVigenciaDias') || '90',
+      data: v('cliData')
+    };
+    if (!d.nome || !d.cpf){ recado('Preencha ao menos o nome e o CPF do cliente.', false); return null; }
+
+    var preambulo =
+      'Pelo presente instrumento particular, de um lado <strong>' + escapa(v('astroRazao') || '[Astro]') +
+      '</strong>, pessoa jurídica de direito privado, inscrita no CNPJ sob o nº ' + escapa(v('astroCnpj')) +
+      ', com sede em ' + escapa(v('astroEndereco')) + ', neste ato representada por ' +
+      escapa(v('astroRepresentante')) + ', portador(a) do CPF nº ' + escapa(v('astroRepresentanteCpf')) +
+      ', doravante denominada simplesmente <strong>“ASTRO”</strong>; e, de outro lado, <strong>' + escapa(d.nome) +
+      '</strong>, portador(a) do CPF nº ' + escapa(d.cpf) + ', residente e domiciliado(a) em ' + escapa(d.endereco) +
+      ', doravante denominado(a) simplesmente <strong>“CLIENTE”</strong> (ASTRO e CLIENTE, em conjunto, “Partes”), ' +
+      'têm entre si justo e contratado o presente Contrato de Prestação de Serviços de Assessoria em Consórcio, ' +
+      'que se regerá pelas cláusulas seguintes.';
+
+    var referenciaGrupo = (d.administradora || d.grupoCota)
+      ? (' junto à administradora ' + escapa(d.administradora || '[a definir]') +
+         (d.grupoCota ? (', ' + escapa(d.grupoCota)) : '') + ',')
+      : ',';
+
+    var clausulas = [
+      { titulo: 'Cláusula 1ª – Do Objeto', paragrafos: [
+        'A ASTRO prestará ao CLIENTE serviço de assessoria e orientação gratuita para a escolha do grupo e da ' +
+        'administradora de consórcio mais adequados ao seu perfil' + referenciaGrupo +
+        ' incluindo simulações, esclarecimento de dúvidas e acompanhamento até a formalização da adesão perante a ' +
+        'administradora escolhida, para uma carta de crédito estimada em <strong>' + formatarMoeda(d.valor) +
+        '</strong> (' + moedaPorExtenso(d.valor) + ').'
+      ]},
+      { titulo: 'Cláusula 2ª – Da Gratuidade do Serviço', paragrafos: [
+        'O serviço prestado ao CLIENTE não gera cobrança direta. A ASTRO é remunerada pela administradora parceira, ' +
+        'dentro da distribuição oficial já prevista no plano do consórcio, sem qualquer custo adicional ao CLIENTE.'
+      ]},
+      { titulo: 'Cláusula 3ª – Da Independência entre ASTRO e a Administradora', paragrafos: [
+        'A ASTRO não é administradora de consórcio, não gerencia grupos, sorteios, lances ou aprovação de crédito, ' +
+        'atividades de responsabilidade exclusiva da administradora escolhida, entidade autorizada a funcionar e ' +
+        'fiscalizada pelo Banco Central do Brasil, regida por contrato de adesão próprio, a ser firmado diretamente ' +
+        'entre o CLIENTE e a administradora.'
+      ]},
+      { titulo: 'Cláusula 4ª – Da Ausência de Garantias', paragrafos: [
+        'Nenhuma contemplação, prazo, aprovação de crédito ou resultado é garantido pela ASTRO. A contemplação ' +
+        'ocorre por sorteio ou lance, conforme o regulamento do grupo de consórcio escolhido.'
+      ]},
+      { titulo: 'Cláusula 5ª – Das Obrigações do CLIENTE', paragrafos: [
+        'O CLIENTE obriga-se a fornecer informações verdadeiras e atualizadas e a ler integralmente o contrato de ' +
+        'adesão da administradora antes de assiná-lo, esclarecendo previamente qualquer dúvida com a ASTRO ou com a ' +
+        'administradora.'
+      ]},
+      { titulo: 'Cláusula 6ª – Da Proteção de Dados Pessoais (LGPD)', paragrafos: [
+        'Os dados pessoais do CLIENTE serão tratados pela ASTRO exclusivamente para a finalidade de orientação e ' +
+        'intermediação prevista neste contrato e, quando necessário à formalização da proposta, poderão ser ' +
+        'compartilhados com a administradora escolhida, nos termos da Lei nº 13.709/2018 (LGPD), podendo o CLIENTE ' +
+        'exercer os direitos ali previstos mediante contato com a ASTRO.'
+      ]},
+      { titulo: 'Cláusula 7ª – Da Vigência', paragrafos: [
+        'Este contrato vigora até a formalização da adesão do CLIENTE junto à administradora escolhida ou pelo prazo ' +
+        'de <strong>' + escapa(d.prazoDias) + ' dias</strong>, o que ocorrer primeiro, podendo ser rescindido a ' +
+        'qualquer tempo por qualquer das Partes, sem ônus.'
+      ]},
+      { titulo: 'Cláusula 8ª – Do Foro', paragrafos: [
+        'Fica eleito o foro da comarca de ' + escapa(v('cidadeForo') || '[cidade]') +
+        ' para dirimir quaisquer controvérsias oriundas deste contrato, com renúncia a qualquer outro, por mais ' +
+        'privilegiado que seja.'
+      ]}
+    ];
+
+    var blocoB = escapa(d.nome) + '<br>CPF ' + escapa(d.cpf);
+    return folha('Contrato de Prestação de Serviços de Assessoria em Consórcio', preambulo, clausulas, blocoB, 'CLIENTE', d.data);
+  }
+
+  var GERADORES = { pj: gerarPJ, adm: gerarAdm, cli: gerarCli };
+
+  el('gerar').addEventListener('click', function(){
+    var html = GERADORES[tipoAtual]();
+    if (!html) return;
+    el('folha').innerHTML = html;
+    el('previa').hidden = false;
+    el('imprimir').hidden = false;
+    recado('Minuta gerada. Revise o texto antes de imprimir ou salvar em PDF.', true);
+    el('previa').scrollIntoView({ behavior:'smooth', block:'start' });
+  });
+
+  el('imprimir').addEventListener('click', function(){ window.print(); });
+})();
+</script>
+</body>
+</html>
