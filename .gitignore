@@ -1,0 +1,3 @@
+# Arquivo de lock de sessão do Claude Code — muda a cada sessão (PID,
+# session id, timestamp), não é conteúdo do projeto.
+.claude/scheduled_tasks.lock
