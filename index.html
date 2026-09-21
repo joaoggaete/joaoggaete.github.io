@@ -1481,6 +1481,14 @@ input[type=range]::-moz-range-thumb{
 }
 .calc-prazo-opcoes button:hover{ transform:translateY(-1px); color:var(--text); border-color:var(--accent-line) }
 .calc-prazo-opcoes button.ativo{ color:#fff; background:var(--accent); border-color:var(--accent) }
+.calc-lance{
+  margin-top:18px;
+  padding-top:16px;
+  border-top:1px solid rgba(147,169,201,.2);
+}
+.calc-valor-lance{ font-size:clamp(22px,3.2vw,30px); margin:8px 0 12px }
+.calc-lance-grade{ border-top:none; padding-top:0; margin-top:14px }
+.calc-lance-nota{ margin-top:16px; font-size:13px; line-height:1.68; color:var(--text-2) }
 .calc-resumo-form{
   margin:0 0 18px; padding:11px 14px; border-radius:12px;
   border:1px solid rgba(59,143,224,.28); background:rgba(59,143,224,.08);
@@ -7097,6 +7105,25 @@ nav{z-index:300!important}
           </div>
           <div class="calc-prazo-opcoes" id="calcPrazoOpcoes" role="group" aria-label="Prazo da simulação"></div>
         </div>
+
+        <div class="calc-lance">
+          <div class="calc-prazo-cab">
+            <span>Estratégia de lance</span>
+            <small id="calcLanceEmbutidoNota">Embutido fixo de 30% nesta modalidade</small>
+          </div>
+          <label class="calc-label" for="calcLanceLivre">Lance livre (recurso próprio, além do embutido)</label>
+          <div class="calc-valor calc-valor-lance" id="calcLanceLivreTexto">20%</div>
+          <input type="range" id="calcLanceLivre" min="0" max="75" step="1" value="20"
+                 aria-label="Percentual de lance livre, pago com recurso próprio">
+          <div class="calc-escala"><span>0%</span><span>75%</span></div>
+          <div class="res-grade calc-lance-grade">
+            <div class="res-item"><span>Lance embutido</span><b id="calcLanceEmbutidoPct">30%</b></div>
+            <div class="res-item"><span>Lance total ofertado</span><b id="calcLanceTotalPct">50%</b></div>
+            <div class="res-item"><span>Valor do lance livre</span><b id="calcLanceLivreValor">R$ 60.000</b></div>
+            <div class="res-item"><span>Crédito líquido após embutido</span><b id="calcCreditoLiquido">R$ 210.000</b></div>
+          </div>
+          <p class="calc-lance-nota">O lance embutido usa parte do próprio crédito — por isso reduz o valor líquido recebido — e o teto é fixado pela administradora conforme a modalidade. O lance livre é recurso extra seu, somado ao embutido para compor o lance total. Nenhum percentual garante prazo de contemplação: ela segue por sorteio ou lance, conforme as regras de cada grupo.</p>
+        </div>
         </div>
 
         <div class="calc-resultado" id="calcResultado">
@@ -8060,6 +8087,7 @@ window.AstroTaxas = {
       TXB:25,          /* taxa mensal do banco */
       indice:'INCC',   /* crédito imobiliário é corrigido pelo INCC */
       ENT:0.20,        /* entrada que um financiamento imobiliário costuma pedir */
+      EMBUTIDO:0.30,   /* teto de lance embutido em imóvel, o mais comum entre administradoras */
       min:50000, max:2000000, passo:10000, padrao:300000,
       atalhos:[[50000,'50 mil'],[150000,'150 mil'],[300000,'300 mil'],[500000,'500 mil'],[800000,'800 mil'],[1000000,'1 mi']]
     },
@@ -8077,6 +8105,7 @@ window.AstroTaxas = {
       TXB:25,
       indice:'IPCA',   /* veículo segue IPCA ou tabela do fabricante */
       ENT:0.20,        /* entrada típica de CDC de veículo */
+      EMBUTIDO:0.25,   /* teto de lance embutido em veículo, mais conservador que o de imóvel */
       /* teto em 2 milhões, não só carro popular: linha alta (Porsche,
          Ferrari, BMW) também fecha consórcio de automóvel e tem
          demanda real — limitar a 400 mil escondia esse público. */
@@ -8098,6 +8127,7 @@ window.AstroTaxas = {
       prazos:[60,80,100,120,140],
       I:0.0175, ADM:0.125, FR:0.02, SEG:0.0004, MIP:0.00030, DFI:0,
       IOF:0.0338, TXB:25, indice:'IPCA', ENT:0.20,
+      EMBUTIDO:0.25,   /* mesmo teto do veículo: maquinário segue a linha mais conservadora */
       /* teto em 3 milhões: maquinário agrícola (colheitadeira, trator
          grande) passa de 1 milhão com frequência — 1 milhão como teto
          escondia justo o ticket mais comum desse público. */
@@ -9175,9 +9205,37 @@ document.addEventListener('DOMContentLoaded', function () {
         bCon = document.getElementById('calcBarCon'),
         dica = document.getElementById('calcDica'),
         prazoOpcoes = document.getElementById('calcPrazoOpcoes'),
-        atalhos = document.querySelectorAll('.calc-atalhos button');   /* reatribuído ao trocar de modalidade */
+        atalhos = document.querySelectorAll('.calc-atalhos button'),   /* reatribuído ao trocar de modalidade */
+        slLance = document.getElementById('calcLanceLivre'),
+        txtLance = document.getElementById('calcLanceLivreTexto');
     /* as taxas vêm de window.AstroTaxas, fonte única do site */
     var compor = function(pv){ return window.AstroTaxas.compor(pv); };
+
+    /* Embutido é fixo por modalidade (definido pela administradora); livre é
+       quem arrasta o slider. Nenhum dos dois promete prazo de contemplação —
+       só mostram o efeito no crédito líquido e no valor a desembolsar. */
+    function atualizarLance(){
+      if (!slLance) return;
+      var pv = Number(sl.value);
+      var embutidoPct = window.AstroTaxas.def().EMBUTIDO * 100;
+      var livrePct = Number(slLance.value);
+      var totalPct = embutidoPct + livrePct;
+      var valorLivre = pv * livrePct / 100;
+      var creditoLiquido = pv * (1 - embutidoPct / 100);
+
+      txtLance.textContent = livrePct + '%';
+      var põeLance = function(id, v){ var e = document.getElementById(id); if (e) e.textContent = v; };
+      põeLance('calcLanceEmbutidoPct', embutidoPct.toFixed(0) + '%');
+      põeLance('calcLanceTotalPct', totalPct.toFixed(0) + '%');
+      põeLance('calcLanceLivreValor', brl(valorLivre));
+      põeLance('calcCreditoLiquido', brl(creditoLiquido));
+      var nota = document.getElementById('calcLanceEmbutidoNota');
+      if (nota) nota.textContent = 'Embutido fixo de ' + embutidoPct.toFixed(0) + '% nesta modalidade';
+
+      var pctSlider = ((slLance.value - slLance.min) / (slLance.max - slLance.min)) * 100;
+      slLance.style.background = 'linear-gradient(90deg,#3B8FE0 0%,#7FD4FF ' + pctSlider + '%,rgba(147,169,201,.16) ' + pctSlider + '%,rgba(147,169,201,.16) 100%)';
+    }
+    if (slLance) slLance.addEventListener('input', atualizarLance);
 
     function atualizar(){
       var pv = Number(sl.value);
@@ -9262,6 +9320,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       atalhos.forEach(function(bt){ bt.classList.toggle('ativo', Number(bt.dataset.v) === Number(sl.value)); });
       Regua.pv(pv);   /* a régua do hero passa a contar o SEU número */
+      atualizarLance();
     }
 
     var compAbre = document.getElementById('compAbre'), compCorpo = document.getElementById('compCorpo');
