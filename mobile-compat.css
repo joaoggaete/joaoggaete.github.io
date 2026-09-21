@@ -39,9 +39,9 @@ body.menu-aberto .nav-painel{z-index:299!important}
    a leitura de vidro e reduz sensivelmente a área recomposta pela GPU. */
 @media (min-width:761px) and (max-width:1100px){
   @supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-    nav,.doc-nav-global,.nav-painel,.busca-global-painel,
+    nav,.doc-nav-global,.nav-painel,.busca-painel,
     :root[data-tema="claro"] nav,:root[data-tema="claro"] .doc-nav-global,
-    :root[data-tema="claro"] .nav-painel,:root[data-tema="claro"] .busca-global-painel{
+    :root[data-tema="claro"] .nav-painel,:root[data-tema="claro"] .busca-painel{
       backdrop-filter:blur(18px) saturate(155%)!important;
       -webkit-backdrop-filter:blur(18px) saturate(155%)!important;
     }
@@ -158,13 +158,13 @@ body.menu-aberto .nav-painel{z-index:299!important}
    pseudo-elementos. O filtro menor evita halos e reduz o trabalho da GPU. */
 @media (max-width:760px){
   @supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-    nav,.doc-nav-global,.nav-painel,.busca-global-painel,
+    nav,.doc-nav-global,.nav-painel,.busca-painel,
     :root[data-tema="claro"] nav,:root[data-tema="claro"] .doc-nav-global,
-    :root[data-tema="claro"] .nav-painel,:root[data-tema="claro"] .busca-global-painel{
+    :root[data-tema="claro"] .nav-painel,:root[data-tema="claro"] .busca-painel{
       backdrop-filter:blur(16px) saturate(145%)!important;
       -webkit-backdrop-filter:blur(16px) saturate(145%)!important;
     }
-    .busca-global-btn,.nav-burger,.tema-btn,.hero-sub,.mobile-cta,
+    .busca-btn,.nav-burger,.tema-btn,.hero-sub,.mobile-cta,
     .btn-fantasma,.nav-cta,.btn-wa-vidro{
       backdrop-filter:blur(10px) saturate(130%)!important;
       -webkit-backdrop-filter:blur(10px) saturate(130%)!important;
@@ -187,7 +187,7 @@ body.menu-aberto .nav-painel{z-index:299!important}
    reserva sólida. O restante do visual, espaçamento e contraste permanece. */
 @media (max-width:760px) and (prefers-reduced-transparency:reduce),
        (max-width:760px) and (update:slow){
-  nav,.nav-painel,.doc-nav-global,.busca-global-painel,.busca-global-btn,
+  nav,.nav-painel,.doc-nav-global,.busca-painel,.busca-btn,
   .nav-burger,.tema-btn,.hero-sub,.mobile-cta,.btn-fantasma,.nav-cta,.btn-wa-vidro,
   .vidro,.modal-card,.pagina-card,.atend-card,.faq-item,.comp-card,.stats-inner,
   .video-card,.simulador,.form-larga,.calc-resultado,.aviso-assembleia{
