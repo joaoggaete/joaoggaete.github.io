@@ -1,0 +1,250 @@
+/* ==========================================================================
+   NAV COMPARTILHADO — menu (desktop + mobile), busca e botão de tema.
+   Usado pelas 8 páginas do site. Extraído do index.html para acabar com a
+   duplicação de CSS/JS de navegação entre páginas (cada página tinha sua
+   própria cópia, e elas foram saindo de sincronia). Depende dos tokens de
+   :root já definidos no <style> de cada página (--canvas, --accent, --text,
+   --line, --f-display etc.) — aqui só ficam os dois que nem toda página
+   ainda define, como fallback seguro (a página que já definir os seus
+   continua valendo, por vir depois no cascata). */
+:root{ --nav-h:74px; --larg:1180px }
+@media (min-width:1600px){ :root{ --larg:1340px; --nav-h:86px } }
+@media (min-width:1920px){ :root{ --larg:1560px; --nav-h:94px } }
+@media (min-width:2200px){ :root{ --larg:1780px; --nav-h:98px } }
+
+nav{
+  position:sticky; top:0; z-index:300;
+  height:var(--nav-h);
+  display:flex; align-items:center;
+  background:rgba(3,6,15,.62);
+  backdrop-filter:blur(16px) saturate(1.4);
+  -webkit-backdrop-filter:blur(16px) saturate(1.4);
+  border-bottom:1px solid transparent;
+  transition:background .5s var(--ease), border-color .5s var(--ease);
+}
+nav.solida{ background:rgba(3,6,15,.9); border-bottom-color:var(--line) }
+
+.nav-inner{
+  width:min(var(--larg), calc(100% - 44px)); margin-inline:auto;
+  display:grid; grid-template-columns:1fr auto 1fr;
+  align-items:center; gap:24px;
+}
+.nav-logo{ height:44px; display:inline-flex; align-items:center; gap:11px; justify-self:start }
+.nav-cracha{ position:relative; flex:none; height:86%; aspect-ratio:400 / 252 }
+.nav-marca{ position:absolute; inset:0; width:100%; height:100%; display:block; color:#0B2149; visibility:hidden }
+.nav-gira{
+  position:absolute; inset:0;
+  background-image:url('/img/marca-estatica-navy.webp');
+  background-repeat:no-repeat; background-size:contain; background-position:center;
+}
+:root[data-tema="claro"] .nav-gira{ background-image:url('/img/marca-estatica-prata.webp') }
+:root[data-tema="claro"] .nav-marca{ color:#F2F6FC }
+:root[data-tema="claro"] .nav-logo{ filter:none }
+@media (prefers-color-scheme: light){
+  :root:not([data-tema="escuro"]) .nav-gira{ background-image:url('/img/marca-estatica-prata.webp') }
+  :root:not([data-tema="escuro"]) .nav-marca{ color:#F2F6FC }
+  :root:not([data-tema="escuro"]) .nav-logo{ filter:none }
+}
+.nav-palavra{ height:66%; width:auto; display:block; flex:none }
+
+.nav-links{ list-style:none; display:flex; flex-wrap:wrap; gap:8px 32px; justify-self:center; margin:0; padding:0 }
+.nav-links a{
+  font-size:15px; font-weight:600; color:#93A9C9;
+  letter-spacing:-.005em; position:relative; padding:8px 0;
+  transition:color .35s var(--ease); text-decoration:none;
+}
+.nav-links a::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:1px;
+  background:var(--accent-hi); transform:scaleX(0); transform-origin:left;
+  transition:transform .45s var(--ease);
+}
+.nav-links a:hover{ color:var(--text) }
+.nav-links a:hover::after{ transform:scaleX(1) }
+.nav-links a[aria-current="page"]{ color:var(--text) }
+.nav-links a[aria-current="page"]::after{ transform:scaleX(1) }
+
+.nav-acao{ display:flex; align-items:center; gap:12px; justify-self:end }
+
+.nav-cta{
+  position:relative; overflow:hidden;
+  font-size:15px; font-weight:700; letter-spacing:-.012em;
+  padding:12px 24px; border-radius:100px; color:#FFFFFF; text-decoration:none;
+  background:linear-gradient(150deg, rgba(127,212,255,.13), rgba(255,255,255,.04));
+  backdrop-filter:blur(22px) saturate(190%); -webkit-backdrop-filter:blur(22px) saturate(190%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.24), 0 6px 22px rgba(2,5,12,.35);
+  transition:transform .4s var(--ease), box-shadow .4s var(--ease), background .4s var(--ease);
+  white-space:nowrap;
+}
+.nav-cta:hover{
+  transform:translateY(-1px);
+  background:linear-gradient(150deg, rgba(127,212,255,.24), rgba(255,255,255,.07));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.34), 0 12px 30px rgba(59,143,224,.28);
+}
+.nav-cta:active{ transform:translateY(0) scale(.985) }
+
+.nav-burger{
+  display:none;
+  width:44px; height:44px; border-radius:var(--r);
+  background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.13);
+  backdrop-filter:blur(20px) saturate(180%); -webkit-backdrop-filter:blur(20px) saturate(180%);
+  cursor:pointer; position:relative; justify-self:end;
+}
+.nav-burger span{
+  position:absolute; left:13px; width:18px; height:1.6px; border-radius:2px;
+  background:var(--text); transition:transform .45s var(--ease), opacity .3s var(--ease);
+}
+.nav-burger span:nth-child(1){ top:16px }
+.nav-burger span:nth-child(2){ top:21px }
+.nav-burger span:nth-child(3){ top:26px }
+.nav-burger.aberto span:nth-child(1){ transform:translateY(5px) rotate(45deg) }
+.nav-burger.aberto span:nth-child(2){ opacity:0 }
+.nav-burger.aberto span:nth-child(3){ transform:translateY(-5px) rotate(-45deg) }
+:root[data-tema="claro"] .nav-burger span{ background:var(--text) }
+
+.nav-painel{
+  position:fixed; z-index:299;
+  left:0; right:0; margin-inline:auto; bottom:auto;
+  width:min(var(--larg), calc(100% - 28px));
+  margin-top:0; max-height:calc(100dvh - 140px);
+  border-radius:0 0 26px 26px;
+  background:rgba(255,255,255,.76);
+  box-shadow:0 26px 70px rgba(2,5,12,.55), 0 0 0 1px rgba(11,33,73,.10);
+  backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px);
+  padding:16px 18px 20px;
+  display:flex; flex-direction:column; gap:6px;
+  opacity:0; visibility:hidden;
+  clip-path:inset(0 0 100% 0 round 0 0 26px 26px);
+  transition:clip-path .44s var(--ease), opacity .2s var(--ease), visibility .44s;
+  overflow-y:auto; overscroll-behavior:contain;
+}
+.nav-painel.aberto{ clip-path:inset(0 0 0 0 round 0 0 26px 26px); opacity:1; visibility:visible }
+
+body.menu-aberto::after{
+  content:""; position:fixed; inset:0; z-index:288;
+  pointer-events:none;
+  background:rgba(2,5,12,.52);
+  backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);
+  animation:veuEntra .3s var(--ease) both;
+}
+@keyframes veuEntra{ from{ opacity:0 } to{ opacity:1 } }
+
+.nav-painel ul a, .nav-painel li a{ color:#0B2149 }
+.nav-painel ul a{ border-bottom-color:rgba(11,33,73,.12) }
+.nav-painel ul{ list-style:none; display:flex; flex-direction:column; margin:0; padding:0 }
+.nav-painel ul a{
+  display:block; padding:15px 4px;
+  font-family:var(--f-display); font-size:20px; font-weight:600;
+  border-bottom:1px solid var(--line); text-decoration:none;
+}
+.nav-painel ul a[aria-current="page"]{ color:var(--accent) }
+.nav-painel-cta,.nav-painel-wa{
+  margin-top:10px; text-align:center; padding:14px;
+  border-radius:100px; font-weight:700; font-size:14.5px; text-decoration:none; display:block;
+}
+.nav-painel-cta{ background:linear-gradient(135deg,var(--accent-hi),var(--accent)); color:#04101F }
+.nav-painel-wa{ background:linear-gradient(150deg,#2EDB70,#1AA84F); color:#04140A; border:none }
+.tema-linha{ display:flex; align-items:center; justify-content:space-between; margin-top:14px; padding-top:14px; border-top:1px solid var(--line) }
+.tema-linha .rotulo{ font-size:14.5px; color:#0B2149; font-weight:600 }
+
+:root[data-tema="claro"] .nav-painel{
+  background:rgba(11,33,73,.76) !important;
+  box-shadow:0 26px 70px rgba(11,33,73,.30), 0 0 0 1px rgba(255,255,255,.12) !important;
+}
+:root[data-tema="claro"] .nav-painel ul a,
+:root[data-tema="claro"] .nav-painel li a{ color:#FFFFFF !important }
+:root[data-tema="claro"] .nav-painel ul a{ border-bottom-color:rgba(255,255,255,.16) !important }
+:root[data-tema="claro"] .tema-linha{ border-top-color:rgba(255,255,255,.16) }
+:root[data-tema="claro"] .tema-linha .rotulo{ color:#FFFFFF }
+@media (prefers-color-scheme: light){
+  :root:not([data-tema="escuro"]) .nav-painel{
+    background:rgba(11,33,73,.76) !important;
+    box-shadow:0 26px 70px rgba(11,33,73,.30), 0 0 0 1px rgba(255,255,255,.12) !important;
+  }
+  :root:not([data-tema="escuro"]) .nav-painel ul a,
+  :root:not([data-tema="escuro"]) .nav-painel li a{ color:#FFFFFF !important }
+  :root:not([data-tema="escuro"]) .nav-painel ul a{ border-bottom-color:rgba(255,255,255,.16) !important }
+  :root:not([data-tema="escuro"]) .tema-linha{ border-top-color:rgba(255,255,255,.16) }
+  :root:not([data-tema="escuro"]) .tema-linha .rotulo{ color:#FFFFFF }
+}
+
+.tema-btn,.busca-btn{
+  position:relative; isolation:isolate;
+  width:42px; height:42px; border-radius:50%;
+  display:grid; place-items:center; cursor:pointer;
+  background:rgba(147,169,201,.05); border:none; color:var(--text-2);
+  backdrop-filter:blur(20px) saturate(160%) brightness(1.03);
+  -webkit-backdrop-filter:blur(20px) saturate(160%) brightness(1.03);
+  box-shadow:0 0 0 1px rgba(255,255,255,.1), inset 0 1px 0 rgba(255,255,255,.22), 0 0 20px 2px rgba(127,212,255,.18);
+  transition:color .3s var(--ease), box-shadow .35s var(--ease), transform .3s var(--ease);
+  flex:none;
+}
+.tema-btn:hover,.busca-btn:hover{ color:var(--text); box-shadow:0 0 0 1px rgba(127,212,255,.4), inset 0 1px 0 rgba(255,255,255,.3), 0 0 26px 3px rgba(127,212,255,.3) }
+.tema-btn:active,.busca-btn:active{ transform:scale(.94) }
+.busca-btn.aberto{ color:var(--text); box-shadow:0 0 0 1px rgba(127,212,255,.5), inset 0 1px 0 rgba(255,255,255,.3), 0 0 26px 3px rgba(127,212,255,.3) }
+.tema-btn svg,.busca-btn svg{ width:19px; height:19px; display:block }
+.tema-btn svg{ position:absolute; inset:0; margin:auto; transition:opacity .3s var(--ease), transform .45s var(--ease) }
+.tema-btn .lua{ opacity:0; transform:rotate(-40deg) scale(.7) }
+.tema-btn .sol{ opacity:1; transform:none }
+:root[data-tema="claro"] .tema-btn .lua{ opacity:1; transform:none }
+:root[data-tema="claro"] .tema-btn .sol{ opacity:0; transform:rotate(40deg) scale(.7) }
+@media (prefers-color-scheme: light){
+  :root:not([data-tema="escuro"]) .tema-btn .lua{ opacity:1; transform:none }
+  :root:not([data-tema="escuro"]) .tema-btn .sol{ opacity:0; transform:rotate(40deg) scale(.7) }
+}
+
+.busca-caixa{ position:relative }
+.busca-painel{
+  position:absolute; top:calc(100% + 12px); right:0; z-index:120;
+  width:min(400px, 88vw);
+  background:rgba(8,14,28,.92);
+  border:1px solid rgba(255,255,255,.1); border-radius:var(--r-l);
+  backdrop-filter:blur(24px) saturate(180%); -webkit-backdrop-filter:blur(24px) saturate(180%);
+  box-shadow:0 24px 60px rgba(2,5,12,.5), inset 0 1px 0 rgba(255,255,255,.08);
+  padding:14px;
+}
+.busca-campo{
+  display:flex; align-items:center; gap:10px;
+  padding:10px 14px; border-radius:100px;
+  background:rgba(147,169,201,.08); border:1px solid var(--line-2);
+  color:var(--text-2);
+}
+.busca-campo svg{ width:18px; height:18px; flex:none }
+.busca-campo input{
+  flex:1; min-width:0; background:none; border:none; outline:none;
+  font-family:var(--f-text); font-size:15px; color:var(--text);
+}
+.busca-campo input::placeholder{ color:var(--text-3) }
+.busca-resultados{
+  list-style:none; margin:10px 0 0; padding:0;
+  max-height:340px; overflow-y:auto;
+  display:flex; flex-direction:column; gap:4px;
+}
+.busca-item a{ display:block; padding:10px 12px; border-radius:10px; text-decoration:none; transition:background-color .2s var(--ease) }
+.busca-item a:hover, .busca-item a:focus-visible{ background:rgba(127,212,255,.1) }
+.busca-item-tit{ display:block; font-size:14.5px; font-weight:700; color:var(--text) }
+.busca-item-cat{
+  display:block; font-family:var(--f-mono); font-size:10.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--text-3); margin-top:2px;
+}
+.busca-vazio{ margin:14px 4px 4px; font-size:14px; color:var(--text-3); text-align:center }
+
+/* Entre o corte pro menu mobile (1024px) e a largura confortável (1600px),
+   o conjunto "6 links + busca + tema + CTA" fica justo — sem essa faixa,
+   qualquer folga a menos (fonte ainda carregando, zoom do navegador) faz o
+   CTA estourar a barra. */
+@media (max-width:1400px){
+  .nav-inner{ gap:12px }
+  .nav-links{ gap:8px 16px }
+  .nav-links a{ font-size:13.5px }
+  .nav-cta{ font-size:13px; padding:9px 15px }
+  .nav-acao{ gap:8px }
+}
+@media (max-width:1024px){
+  .nav-links,.nav-cta{ display:none }
+  .nav-burger{ display:block }
+  .busca-painel{ right:auto; left:50%; transform:translateX(-50%); width:min(360px, 90vw) }
+}
+@media (max-width:400px){
+  .nav-painel{ padding:16px 20px 24px }
+  .nav-painel ul a{ padding:11px 4px; font-size:17px }
+}

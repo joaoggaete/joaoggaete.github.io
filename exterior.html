@@ -940,7 +940,6 @@ html { color-scheme: light only; }
   display: flex; justify-content: space-between;
   font-family: Arial, sans-serif; font-size:11px; color: #5A76A6; margin-bottom: 22px;
 }
-.calc-comparativo { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
 .calc-box {
   border-radius:var(--r); padding: 16px 14px; text-align: center;
   border: 1px solid rgba(19,37,78,.12);
@@ -4094,7 +4093,7 @@ html.consent-aberto .mobile-cta:not(.recolhido){
   display:inline-block; padding:4px 2px; min-height:24px; line-height:16px;
 }
 </style>
-<link rel="stylesheet" href="/busca-global.css">
+<link rel="stylesheet" href="/nav.css">
 <style>
 html{scroll-padding-top:108px}
 section[id]{scroll-margin-top:108px}
@@ -4103,6 +4102,7 @@ nav{z-index:300!important}
 @media(max-width:1024px){nav .nav-inner{display:grid!important;grid-template-columns:auto 1fr auto!important}.nav-acao{display:flex!important;grid-column:2!important;justify-self:end!important}.nav-acao .nav-cta{display:none!important}.nav-burger{grid-column:3!important}.nav-logo{grid-column:1!important}}
 </style>
 <link rel="stylesheet" href="/mobile-compat.css">
+<script src="/nav.js" defer></script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -4133,14 +4133,25 @@ nav{z-index:300!important}
     </span>
     <ul class="nav-links">
         <li><a href="/como-funciona.html">Como Funciona</a></li>
+        <li><a href="/#calculadora">Simulador</a></li>
         <li><a href="/exterior.html" aria-current="page" class="ativo">Brasileiros no Exterior</a></li>
         <li><a href="/#duvidas">Dúvidas</a></li>
+        <li><a href="/seguranca.html">Segurança e privacidade</a></li>
         <li><a href="/#onde-estamos">Atendimento</a></li>
     </ul>
     <div class="nav-acao">
-      <div class="busca-global" data-busca-global>
-        <button class="busca-global-btn" type="button" aria-label="Buscar no site" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.9"/><path d="m20.5 20.5-4-4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></button>
-        <div class="busca-global-painel" role="search" hidden><div class="busca-global-campo"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.9"/><path d="m20.5 20.5-4-4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><input type="search" placeholder="Buscar no site" aria-label="Buscar no site" autocomplete="off"></div><ul class="busca-global-resultados"></ul><p class="busca-global-vazio" hidden>Nenhum resultado encontrado.</p></div>
+      <div class="busca-caixa">
+        <button class="busca-btn" id="buscaBtn" type="button" aria-label="Buscar no site" aria-expanded="false" aria-controls="buscaPainel">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.9"/><path d="m20.5 20.5-4-4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+        </button>
+        <div class="busca-painel" id="buscaPainel" role="search" hidden>
+          <div class="busca-campo">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.9"/><path d="m20.5 20.5-4-4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+            <input type="search" id="buscaInput" placeholder="Buscar no site" aria-label="Buscar no site" autocomplete="off">
+          </div>
+          <ul class="busca-resultados" id="buscaResultados"></ul>
+          <p class="busca-vazio" id="buscaVazio" hidden>Nenhum resultado encontrado.</p>
+        </div>
       </div>
       <button class="tema-btn" type="button" aria-label="Mudar para o modo claro" aria-pressed="false"><svg class="sol" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.9"/><path d="M12 2.6v2.2M12 19.2v2.2M21.4 12h-2.2M4.8 12H2.6M18.6 5.4l-1.6 1.6M7 17l-1.6 1.6M18.6 18.6L17 17M7 7 5.4 5.4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><svg class="lua" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.5 14.2A8.6 8.6 0 0 1 9.8 3.5a8.6 8.6 0 1 0 10.7 10.7Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg></button>
       <a href="/#form-simulador" class="nav-cta">Planejar minha conquista</a>
@@ -4158,13 +4169,12 @@ nav{z-index:300!important}
 <div class="nav-painel" id="navPainel" role="dialog" aria-modal="true" aria-label="Menu de navegação">
     <ul>
       <li><a href="/">Página inicial</a></li>
-      <li><a href="/#verdade">Como Funciona</a></li>
+      <li><a href="/como-funciona.html">Como Funciona</a></li>
       <li><a href="/#estruturas">Modalidades</a></li>
-      
-      
-      <li><a href="/#video">Vídeo</a></li>
-        <li><a href="/exterior.html">Exterior</a></li>
-        <li><a href="/#duvidas">Dúvidas</a></li>
+      <li><a href="/#calculadora">Simulador</a></li>
+      <li><a href="/exterior.html" aria-current="page" class="ativo">Exterior</a></li>
+      <li><a href="/#duvidas">Dúvidas</a></li>
+      <li><a href="/seguranca.html">Segurança e privacidade</a></li>
       <li><a href="/#onde-estamos">Atendimento</a></li>
     </ul>
     <a href="/#form-simulador" class="nav-painel-cta">Ver quanto vou economizar</a>
@@ -4492,6 +4502,12 @@ document.addEventListener("DOMContentLoaded", function() {
   window.addEventListener('resize', function(){ if(window.innerWidth>1024) fecha(); });
 })();
 </script>
+<script>
+/* menu e tema já têm script próprio nesta página (acima); só a busca
+   faltava — o nav.js compartilhado cuida dela. DOMContentLoaded porque o
+   nav.js (defer, no <head>) só termina de rodar depois deste trecho. */
+document.addEventListener('DOMContentLoaded', function(){ if (window.AstroNav) AstroNav.initBusca(); });
+</script>
 
 <script>
 (function(){
@@ -4786,6 +4802,5 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 })();
 </script>
-<script src="/busca-global.js" defer></script>
 </body>
 </html>

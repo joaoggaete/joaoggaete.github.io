@@ -193,6 +193,8 @@ nav{
   .consent-btn{ flex:1 1 0; padding:12px 10px }
 }
 </style>
+<link rel="stylesheet" href="/nav.css">
+<script src="/nav.js" defer></script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -221,9 +223,55 @@ nav{
         <img class="nav-palavra" src="img/astro-palavra.webp" width="612" height="250" decoding="async" alt="Astro Consórcios">
       </span>
     </a>
-    <a class="nav-volta" href="/">Voltar ao site</a>
+    <ul class="nav-links">
+        <li><a href="/como-funciona.html">Como Funciona</a></li>
+        <li><a href="/#calculadora">Simulador</a></li>
+        <li><a href="/exterior.html">Brasileiros no Exterior</a></li>
+        <li><a href="/#duvidas">Dúvidas</a></li>
+        <li><a href="/seguranca.html" aria-current="page" class="ativo">Segurança e privacidade</a></li>
+        <li><a href="/#onde-estamos">Atendimento</a></li>
+    </ul>
+    <div class="nav-acao">
+      <div class="busca-caixa">
+        <button class="busca-btn" id="buscaBtn" type="button" aria-label="Buscar no site" aria-expanded="false" aria-controls="buscaPainel">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.9"/><path d="m20.5 20.5-4-4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+        </button>
+        <div class="busca-painel" id="buscaPainel" role="search" hidden>
+          <div class="busca-campo">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.9"/><path d="m20.5 20.5-4-4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+            <input type="search" id="buscaInput" placeholder="Buscar no site" aria-label="Buscar no site" autocomplete="off">
+          </div>
+          <ul class="busca-resultados" id="buscaResultados"></ul>
+          <p class="busca-vazio" id="buscaVazio" hidden>Nenhum resultado encontrado.</p>
+        </div>
+      </div>
+      <button class="tema-btn" type="button" aria-label="Mudar para o modo claro" aria-pressed="false"><svg class="sol" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.9"/><path d="M12 2.6v2.2M12 19.2v2.2M21.4 12h-2.2M4.8 12H2.6M18.6 5.4l-1.6 1.6M7 17l-1.6 1.6M18.6 18.6L17 17M7 7 5.4 5.4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><svg class="lua" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.5 14.2A8.6 8.6 0 0 1 9.8 3.5a8.6 8.6 0 1 0 10.7 10.7Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg></button>
+      <a href="/#form-simulador" class="nav-cta">Planejar minha conquista</a>
+    </div>
+    <button class="nav-burger" id="navBurger" aria-label="Abrir menu" aria-expanded="false" aria-controls="navPainel">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<div class="nav-painel" id="navPainel" role="dialog" aria-modal="true" aria-label="Menu de navegação">
+    <ul>
+      <li><a href="/">Página inicial</a></li>
+      <li><a href="/como-funciona.html">Como Funciona</a></li>
+      <li><a href="/#estruturas">Modalidades</a></li>
+      <li><a href="/#calculadora">Simulador</a></li>
+      <li><a href="/exterior.html">Exterior</a></li>
+      <li><a href="/#duvidas">Dúvidas</a></li>
+      <li><a href="/seguranca.html" aria-current="page" class="ativo">Segurança e privacidade</a></li>
+      <li><a href="/#onde-estamos">Atendimento</a></li>
+    </ul>
+    <a href="/#form-simulador" class="nav-painel-cta">Ver quanto vou economizar</a>
+    <a href="https://wa.me/554599999999?text=Ol%C3%A1!%20Quero%20come%C3%A7ar%20meu%20planejamento%20com%20a%20Astro." class="nav-painel-wa" target="_blank" rel="noopener noreferrer">Começar meu planejamento</a>
+    <div class="tema-linha">
+      <span class="rotulo">Modo escuro</span>
+      <button class="tema-btn" type="button" aria-label="Mudar para o modo claro" aria-pressed="false"><svg class="sol" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.9"/><path d="M12 2.6v2.2M12 19.2v2.2M21.4 12h-2.2M4.8 12H2.6M18.6 5.4l-1.6 1.6M7 17l-1.6 1.6M18.6 18.6L17 17M7 7 5.4 5.4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><svg class="lua" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.5 14.2A8.6 8.6 0 0 1 9.8 3.5a8.6 8.6 0 1 0 10.7 10.7Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
 
 <div class="wrap">
   <main id="conteudo">
@@ -326,6 +374,9 @@ nav{
     grava('nao'); fecha();
   });
 })();
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){ if (window.AstroNav) AstroNav.tudo(); });
 </script>
 </body>
 </html>
