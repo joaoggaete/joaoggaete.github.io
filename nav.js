@@ -147,6 +147,13 @@
       b.classList.remove('aberto'); p.classList.remove('aberto');
       document.body.classList.remove('menu-aberto');
       b.setAttribute('aria-expanded','false'); b.setAttribute('aria-label','Abrir menu');
+      /* reabrir o menu não deve mostrar um acordeão que ficou aberto da
+         última vez */
+      p.querySelectorAll('.nav-drop.aberto').forEach(function(d){
+        d.classList.remove('aberto');
+        var db = d.querySelector('.nav-drop-btn');
+        if (db) db.setAttribute('aria-expanded', 'false');
+      });
     }
     function abre(){
       document.body.classList.add('menu-aberto');
@@ -171,6 +178,49 @@
       fecha();
     });
     window.addEventListener('resize', function(){ if (window.innerWidth > 1024) fecha(); });
+  }
+
+  /* ------------------------------------------------------------------
+     TÓPICOS COM SUBMENU ("Nosso Produto", "Atendimento") — mesmo
+     markup (.nav-drop / .nav-drop-btn / .nav-drop-menu) serve pro
+     dropdown flutuante do desktop e pro acordeão dentro do menu mobile;
+     só o CSS muda a apresentação conforme o contêiner.
+     ------------------------------------------------------------------ */
+  function initDropdowns(){
+    var drops = document.querySelectorAll('.nav-drop');
+    if (!drops.length) return;
+    function fechaTodos(exceto){
+      drops.forEach(function(d){
+        if (d === exceto) return;
+        d.classList.remove('aberto');
+        var b = d.querySelector('.nav-drop-btn');
+        if (b) b.setAttribute('aria-expanded', 'false');
+      });
+    }
+    drops.forEach(function(d){
+      var btn = d.querySelector('.nav-drop-btn');
+      if (!btn) return;
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var abrindo = !d.classList.contains('aberto');
+        fechaTodos(abrindo ? d : null);
+        d.classList.toggle('aberto', abrindo);
+        btn.setAttribute('aria-expanded', String(abrindo));
+      });
+      d.querySelectorAll('.nav-drop-menu a').forEach(function(a){
+        a.addEventListener('click', function(){
+          d.classList.remove('aberto');
+          btn.setAttribute('aria-expanded', 'false');
+        });
+      });
+    });
+    document.addEventListener('click', function(e){
+      var dentro = e.target.closest ? e.target.closest('.nav-drop') : null;
+      if (!dentro) fechaTodos(null);
+    });
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape') fechaTodos(null);
+    });
   }
 
   /* ------------------------------------------------------------------
@@ -243,6 +293,7 @@
   function tudo(){
     initBusca();
     initMenu();
+    initDropdowns();
     initRolagem();
     initTema();
   }
@@ -250,6 +301,7 @@
     window.AstroNav = {
       initBusca: initBusca,
       initMenu: initMenu,
+      initDropdowns: initDropdowns,
       initRolagem: initRolagem,
       initTema: initTema,
       tudo: tudo

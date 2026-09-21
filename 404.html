@@ -973,12 +973,29 @@ html.consent-aberto .mobile-cta:not(.recolhido){
       </span>
     </a>
     <ul class="nav-links">
-        <li><a href="/como-funciona.html">Como Funciona</a></li>
         <li><a href="/#calculadora">Simulador</a></li>
-        <li><a href="/exterior.html">Brasileiros no Exterior</a></li>
-        <li><a href="/#duvidas">Dúvidas</a></li>
+        <li class="nav-drop">
+          <button type="button" class="nav-drop-btn" aria-expanded="false">Nosso Produto
+            <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul class="nav-drop-menu">
+            <li><a href="/como-funciona.html">Como Funciona</a></li>
+            <li><a href="/#diferencial-astro">Diferencial da Astro</a></li>
+            <li><a href="/#estruturas">Modalidades</a></li>
+            <li><a href="/exterior.html">Brasileiros no Exterior</a></li>
+          </ul>
+        </li>
         <li><a href="/seguranca.html">Segurança e privacidade</a></li>
-        <li><a href="/#onde-estamos">Atendimento</a></li>
+        <li class="nav-drop">
+          <button type="button" class="nav-drop-btn" aria-expanded="false">Atendimento
+            <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul class="nav-drop-menu">
+            <li><a href="/#duvidas">Dúvidas</a></li>
+            <li><a href="/#onde-estamos">Fale com a gente</a></li>
+            <li><a href="/#saiba-mais">Saiba mais</a></li>
+          </ul>
+        </li>
     </ul>
     <div class="nav-acao">
       <div class="busca-caixa">
@@ -1006,13 +1023,29 @@ html.consent-aberto .mobile-cta:not(.recolhido){
 <div class="nav-painel" id="navPainel" role="dialog" aria-modal="true" aria-label="Menu de navegação">
     <ul>
       <li><a href="/">Página inicial</a></li>
-      <li><a href="/como-funciona.html">Como Funciona</a></li>
-      <li><a href="/#estruturas">Modalidades</a></li>
       <li><a href="/#calculadora">Simulador</a></li>
-      <li><a href="/exterior.html">Exterior</a></li>
-      <li><a href="/#duvidas">Dúvidas</a></li>
+      <li class="nav-drop">
+        <button type="button" class="nav-drop-btn" aria-expanded="false">Nosso Produto
+          <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="nav-drop-menu">
+          <li><a href="/como-funciona.html">Como Funciona</a></li>
+          <li><a href="/#diferencial-astro">Diferencial da Astro</a></li>
+          <li><a href="/#estruturas">Modalidades</a></li>
+          <li><a href="/exterior.html">Brasileiros no Exterior</a></li>
+        </ul>
+      </li>
       <li><a href="/seguranca.html">Segurança e privacidade</a></li>
-      <li><a href="/#onde-estamos">Atendimento</a></li>
+      <li class="nav-drop">
+        <button type="button" class="nav-drop-btn" aria-expanded="false">Atendimento
+          <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="nav-drop-menu">
+          <li><a href="/#duvidas">Dúvidas</a></li>
+          <li><a href="/#onde-estamos">Fale com a gente</a></li>
+          <li><a href="/#saiba-mais">Saiba mais</a></li>
+        </ul>
+      </li>
     </ul>
     <a href="/#form-simulador" class="nav-painel-cta">Ver quanto vou economizar</a>
     <a href="https://wa.me/554599999999?text=Ol%C3%A1!%20Quero%20come%C3%A7ar%20meu%20planejamento%20com%20a%20Astro." class="nav-painel-wa" target="_blank" rel="noopener noreferrer">Começar meu planejamento</a>
@@ -1093,7 +1126,7 @@ html.consent-aberto .mobile-cta:not(.recolhido){
    pra acionar); só o menu e a busca vêm do nav.js compartilhado. */
 document.addEventListener('DOMContentLoaded', function(){
   if (!window.AstroNav) return;
-  AstroNav.initMenu(); AstroNav.initBusca(); AstroNav.initRolagem();
+  AstroNav.initMenu(); AstroNav.initBusca(); AstroNav.initDropdowns(); AstroNav.initRolagem();
 });
 </script>
 

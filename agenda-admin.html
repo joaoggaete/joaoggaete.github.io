@@ -126,12 +126,29 @@ a.sala{ color:var(--accent-hi); font-size:13px; word-break:break-all }
       </span>
     </a>
     <ul class="nav-links">
-        <li><a href="/como-funciona.html">Como Funciona</a></li>
         <li><a href="/#calculadora">Simulador</a></li>
-        <li><a href="/exterior.html">Brasileiros no Exterior</a></li>
-        <li><a href="/#duvidas">Dúvidas</a></li>
+        <li class="nav-drop">
+          <button type="button" class="nav-drop-btn" aria-expanded="false">Nosso Produto
+            <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul class="nav-drop-menu">
+            <li><a href="/como-funciona.html">Como Funciona</a></li>
+            <li><a href="/#diferencial-astro">Diferencial da Astro</a></li>
+            <li><a href="/#estruturas">Modalidades</a></li>
+            <li><a href="/exterior.html">Brasileiros no Exterior</a></li>
+          </ul>
+        </li>
         <li><a href="/seguranca.html">Segurança e privacidade</a></li>
-        <li><a href="/#onde-estamos">Atendimento</a></li>
+        <li class="nav-drop">
+          <button type="button" class="nav-drop-btn" aria-expanded="false">Atendimento
+            <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul class="nav-drop-menu">
+            <li><a href="/#duvidas">Dúvidas</a></li>
+            <li><a href="/#onde-estamos">Fale com a gente</a></li>
+            <li><a href="/#saiba-mais">Saiba mais</a></li>
+          </ul>
+        </li>
     </ul>
     <div class="nav-acao">
       <button class="tema-btn" type="button" aria-label="Mudar para o modo claro" aria-pressed="false"><svg class="sol" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.9"/><path d="M12 2.6v2.2M12 19.2v2.2M21.4 12h-2.2M4.8 12H2.6M18.6 5.4l-1.6 1.6M7 17l-1.6 1.6M18.6 18.6L17 17M7 7 5.4 5.4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><svg class="lua" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.5 14.2A8.6 8.6 0 0 1 9.8 3.5a8.6 8.6 0 1 0 10.7 10.7Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg></button>
@@ -149,13 +166,29 @@ a.sala{ color:var(--accent-hi); font-size:13px; word-break:break-all }
 <div class="nav-painel" id="navPainel" role="dialog" aria-modal="true" aria-label="Menu de navegação">
     <ul>
       <li><a href="/">Página inicial</a></li>
-      <li><a href="/como-funciona.html">Como Funciona</a></li>
-      <li><a href="/#estruturas">Modalidades</a></li>
       <li><a href="/#calculadora">Simulador</a></li>
-      <li><a href="/exterior.html">Exterior</a></li>
-      <li><a href="/#duvidas">Dúvidas</a></li>
+      <li class="nav-drop">
+        <button type="button" class="nav-drop-btn" aria-expanded="false">Nosso Produto
+          <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="nav-drop-menu">
+          <li><a href="/como-funciona.html">Como Funciona</a></li>
+          <li><a href="/#diferencial-astro">Diferencial da Astro</a></li>
+          <li><a href="/#estruturas">Modalidades</a></li>
+          <li><a href="/exterior.html">Brasileiros no Exterior</a></li>
+        </ul>
+      </li>
       <li><a href="/seguranca.html">Segurança e privacidade</a></li>
-      <li><a href="/#onde-estamos">Atendimento</a></li>
+      <li class="nav-drop">
+        <button type="button" class="nav-drop-btn" aria-expanded="false">Atendimento
+          <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="nav-drop-menu">
+          <li><a href="/#duvidas">Dúvidas</a></li>
+          <li><a href="/#onde-estamos">Fale com a gente</a></li>
+          <li><a href="/#saiba-mais">Saiba mais</a></li>
+        </ul>
+      </li>
     </ul>
     <div class="tema-linha">
       <span class="rotulo">Modo escuro</span>
@@ -430,7 +463,7 @@ a.sala{ color:var(--accent-hi); font-size:13px; word-break:break-all }
 <script>
 document.addEventListener('DOMContentLoaded', function(){
   if (!window.AstroNav) return;
-  AstroNav.initMenu(); AstroNav.initRolagem(); AstroNav.initTema();
+  AstroNav.initMenu(); AstroNav.initDropdowns(); AstroNav.initRolagem(); AstroNav.initTema();
 });
 </script>
 </body>
