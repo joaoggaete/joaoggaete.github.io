@@ -149,8 +149,14 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-nav { background: #13254E; border-bottom: 1px solid rgba(30, 58, 115, 0.14); position: sticky; top: 0; z-index: 100; }
-.nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 25px 60px; max-width: 1700px; margin: 0 auto; }
+/* nav{...} e .nav-inner{...} que existiam aqui eram o design original
+   desta página (fundo dourado/azul sólido, antes do nav.css compartilhado
+   existir). .nav-inner{display:flex} tinha a mesma especificidade do
+   .nav-inner{display:grid} do nav.css e vinha depois na cascata — ganhava
+   sem precisar de !important, e é isso que fazia o painel "Nosso Produto"
+   flutuar por baixo do menu de ações e travar o clique no dropdown. O
+   nav.css já define tudo que essas duas regras definiam (fundo, sticky,
+   z-index, layout, padding, largura). */
 
 .nav-logo { 
   height: 112px; 
@@ -940,7 +946,6 @@ html { color-scheme: light only; }
   display: flex; justify-content: space-between;
   font-family: Arial, sans-serif; font-size:11px; color: #5A76A6; margin-bottom: 22px;
 }
-.calc-comparativo { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
 .calc-box {
   border-radius:var(--r); padding: 16px 14px; text-align: center;
   border: 1px solid rgba(19,37,78,.12);
@@ -1138,22 +1143,12 @@ html { color-scheme: light only; }
   .hero-sub { margin-bottom: 0 !important; }
   .calc { margin-top: 22px !important; }
 
-  /* cabeçalho: logo menor e menu distribuído */
-  .nav-inner {
-    display: flex !important; align-items: center !important;
-    justify-content: space-between !important; gap: 28px !important;
-    padding-top: 16px !important; padding-bottom: 16px !important;
-  }
-  .nav-logo { height: 62px !important; width: auto !important; flex: 0 0 auto; }
-  .nav-links {
-    display: flex !important; align-items: center !important;
-    gap: 30px !important; margin: 0 !important; flex: 0 1 auto;
-  }
-  .nav-cta { flex: 0 0 auto; }
-}
-@media (min-width: 1600px) {
-  .nav-logo { height: 68px !important; }
-  .nav-links { gap: 38px !important; }
+  /* O bloco que existia aqui forçava .nav-inner pra display:flex!important
+     com seu próprio gap/padding, competindo com o grid do nav.css (que já
+     resolve isso, inclusive a faixa apertada de 1025-1400px). Como usava
+     !important, ganhava da cascata mesmo sem ter mais especificidade —
+     e é isso que fazia o painel "Nosso Produto" ficar embaixo do menu de
+     ações (busca/tema/CTA), travando o clique no dropdown. */
 }
 
 @media (min-width: 1025px) {
@@ -1551,8 +1546,11 @@ footer { background: #020509 !important; }
   .stats-bar .stat-label { color: rgba(10,20,40,.78) !important; }
 }
 
-nav .nav-links { display:flex !important; gap:34px !important; flex-wrap:nowrap !important; }
-nav .nav-links li { white-space:nowrap; }
+/* "nav .nav-links{display:flex!important}" que existia aqui forçava os
+   links do menu a aparecer em QUALQUER largura, inclusive no celular —
+   o !important ganhava até da regra de esconder o menu em favor do
+   hambúrguer (nav.css, @media max-width:1024px), deixando os dois
+   visíveis ao mesmo tempo abaixo de 1024px. */
 nav .nav-links a { padding:6px 2px; }
 @media (max-width:1200px){ nav .nav-links{ gap:22px !important; } nav .nav-cta{ padding:13px 18px !important; font-size:12.5px !important; } }
 
@@ -1604,18 +1602,11 @@ nav .nav-links a { padding:6px 2px; }
   .atend-mapa iframe { height:220px !important; }
 }
 
-/* ===== MENU: hambúrguer antes de apertar ===== */
-@media (max-width: 1319px){
-  .nav-links { display: none !important; }
-  .nav-burger { display: block !important; width:44px !important; height:44px !important;
-                background: transparent !important; }
-  .nav-inner { justify-content: space-between !important; }
-}
-@media (min-width: 1320px){
-  .nav-links { display:flex !important; gap:30px !important; }
-  .nav-burger { display: none !important; }
-}
-@media (max-width: 520px){ .nav-cta { display:none !important; } }
+/* O corte pra menu hambúrguer agora é o mesmo em todo o site (1024px,
+   definido no nav.css compartilhado) — esta página tinha seu próprio corte
+   em 1319/1320px, com !important, que brigava com o nav.css e deixava o
+   dropdown "Nosso Produto"/"Atendimento" inacessível em telas de 1025 a
+   1319px (o botão existia, mas .nav-links ficava display:none). */
 
 /* ===== COLUNAS DA PRIMEIRA DOBRA COM MESMA ALTURA ===== */
 @media (min-width: 1025px){
@@ -1627,19 +1618,10 @@ nav .nav-links a { padding:6px 2px; }
                              position:static !important; }
 }
 
-@media (max-width:1319px){ nav .nav-links{ display:none !important; } }
 /* topo dos cartões alinhado */
 @media (min-width:1025px){
   .hero-grid > .hero-left > .calc { margin-top:0 !important; }
   .hero-grid > .hero-right > .form-card { margin-top:0 !important; }
-}
-
-/* cabeçalho: logo à esquerda, hambúrguer à direita, CTA junto dele */
-@media (max-width:1319px){
-  .nav-inner { display:flex !important; align-items:center !important;
-               justify-content:space-between !important; gap:14px !important; }
-  .nav-inner > .nav-cta { margin-left:auto; order:2; }
-  .nav-inner > .nav-burger { order:3; }
 }
 
 /* ===== TEXTO DOS BLOCOS: tudo à esquerda, alturas iguais ===== */
@@ -1986,77 +1968,16 @@ body::before{
    menu fora de alcance depois da primeira tela. */
 body > *:not(nav){ position:relative; z-index:1 }
 
-/* ---------- barra ---------- */
-nav{
-  background:rgba(3,6,15,.9) !important;
-  backdrop-filter:blur(16px) saturate(1.4); -webkit-backdrop-filter:blur(16px) saturate(1.4);
-  border-bottom:1px solid var(--line) !important;
-  height:74px; display:flex; align-items:center;
-}
-nav .nav-inner{
-  display:grid !important; grid-template-columns:1fr auto 1fr;
-  align-items:center; gap:24px;
-  width:min(1180px, calc(100% - 44px)); margin-inline:auto;
-}
-.nav-logo{ height:44px !important; width:auto; display:inline-flex; align-items:center; gap:11px; justify-self:start }
-/* Componente novo (ícone 3D + palavra separada) — ver o mesmo bloco em
-   index.html, comentado lá. Faltava inteiro aqui: esta página ainda usava
-   o logotipo antigo (astro-logo.webp, um arquivo só, ícone+palavra juntos). */
-.nav-cracha{ position:relative; flex:none; height:86%; aspect-ratio:400 / 252; }
-.nav-marca{ position:absolute; inset:0; width:100%; height:100%; display:block; color:#0B2149; visibility:hidden; }
-.nav-gira{
-  position:absolute; inset:0;
-  /* prata por padrão: o nav DESTA página é escuro por padrão (diferente
-     do index.html, que inverte e é sempre branco) — prata é o que aparece
-     contra fundo quase preto. */
-  background-image:url('img/marca-estatica-prata.webp');
-  background-repeat:no-repeat; background-size:contain; background-position:center;
-}
-.nav-palavra{ height:66%; width:auto; display:block; flex:none }
-/* Diferente do index.html: aqui só o NAV troca de cor com o tema (branco
-   no claro, preto no escuro) — o RODAPÉ fica escuro nos dois temas (ver
-   as regras de footer mais abaixo no arquivo). Por isso a troca de peça e
-   o filtro da palavra são escopados a "nav .nav-gira"/"nav .nav-palavra",
-   não à classe pura — senão o rodapé também seria afetado e a palavra
-   sumiria (marinho sobre fundo escuro). */
-:root[data-tema="claro"] nav .nav-gira{ background-image:url('img/marca-estatica-navy.webp') }
-:root[data-tema="claro"] nav .nav-palavra{ filter:brightness(0) saturate(100%) invert(6%) sepia(30%) saturate(1800%) hue-rotate(186deg) }
-@media (prefers-color-scheme: light){
-  :root:not([data-tema="escuro"]) nav .nav-gira{ background-image:url('img/marca-estatica-navy.webp') }
-  :root:not([data-tema="escuro"]) nav .nav-palavra{ filter:brightness(0) saturate(100%) invert(6%) sepia(30%) saturate(1800%) hue-rotate(186deg) }
-}
-.nav-links{ justify-self:center; display:flex; gap:32px; list-style:none; margin:0 !important }
-.nav-links a{
-  font-family:var(--f-text) !important; font-size:14.5px !important; font-weight:600 !important;
-  color:#93A9C9 !important; text-transform:none !important; letter-spacing:-.005em !important;
-  padding:8px 0; position:relative;
-}
-.nav-links a:hover,.nav-links a.ativo{ color:#fff !important }
-.nav-cta{
-  grid-column:3; justify-self:end; position:relative; overflow:hidden;
-  font-family:var(--f-text) !important; font-size:14px !important; font-weight:700 !important;
-  text-transform:none !important; letter-spacing:-.012em !important;
-  padding:12px 24px !important; border-radius:100px !important;
-  color:#fff !important; border:none !important;
-  background:linear-gradient(150deg, rgba(127,212,255,.13), rgba(255,255,255,.04)) !important;
-  backdrop-filter:blur(22px) saturate(190%); -webkit-backdrop-filter:blur(22px) saturate(190%);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.24), 0 6px 22px rgba(2,5,12,.35) !important;
-}
-.nav-cta::before{
-  content:""; position:absolute; inset:0; border-radius:inherit; padding:1.2px; pointer-events:none;
-  background:linear-gradient(180deg, rgba(255,255,255,.5) 0%, rgba(255,255,255,.14) 22%,
-    rgba(255,255,255,0) 46%, rgba(255,255,255,0) 58%, rgba(127,212,255,.2) 80%, rgba(127,212,255,.48) 100%);
-  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite:xor; mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite:exclude;
-}
-.nav-cta:hover{ transform:translateY(-1px); background:linear-gradient(150deg, rgba(127,212,255,.24), rgba(255,255,255,.07)) !important }
-.nav-burger{ grid-column:3; justify-self:end; background:rgba(255,255,255,.05) !important; border:1px solid rgba(255,255,255,.13) !important; border-radius:var(--r)!important }
-.nav-burger span{ background:var(--text) !important }
-.nav-painel{ background:rgba(3,6,15,.97) !important }
-.nav-painel ul a{ font-family:var(--f-display) !important; color:var(--text) !important; border-bottom:1px solid var(--line) !important }
-.nav-painel-cta{ background:linear-gradient(135deg,var(--accent-hi),var(--accent)) !important; color:#04101F !important; border:none !important }
-.nav-painel-wa{ background:linear-gradient(150deg,#2470DE,#0A3A96) !important; color:#fff !important; border:none !important }
+/* O bloco que existia aqui era uma cópia local e completa do sistema de
+   nav (nav/.nav-inner/.nav-logo/.nav-cracha/.nav-marca/.nav-gira/
+   .nav-palavra/.nav-links/.nav-cta/.nav-burger/.nav-painel), com
+   especificidade maior que a do nav.css (seletores tipo "nav .nav-inner")
+   e até largura fixa em pixels (min(1180px,...) em vez de var(--larg)).
+   É essa cópia que ganhava da cascata e fazia o grid do nav.css nunca
+   valer nesta página — inclusive o grid-template-columns mais seguro
+   que evita o menu de ações passar por cima do "Nosso Produto"/
+   "Atendimento". O nav.css já cobre tudo isso (visual quase idêntico,
+   incluindo o mesmo botão de CTA com vidro e o painel mobile). */
 
 /* ---------- tipografia de seção ---------- */
 .eyebrow{
@@ -4024,24 +3945,12 @@ section:last-of-type, .cta-solo:last-of-type{ padding-bottom:134px !important }
 }
 
 
-/* ===== barra do topo entre 1025px e 1319px =====
-   Nessa faixa o hamburguer aparece e os links somem, mas .nav-acao (linha
-   ~3890) e .nav-burger (linha ~2013) estavam os DOIS em grid-column:3.
-   Dois itens na mesma coluna viram duas fileiras: 132px de conteudo dentro
-   de uma barra de 74px. Por isso a logo saia cortada por cima e o
-   hamburguer aparecia solto por baixo da barra.
-   Cada um na sua coluna resolve, e tudo volta para uma fileira so. */
-@media (min-width:1025px) and (max-width:1319px){
-  nav .nav-inner{
-    grid-template-columns:1fr auto auto !important;
-    padding-top:12px !important; padding-bottom:12px !important;
-  }
-  nav .nav-inner > .nav-acao{ grid-column:2 !important; grid-row:1 !important }
-  nav .nav-inner > .nav-burger{
-    grid-column:3 !important; grid-row:1 !important; justify-self:end !important;
-  }
-}
-
+/* O bloco que existia aqui forçava um grid-template-columns diferente do
+   nav.css para 1025-1319px, pra separar .nav-acao e .nav-burger quando os
+   dois caíam na mesma coluna — um bug de quando o hambúrguer aparecia
+   nessa faixa. Como o corte pro hambúrguer agora é 1024px (nav.css), o
+   hambúrguer nunca aparece nessa faixa e o bloco só sobrava, empurrando
+   .nav-acao pra cima de .nav-links e travando o clique no dropdown. */
 
 /* ==========================================================================
    AVISO DE COOKIES
@@ -4119,7 +4028,7 @@ html.consent-aberto .mobile-cta:not(.recolhido){
   display:inline-block; padding:4px 2px; min-height:24px; line-height:16px;
 }
 </style>
-<link rel="stylesheet" href="/busca-global.css">
+<link rel="stylesheet" href="/nav.css">
 <style>
 html{scroll-padding-top:108px}
 section[id]{scroll-margin-top:108px}
@@ -4129,6 +4038,7 @@ nav{z-index:300!important}
 @media(max-width:1024px){nav .nav-inner{display:grid!important;grid-template-columns:auto 1fr auto!important}.nav-acao{display:flex!important;grid-column:2!important;justify-self:end!important}.nav-acao .nav-cta{display:none!important}.nav-burger{grid-column:3!important}.nav-logo{grid-column:1!important}}
 </style>
 <link rel="stylesheet" href="/mobile-compat.css">
+<script src="/nav.js" defer></script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -4158,15 +4068,46 @@ nav{z-index:300!important}
       <img class="nav-palavra" src="img/astro-palavra.webp" width="612" height="250" decoding="async" alt="Astro Consórcios">
     </span>
     <ul class="nav-links">
-        <li><a href="/como-funciona.html" aria-current="page" class="ativo">Como Funciona</a></li>
-        <li><a href="/exterior.html">Brasileiros no Exterior</a></li>
-        <li><a href="/#duvidas">Dúvidas</a></li>
-        <li><a href="/#onde-estamos">Atendimento</a></li>
+        <li><a href="/#calculadora">Simulador</a></li>
+        <li class="nav-drop">
+          <button type="button" class="nav-drop-btn" aria-expanded="false">Nosso Produto
+            <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul class="nav-drop-menu">
+            <li><a href="/como-funciona.html" aria-current="page" class="ativo">Como Funciona</a></li>
+            <li><a href="#planejamento">Como a Astro trabalha seu caso</a></li>
+            <li><a href="#prazos">Simulador de prazo</a></li>
+            <li><a href="#como-fechar">Como fechar o contrato</a></li>
+            <li><a href="/#diferencial-astro">Diferencial da Astro</a></li>
+            <li><a href="/#estruturas">Modalidades</a></li>
+            <li><a href="/exterior.html">Brasileiros no Exterior</a></li>
+          </ul>
+        </li>
+        <li><a href="/seguranca.html">Segurança e privacidade</a></li>
+        <li class="nav-drop">
+          <button type="button" class="nav-drop-btn" aria-expanded="false">Atendimento
+            <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul class="nav-drop-menu">
+            <li><a href="/#duvidas">Dúvidas</a></li>
+            <li><a href="/#onde-estamos">Fale com a gente</a></li>
+            <li><a href="/#saiba-mais">Saiba mais</a></li>
+          </ul>
+        </li>
     </ul>
     <div class="nav-acao">
-      <div class="busca-global" data-busca-global>
-        <button class="busca-global-btn" type="button" aria-label="Buscar no site" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.9"/><path d="m20.5 20.5-4-4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></button>
-        <div class="busca-global-painel" role="search" hidden><div class="busca-global-campo"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.9"/><path d="m20.5 20.5-4-4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><input type="search" placeholder="Buscar no site" aria-label="Buscar no site" autocomplete="off"></div><ul class="busca-global-resultados"></ul><p class="busca-global-vazio" hidden>Nenhum resultado encontrado.</p></div>
+      <div class="busca-caixa">
+        <button class="busca-btn" id="buscaBtn" type="button" aria-label="Buscar no site" aria-expanded="false" aria-controls="buscaPainel">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.9"/><path d="m20.5 20.5-4-4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+        </button>
+        <div class="busca-painel" id="buscaPainel" role="search" hidden>
+          <div class="busca-campo">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.9"/><path d="m20.5 20.5-4-4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+            <input type="search" id="buscaInput" placeholder="Buscar no site" aria-label="Buscar no site" autocomplete="off">
+          </div>
+          <ul class="busca-resultados" id="buscaResultados"></ul>
+          <p class="busca-vazio" id="buscaVazio" hidden>Nenhum resultado encontrado.</p>
+        </div>
       </div>
       <button class="tema-btn" type="button" aria-label="Mudar para o modo claro" aria-pressed="false"><svg class="sol" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.9"/><path d="M12 2.6v2.2M12 19.2v2.2M21.4 12h-2.2M4.8 12H2.6M18.6 5.4l-1.6 1.6M7 17l-1.6 1.6M18.6 18.6L17 17M7 7 5.4 5.4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><svg class="lua" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.5 14.2A8.6 8.6 0 0 1 9.8 3.5a8.6 8.6 0 1 0 10.7 10.7Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg></button>
       <a href="/#form-simulador" class="nav-cta">Planejar minha conquista</a>
@@ -4184,14 +4125,32 @@ nav{z-index:300!important}
 <div class="nav-painel" id="navPainel" role="dialog" aria-modal="true" aria-label="Menu de navegação">
     <ul>
       <li><a href="/">Página inicial</a></li>
-      <li><a href="/#verdade">Como Funciona</a></li>
-      <li><a href="/#estruturas">Modalidades</a></li>
-      
-      
-      <li><a href="/#video">Vídeo</a></li>
-        <li><a href="/exterior.html">Exterior</a></li>
-        <li><a href="/#duvidas">Dúvidas</a></li>
-      <li><a href="/#onde-estamos">Atendimento</a></li>
+      <li><a href="/#calculadora">Simulador</a></li>
+      <li class="nav-drop">
+        <button type="button" class="nav-drop-btn" aria-expanded="false">Nosso Produto
+          <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="nav-drop-menu">
+          <li><a href="/como-funciona.html" aria-current="page" class="ativo">Como Funciona</a></li>
+          <li><a href="#planejamento">Como a Astro trabalha seu caso</a></li>
+          <li><a href="#prazos">Simulador de prazo</a></li>
+          <li><a href="#como-fechar">Como fechar o contrato</a></li>
+          <li><a href="/#diferencial-astro">Diferencial da Astro</a></li>
+          <li><a href="/#estruturas">Modalidades</a></li>
+          <li><a href="/exterior.html">Brasileiros no Exterior</a></li>
+        </ul>
+      </li>
+      <li><a href="/seguranca.html">Segurança e privacidade</a></li>
+      <li class="nav-drop">
+        <button type="button" class="nav-drop-btn" aria-expanded="false">Atendimento
+          <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="nav-drop-menu">
+          <li><a href="/#duvidas">Dúvidas</a></li>
+          <li><a href="/#onde-estamos">Fale com a gente</a></li>
+          <li><a href="/#saiba-mais">Saiba mais</a></li>
+        </ul>
+      </li>
     </ul>
     <a href="/#form-simulador" class="nav-painel-cta">Ver quanto vou economizar</a>
     <a href="https://wa.me/554599999999?text=Ol%C3%A1!%20Quero%20come%C3%A7ar%20meu%20planejamento%20com%20a%20Astro." class="nav-painel-wa" target="_blank" rel="noopener noreferrer">Começar meu planejamento</a>
@@ -4486,6 +4445,12 @@ document.addEventListener("DOMContentLoaded", function() {
   document.addEventListener('keydown', function(e){ if(e.key==='Escape') fecha(); });
   window.addEventListener('resize', function(){ if(window.innerWidth>1024) fecha(); });
 })();
+</script>
+<script>
+/* menu e tema já têm script próprio nesta página (acima); só a busca
+   faltava — o nav.js compartilhado cuida dela. DOMContentLoaded porque o
+   nav.js (defer, no <head>) só termina de rodar depois deste trecho. */
+document.addEventListener('DOMContentLoaded', function(){ if (window.AstroNav) { AstroNav.initBusca(); AstroNav.initDropdowns(); } });
 </script>
 
 <script>
@@ -4810,6 +4775,5 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 })();
 </script>
-<script src="/busca-global.js" defer></script>
 </body>
 </html>

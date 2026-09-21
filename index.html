@@ -120,6 +120,11 @@ fbq('track', 'PageView');
   document.documentElement.style.colorScheme = claro ? "light" : "dark";
 }catch(e){}})();
 </script>
+<!-- só as classes novas do dropdown do menu (.nav-drop etc.) vêm daqui — o
+     resto do nav já está na folha própria abaixo, que carrega depois e por
+     isso continua valendo onde as duas se sobrepõem (--nav-h, --larg
+     responsivos inclusive). Antes desse <style>, de propósito. -->
+<link rel="stylesheet" href="/nav.css">
 <style>
 /* ==========================================================================
    ASTRO CONSÓRCIOS — sistema visual
@@ -6512,12 +6517,10 @@ nav .nav-acao{justify-self:end;flex-shrink:0}
  .hero-acao{margin-top:4px;align-items:center}
  .hero-acao .hero-microcopy{justify-content:center}
 }
-@media(max-width:1399px){
- nav .nav-inner{grid-template-columns:auto 1fr auto;gap:14px}
- nav .nav-links{display:none}
- nav .nav-acao{grid-column:2;grid-row:1}
- nav .nav-burger{display:flex;grid-column:3;grid-row:1}
-}
+/* O corte pra menu hambúrguer agora é o mesmo em todo o site (1024px, ver
+   bloco @media(max-width:1024px) acima) — este bloco escondia .nav-links a
+   partir de 1399px, bem antes do corte oficial, e deixava o dropdown
+   "Nosso Produto"/"Atendimento" inacessível em telas de 1025 a 1399px. */
 @media(max-width:760px){
  .hero-lado-video{width:100%;max-width:none}
  .video-pilha{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
@@ -6645,6 +6648,7 @@ nav{z-index:300!important}
 }
 </style>
 <link rel="stylesheet" href="/mobile-compat.css">
+<script src="/nav.js" defer></script>
 </head>
 <body>
 
@@ -6894,11 +6898,29 @@ nav{z-index:300!important}
       <img class="nav-palavra" src="img/astro-palavra.webp" width="612" height="250" decoding="async" alt="Astro Consórcios">
     </span>
     <ul class="nav-links">
-      <li><a href="/como-funciona.html">Como Funciona</a></li>
-      <li><a href="/exterior.html">Brasileiros no Exterior</a></li>
-      <li><a href="#duvidas">Dúvidas</a></li>
+      <li><a href="#calculadora">Simulador</a></li>
+      <li class="nav-drop">
+        <button type="button" class="nav-drop-btn" aria-expanded="false">Nosso Produto
+          <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="nav-drop-menu">
+          <li><a href="/como-funciona.html">Como Funciona</a></li>
+          <li><a href="#diferencial-astro">Diferencial da Astro</a></li>
+          <li><a href="#estruturas">Modalidades</a></li>
+          <li><a href="/exterior.html">Brasileiros no Exterior</a></li>
+        </ul>
+      </li>
       <li><a href="/seguranca.html">Segurança e privacidade</a></li>
-      <li><a href="#onde-estamos">Atendimento</a></li>
+      <li class="nav-drop">
+        <button type="button" class="nav-drop-btn" aria-expanded="false">Atendimento
+          <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="nav-drop-menu">
+          <li><a href="#duvidas">Dúvidas</a></li>
+          <li><a href="#onde-estamos">Fale com a gente</a></li>
+          <li><a href="#saiba-mais">Saiba mais</a></li>
+        </ul>
+      </li>
     </ul>
     <div class="nav-acao">
       <div class="busca-caixa">
@@ -6932,14 +6954,30 @@ nav{z-index:300!important}
      mente para o leitor de tela. -->
 <div class="nav-painel" id="navPainel" role="dialog" aria-label="Menu de navegação">
     <ul>
-      <li><a href="#main">Página inicial</a></li>
-      <li><a href="#verdade">Como Funciona</a></li>
-      <li><a href="#estruturas">Modalidades</a></li>
-      <li><a href="#simular">Vídeo</a></li>
-      <li><a href="/exterior.html">Exterior</a></li>
-      <li><a href="#duvidas">Dúvidas</a></li>
+      <li><a href="#main" aria-current="page" class="ativo">Página inicial</a></li>
+      <li><a href="#calculadora">Simulador</a></li>
+      <li class="nav-drop">
+        <button type="button" class="nav-drop-btn" aria-expanded="false">Nosso Produto
+          <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="nav-drop-menu">
+          <li><a href="/como-funciona.html">Como Funciona</a></li>
+          <li><a href="#diferencial-astro">Diferencial da Astro</a></li>
+          <li><a href="#estruturas">Modalidades</a></li>
+          <li><a href="/exterior.html">Brasileiros no Exterior</a></li>
+        </ul>
+      </li>
       <li><a href="/seguranca.html">Segurança e privacidade</a></li>
-      <li><a href="#onde-estamos">Atendimento</a></li>
+      <li class="nav-drop">
+        <button type="button" class="nav-drop-btn" aria-expanded="false">Atendimento
+          <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="nav-drop-menu">
+          <li><a href="#duvidas">Dúvidas</a></li>
+          <li><a href="#onde-estamos">Fale com a gente</a></li>
+          <li><a href="#saiba-mais">Saiba mais</a></li>
+        </ul>
+      </li>
     </ul>
     <a href="#calculadora" class="nav-painel-cta">Ver o custo total</a>
     <a href="https://wa.me/554599999999?text=Ol%C3%A1!%20Quero%20come%C3%A7ar%20meu%20planejamento%20com%20a%20Astro." class="nav-painel-wa" target="_blank" rel="noopener noreferrer">Começar meu planejamento</a>
@@ -9537,10 +9575,12 @@ document.addEventListener('DOMContentLoaded', function () {
       { tit:'Segurança e privacidade', cat:'Página', url:'/seguranca.html' },
       { tit:'Como o consórcio realmente funciona', cat:'Seção', url:'#verdade' },
       { tit:'Modalidades: imóveis, veículos e maquinário', cat:'Seção', url:'#estruturas' },
+      { tit:'O que muda quando a Astro acompanha', cat:'Seção', url:'#diferencial-astro' },
       { tit:'Atendimento: WhatsApp, vídeo ou presencial', cat:'Seção', url:'#onde-estamos' },
+      { tit:'Três leituras que valem o seu tempo', cat:'Seção', url:'#saiba-mais' },
       { tit:'Simule seu crédito', cat:'Seção', url:'#form-simulador' },
       { tit:'Simulador de parcela mês a mês', cat:'Seção', url:'#calculadora' },
-      { tit:'Um vídeo pra cada forma de usar', cat:'Seção', url:'#estruturas' },
+      { tit:'Um vídeo pra cada forma de usar', cat:'Seção', url:'#lequeCarrossel' },
       { tit:'O que é consórcio e como funciona', cat:'Vídeo', url:'#videoPlay' },
       { tit:'Diferencial da Astro', cat:'Vídeo', url:'#videoPlayDiferencial' },
       { tit:'Atendimento do seu jeito', cat:'Vídeo', url:'#videoPlayAtendimento' },
@@ -9681,6 +9721,13 @@ document.addEventListener('DOMContentLoaded', function () {
       b.classList.remove('aberto'); p.classList.remove('aberto');
       document.body.classList.remove('menu-aberto');
       b.setAttribute('aria-expanded','false'); b.setAttribute('aria-label','Abrir menu');
+      /* reabrir o menu não deve mostrar um acordeão que ficou aberto da
+         última vez */
+      p.querySelectorAll('.nav-drop.aberto').forEach(function(d){
+        d.classList.remove('aberto');
+        var db = d.querySelector('.nav-drop-btn');
+        if (db) db.setAttribute('aria-expanded', 'false');
+      });
     }
     function abre(){
       /* a classe entra ANTES da medida: e ela que torna a barra fixa, e medir
@@ -9714,6 +9761,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     window.addEventListener('resize', function(){ if (window.innerWidth > 1024) fecha(); });
   })();
+
+  /* menu, busca e tema já têm script próprio aqui em cima (testado); só o
+     submenu ("Nosso Produto", "Atendimento") é novo e vem do nav.js
+     compartilhado — carregado com defer, por isso só depois do DOM pronto. */
+  document.addEventListener('DOMContentLoaded', function(){ if (window.AstroNav) AstroNav.initDropdowns(); });
 
   /* barra de progresso e nav sólida, a 10Hz e só na mudança */
   var Rolagem = (function(){
