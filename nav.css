@@ -94,11 +94,29 @@ nav.solida{ background:rgba(3,6,15,.9); border-bottom-color:var(--line) }
 }
 .nav-links .nav-drop-menu a{
   display:block; padding:9px 12px; border-radius:10px; white-space:nowrap;
-  font-size:14px; font-weight:600; color:var(--text-2); text-decoration:none;
+  font-size:14px; font-weight:600; text-decoration:none;
   transition:background-color .2s var(--ease), color .2s var(--ease);
 }
-.nav-links .nav-drop-menu a:hover{ background:rgba(127,212,255,.1); color:var(--text) }
-.nav-links .nav-drop-menu a[aria-current="page"]{ color:var(--accent-hi) }
+.nav-links .nav-drop-menu a:hover{ background:rgba(127,212,255,.1) }
+/* Cor fixa, não var(--text-2)/var(--text): o fundo deste painel é sempre
+   escuro (linha acima), em qualquer tema — é um "cartão de vidro" que não
+   muda com o tema da página, do mesmo jeito que o .nav-painel do celular
+   (ver o :root[data-tema="claro"] .nav-painel logo abaixo). Usar as
+   variáveis de texto do tema fazia essas letras ficarem escuras no tema
+   claro (e em privacidade.html/404.html, que são sempre claras) — texto
+   escuro num fundo que continua escuro, quase ilegível.
+   Seletor bem encorpado (nav + .nav-links + .nav-drop.aberto +
+   .nav-drop-menu + a) de propósito: páginas antigas cravam regras tipo
+   ":root[data-tema=claro] .nav-links a, :root[data-tema=claro] .nav-links
+   li a{color:...!important}", que somando ":root"+"[data-tema]" como dois
+   seletores de classe já empata ou passa a especificidade de um seletor
+   mais curto — e como os dois lados têm !important, quem vem depois no
+   HTML ganha o empate (a folha da própria página, carregada depois do
+   nav.css). Só ganhar sempre, sem depender da sorte da ordem, precisa de
+   mais peso mesmo. */
+nav .nav-links .nav-drop.aberto .nav-drop-menu a{ color:#93A9C9 !important }
+nav .nav-links .nav-drop.aberto .nav-drop-menu a:hover{ color:#F2F6FC !important }
+nav .nav-links .nav-drop.aberto .nav-drop-menu a[aria-current="page"]{ color:#7FD4FF !important }
 
 /* mobile: o mesmo grupo, só que expande dentro do próprio menu */
 .nav-painel .nav-drop-btn{
