@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sorteio, lance embutido ou lance livre | Astro Consórcios</title>
+<title>Sorteio, lance fixo ou lance livre | Astro Consórcios</title>
 
 <!-- METATAGS DE SEO E PREVIEW DE COMPARTILHAMENTO (WHATSAPP) -->
-<meta name="description" content="As três formas de ser contemplado no consórcio: sorteio, lance embutido e lance livre. Entenda as diferenças e simule sua estratégia com as taxas reais.">
+<meta name="description" content="As três formas de ser contemplado no consórcio: sorteio, lance fixo e lance livre — e como o lance embutido pode pagar parte de qualquer um dos dois. Entenda as diferenças e simule sua estratégia com as taxas reais.">
 <meta property="og:title" content="Estratégia de lance | Astro Consórcios">
-<meta property="og:description" content="As três formas de ser contemplado no consórcio: sorteio, lance embutido e lance livre. Entenda as diferenças e simule sua estratégia com as taxas reais.">
+<meta property="og:description" content="As três formas de ser contemplado no consórcio: sorteio, lance fixo e lance livre — e como o lance embutido pode pagar parte de qualquer um dos dois. Entenda as diferenças e simule sua estratégia com as taxas reais.">
 <meta property="og:image" content="https://astroconsorcios.netlify.app/img/og-como-funciona.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -4398,7 +4398,7 @@ input[type=range]::-moz-range-thumb{
 <section class="pagina-capa">
   <div class="container">
     <div class="eyebrow" style="text-align:center;">Estratégia de lance</div>
-    <h1 class="section-title" style="margin-bottom:14px;">Sorteio, lance embutido ou <span>lance livre</span></h1>
+    <h1 class="section-title" style="margin-bottom:14px;">Sorteio, lance fixo ou <span>lance livre</span></h1>
     <p class="section-sub" style="text-align:center;max-width:740px;margin:0 auto;">
       Existem três formas de ser contemplado no consórcio. <span class="marca">Nenhuma garante uma data</span> — mas dá pra entender o efeito de cada uma e simular a sua.
     </p>
@@ -4419,14 +4419,16 @@ input[type=range]::-moz-range-thumb{
         <p>Todo participante do grupo concorre automaticamente, todo mês, sem custo nenhum além da parcela normal. É a forma mais simples — mas sem previsão de quando: pode sair logo no início ou só perto do fim do prazo.</p>
       </div>
       <div class="plan-item">
-        <h3>Lance embutido</h3>
-        <p>Você usa uma parte da sua própria carta de crédito — geralmente até 25% em automóvel e maquinário, e até 30% em imóvel, os tetos mais comuns entre administradoras — pra reforçar sua posição na disputa de lance. Não tira dinheiro do seu bolso, mas reduz o crédito que sobra pra usar.</p>
+        <h3>Lance fixo</h3>
+        <p>A administradora define um percentual único pra todo o grupo naquele mês. Quem oferece esse fixo entra num sorteio de desempate — pagar mais com embutido ou mais em dinheiro não muda sua chance, só quanto sai do seu bolso.</p>
       </div>
       <div class="plan-item">
         <h3>Lance livre</h3>
-        <p>Dinheiro do seu próprio bolso, somado ao embutido, pra pesar ainda mais na disputa — funciona como um leilão: quem oferece mais tem mais chance. Aumenta a competitividade, mas descapitaliza — nem sempre compensa.</p>
+        <p>Funciona como um leilão: quem oferece o percentual mais alto naquele mês é quem é contemplado. Aumenta a competitividade, mas descapitaliza — nem sempre compensa.</p>
       </div>
     </div>
+
+    <p class="calc-nota" style="text-align:center;max-width:720px;margin:28px auto 0;">Em qualquer um dos dois lances, o <strong>lance embutido</strong> — parte da sua própria carta de crédito, até um teto que varia por modalidade e administradora — pode cobrir uma fatia do que você oferece. O restante é sempre pago em dinheiro.</p>
   </div>
 </section>
 
@@ -4464,7 +4466,7 @@ input[type=range]::-moz-range-thumb{
             <span>Modalidade da carta</span>
             <small>Muda as taxas usadas na conta</small>
           </div>
-          <div class="calc-modo calc-modo-mini" role="group" aria-label="Modalidade usada na estratégia de lance">
+          <div class="calc-modo calc-modo-mini calc-modo-modalidade" role="group" aria-label="Modalidade usada na estratégia de lance">
             <button type="button" class="calc-modo-bt ativo" data-modomini="imovel" aria-pressed="true">Imóvel</button>
             <button type="button" class="calc-modo-bt" data-modomini="carro" aria-pressed="false">Automóvel</button>
             <button type="button" class="calc-modo-bt" data-modomini="maquinario" aria-pressed="false">Maquinário</button>
@@ -4479,24 +4481,33 @@ input[type=range]::-moz-range-thumb{
             <select class="calc-prazo-select" id="lancePrazoSelect" aria-label="Prazo da estratégia de lance"></select>
           </div>
 
-          <div class="calc-prazo calc-lance-embutido">
-            <div class="calc-prazo-cab">
-              <span>Lance embutido</span>
-              <small>Sai do seu próprio crédito, sem tirar do bolso — teto mais comum entre administradoras</small>
-            </div>
-            <div class="calc-prazo-opcoes" id="lanceEmbutidoGrupo" role="group" aria-label="Ativar lance embutido de 30%">
-              <button type="button" id="lanceEmbutidoToggle" class="ativo" aria-pressed="true">30% ligado</button>
-            </div>
+          <div class="calc-prazo-cab" style="margin-top:22px;">
+            <span>Mecânica do lance</span>
+            <small>Muda como você é contemplado, não como você paga</small>
+          </div>
+          <div class="calc-modo calc-modo-mini calc-modo-mecanica" role="group" aria-label="Mecânica do lance">
+            <button type="button" class="calc-modo-bt ativo" data-mecanica="fixo" aria-pressed="true">Lance fixo</button>
+            <button type="button" class="calc-modo-bt" data-mecanica="livre" aria-pressed="false">Lance livre</button>
           </div>
 
-          <div class="calc-prazo calc-lance-livre">
+          <div class="calc-prazo calc-lance-total">
             <div class="calc-prazo-cab">
-              <span>Lance livre (recurso próprio, além do embutido)</span>
-              <small>Dinheiro do seu bolso — pesa mais na disputa, mas descapitaliza</small>
+              <span id="lanceTotalRotulo">Lance fixo do seu grupo</span>
+              <small id="lanceTotalNota">Definido pela administradora — todo mundo desse grupo oferece o mesmo</small>
             </div>
-            <div class="calc-valor" id="lanceLivreTexto" style="font-size:clamp(21px,2.6vw,27px)">0%</div>
-            <input type="range" id="lanceLivreSlider" min="0" max="70" step="1" value="0" aria-label="Percentual de lance livre">
-            <div class="calc-escala"><span>0%</span><span id="lanceLivreMaxTxt">70%</span></div>
+            <div class="calc-valor" id="lanceTotalTexto" style="font-size:clamp(21px,2.6vw,27px)">25%</div>
+            <input type="range" id="lanceTotalSlider" min="0" max="50" step="1" value="25" aria-label="Percentual total do lance">
+            <div class="calc-escala"><span>0%</span><span id="lanceTotalMaxTxt">50%</span></div>
+          </div>
+
+          <div class="calc-prazo calc-lance-embutido">
+            <div class="calc-prazo-cab">
+              <span>Quanto disso é embutido</span>
+              <small id="lanceEmbutidoNota">Sai do seu próprio crédito, sem tirar do bolso — o resto você paga em dinheiro</small>
+            </div>
+            <div class="calc-valor" id="lanceEmbutidoTexto" style="font-size:clamp(21px,2.6vw,27px)">25%</div>
+            <input type="range" id="lanceEmbutidoSlider" min="0" max="25" step="1" value="25" aria-label="Percentual do lance pago com embutido">
+            <div class="calc-escala"><span>0%</span><span id="lanceEmbutidoMaxTxt">25%</span></div>
           </div>
         </div>
 
@@ -4519,10 +4530,10 @@ input[type=range]::-moz-range-thumb{
           </div>
 
           <div class="res-grade" id="lanceLivreResultado">
-            <div class="res-item"><span>Lance embutido</span><b id="lanceEmbutidoPctTxt">30%</b></div>
-            <div class="res-item"><span>Lance total ofertado</span><b id="lanceTotalPct">30%</b></div>
-            <div class="res-item"><span>Valor do lance livre</span><b id="lanceLivreValorR">R$ 0</b></div>
-            <div class="res-item"><span>Se esse dinheiro ficasse investido, renderia</span><b id="lanceLivreRendimento">R$ 0</b></div>
+            <div class="res-item"><span>Lance total ofertado</span><b id="lanceTotalPct">25%</b></div>
+            <div class="res-item"><span>Pago com embutido</span><b id="lanceEmbutidoPctTxt">25%</b></div>
+            <div class="res-item"><span>Pago em dinheiro</span><b id="lanceDinheiroValorR">R$ 0</b></div>
+            <div class="res-item"><span>Se esse dinheiro ficasse investido, renderia</span><b id="lanceDinheiroRendimento">R$ 0</b></div>
           </div>
 
           <div class="calc-lance-modo-ativo" id="lanceModoAtivo">
@@ -4562,7 +4573,8 @@ input[type=range]::-moz-range-thumb{
       <ul>
         <li>Sorteio e lance acontecem <strong>na mesma assembleia mensal</strong> — quem entra no grupo antes dela já concorre no mês seguinte</li>
         <li>O lance embutido <strong>reduz o crédito que você recebe</strong>, porque sai da sua própria carta — não existe "lance grátis"</li>
-        <li>O lance livre <strong>é dinheiro do seu bolso</strong>; descapitalizar só compensa quando a urgência da contemplação supera o custo de oportunidade</li>
+        <li>No lance fixo, pagar mais com embutido ou mais em dinheiro <strong>não muda sua chance</strong> no sorteio de desempate — só quanto sai do seu bolso</li>
+        <li>No lance livre, o que passar do teto do embutido <strong>precisa ser pago em dinheiro</strong>; descapitalizar só compensa quando a urgência da contemplação supera o custo de oportunidade</li>
         <li>O percentual máximo de lance embutido e as regras da assembleia <strong>variam por administradora e por grupo</strong></li>
         <li>Nenhuma simulação aqui é <strong>proposta ou garantia de contemplação</strong> — é uma estimativa pra ajudar na decisão</li>
       </ul>
@@ -5076,15 +5088,15 @@ document.addEventListener("DOMContentLoaded", function() {
   var txt = document.getElementById('calcValorTexto');
   var dica = document.getElementById('calcDica');
   var modalidade = 'imovel';
-  var embutidoAtivo = true;
-  /* teto do lance embutido varia por modalidade: padrão de mercado é
-     mais alto em imóvel do que em bens móveis (automóvel/moto e
-     maquinário, tratado aqui como bem móvel também). */
+  /* lance embutido não é uma estratégia própria — é forma de pagamento
+     (usa parte do próprio crédito) que cobre uma fatia do lance fixo OU
+     do lance livre, até um teto que varia por modalidade/administradora. */
+  var mecanica = 'fixo';
   var PCT_EMBUTIDO_MODALIDADE = { imovel: 30, carro: 25, maquinario: 25 };
-  var pctLivre = 0;
   var prazoEscolhido = window.AstroTaxas.perfis[modalidade].N;
   var mesSl = document.getElementById('lanceMes');
-  var livreSl = document.getElementById('lanceLivreSlider');
+  var totalSl = document.getElementById('lanceTotalSlider');
+  var embutidoSl = document.getElementById('lanceEmbutidoSlider');
 
   function comModalidade(modo, prazo, fn){
     var salvoModalidade = window.AstroTaxas.modalidade;
@@ -5143,15 +5155,44 @@ document.addEventListener("DOMContentLoaded", function() {
 
   function atualizar(){
     var PCT_EMBUTIDO_MAX = PCT_EMBUTIDO_MODALIDADE[modalidade];
-    var PCT_EMBUTIDO = embutidoAtivo ? PCT_EMBUTIDO_MAX : 0;
-    var toggleEmbutidoEl = document.getElementById('lanceEmbutidoToggle');
-    if (toggleEmbutidoEl) {
-      toggleEmbutidoEl.textContent = PCT_EMBUTIDO_MAX + '%' + (embutidoAtivo ? ' ligado' : ' desligado');
-      var grupoEmbutido = document.getElementById('lanceEmbutidoGrupo');
-      if (grupoEmbutido) grupoEmbutido.setAttribute('aria-label', 'Ativar lance embutido de ' + PCT_EMBUTIDO_MAX + '%');
+
+    /* teto do slider "total do lance": no fixo, é uma faixa ilustrativa
+       (o valor real é o que a administradora define pro grupo); no
+       livre, vai até 100% porque é um leilão sem teto. */
+    var tetoTotal = mecanica === 'fixo' ? 50 : 100;
+    if (totalSl) {
+      totalSl.max = tetoTotal;
+      if (Number(totalSl.value) > tetoTotal) totalSl.value = tetoTotal;
     }
+    var pctTotal = totalSl ? Number(totalSl.value) : 0;
+
+    /* o embutido é forma de pagamento, não mecânica: cobre uma fatia do
+       lance total (fixo ou livre) até o teto da modalidade — o resto é
+       sempre pago em dinheiro. */
+    var tetoEmbutido = Math.min(PCT_EMBUTIDO_MAX, pctTotal);
+    if (embutidoSl) {
+      embutidoSl.max = tetoEmbutido;
+      if (Number(embutidoSl.value) > tetoEmbutido) embutidoSl.value = tetoEmbutido;
+    }
+    var pctEmbutido = embutidoSl ? Number(embutidoSl.value) : 0;
+    var pctDinheiro = pctTotal - pctEmbutido;
+
+    põe('lanceTotalTexto', pctTotal + '%');
+    põe('lanceTotalMaxTxt', tetoTotal + '%');
+    põe('lanceEmbutidoTexto', pctEmbutido + '%');
+    põe('lanceEmbutidoMaxTxt', tetoEmbutido + '%');
+    var rotuloTotal = document.getElementById('lanceTotalRotulo');
+    var notaTotal = document.getElementById('lanceTotalNota');
+    if (mecanica === 'fixo') {
+      if (rotuloTotal) rotuloTotal.textContent = 'Lance fixo do seu grupo';
+      if (notaTotal) notaTotal.textContent = 'Definido pela administradora — todo mundo desse grupo oferece o mesmo';
+    } else {
+      if (rotuloTotal) rotuloTotal.textContent = 'Seu lance no leilão';
+      if (notaTotal) notaTotal.textContent = 'Quem oferecer o percentual mais alto nesse mês é contemplado';
+    }
+
     var creditoUtil = Math.max(1, Number(sl.value));
-    var carta = creditoUtil / (1 - PCT_EMBUTIDO / 100);
+    var carta = creditoUtil / (1 - pctEmbutido / 100);
     var valorEmbutido = carta - creditoUtil;
 
     var r = comModalidade(modalidade, prazoEscolhido, function(){
@@ -5168,57 +5209,41 @@ document.addEventListener("DOMContentLoaded", function() {
     põe('lanceCreditoUtil', brl(creditoUtil));
     põe('lancePrazo', r.d.N + ' meses');
 
-    /* o teto do lance livre depende do embutido: com embutido ligado, os
-       dois juntos não passam de 100% (o % embutido da modalidade + o
-       resto); desligado, o lance livre sozinho pode ir até 100%. */
-    if (livreSl) {
-      var tetoLivre = embutidoAtivo ? (100 - PCT_EMBUTIDO_MAX) : 100;
-      livreSl.max = tetoLivre;
-      if (Number(livreSl.value) > tetoLivre) livreSl.value = tetoLivre;
-      pctLivre = Number(livreSl.value);
-      põe('lanceLivreMaxTxt', tetoLivre + '%');
-      põe('lanceLivreTexto', pctLivre + '%');
-    }
-    põe('lanceEmbutidoPctTxt', PCT_EMBUTIDO + '%');
-    põe('lanceTotalPct', (PCT_EMBUTIDO + pctLivre) + '%');
+    põe('lanceEmbutidoPctTxt', pctEmbutido + '%');
+    põe('lanceTotalPct', pctTotal + '%');
 
     var modo;
-    if (!embutidoAtivo && pctLivre === 0) {
+    if (pctTotal === 0) {
       modo = {
         nome: 'Sorteio puro, sem lance',
         desc: 'Você não está usando lance nenhum: concorre só pelo sorteio mensal da assembleia, sem custo extra e sem previsão de quando sai.'
       };
-    } else if (embutidoAtivo && pctLivre === 0) {
+    } else if (mecanica === 'fixo') {
       modo = {
         nome: 'Lance fixo, com sorteio de desempate',
-        desc: 'Você entra no grupo de quem oferece os ' + PCT_EMBUTIDO_MAX + '% embutidos. Se mais gente oferecer o mesmo nesse mês do que vagas abertas, o desempate entre vocês é por sorteio.'
-      };
-    } else if (embutidoAtivo && pctLivre > 0) {
-      modo = {
-        nome: 'Lance fixo + lance livre extra',
-        desc: 'Você usa os ' + PCT_EMBUTIDO_MAX + '% embutidos e complementa com dinheiro do bolso, furando a fila do sorteio dentro do grupo do lance fixo — quem oferece mais nesse grupo sai na frente.'
+        desc: 'Você entra no grupo de quem oferece os ' + pctTotal + '% fixados pela administradora' + (pctEmbutido > 0 ? ' (' + pctEmbutido + '% via embutido' + (pctDinheiro > 0 ? ' e ' + pctDinheiro + '% em dinheiro)' : ')') : ', todo em dinheiro') + '. Pagar mais com embutido ou mais em dinheiro não muda sua chance — se mais gente oferecer o mesmo nesse mês do que vagas abertas, o desempate é por sorteio.'
       };
     } else {
       modo = {
-        nome: 'Lance livre — leilão sem lance fixo',
-        desc: 'Você disputa só com dinheiro do bolso, fora do grupo do lance fixo — funciona como um leilão à parte: quem oferece o maior percentual nesse mês é quem é contemplado.'
+        nome: 'Lance livre — leilão',
+        desc: 'Você entra no leilão oferecendo ' + pctTotal + '%' + (pctEmbutido > 0 ? ', sendo ' + pctEmbutido + '% via embutido' + (pctDinheiro > 0 ? ' e ' + pctDinheiro + '% em dinheiro' : '') : ', todo em dinheiro') + '. Quem oferecer o percentual mais alto nesse mês é quem é contemplado.'
       };
     }
     põe('lanceModoNome', modo.nome);
     põe('lanceModoDesc', modo.desc);
 
-    var valorLivre = 0;
+    var valorDinheiro = 0;
     var resultLivre = document.getElementById('lanceLivreResultado');
-    if (pctLivre > 0) {
-      valorLivre = carta * (pctLivre / 100);
+    if (pctDinheiro > 0) {
+      valorDinheiro = carta * (pctDinheiro / 100);
       var anos = r.d.N / 12;
-      var bruto = valorLivre * Math.pow(1 + window.AstroTaxas.CDI, anos);
-      var liquido = valorLivre + (bruto - valorLivre) * (1 - window.AstroTaxas.IR);
-      põe('lanceLivreValorR', brl(valorLivre));
-      põe('lanceLivreRendimento', brl(liquido));
+      var bruto = valorDinheiro * Math.pow(1 + window.AstroTaxas.CDI, anos);
+      var liquido = valorDinheiro + (bruto - valorDinheiro) * (1 - window.AstroTaxas.IR);
+      põe('lanceDinheiroValorR', brl(valorDinheiro));
+      põe('lanceDinheiroRendimento', brl(liquido));
     } else {
-      põe('lanceLivreValorR', brl(0));
-      põe('lanceLivreRendimento', brl(0));
+      põe('lanceDinheiroValorR', brl(0));
+      põe('lanceDinheiroRendimento', brl(0));
     }
     if (resultLivre) resultLivre.style.display = 'grid';
 
@@ -5236,8 +5261,8 @@ document.addEventListener("DOMContentLoaded", function() {
       põe('lanceMesTexto', mes);
       põe('lanceMesTotal', r.d.N);
 
-      var parcelaDepois = valorLivre > 0
-        ? Math.max(0, parcelaBaseDepois - valorLivre / mesesRestantes)
+      var parcelaDepois = valorDinheiro > 0
+        ? Math.max(0, parcelaBaseDepois - valorDinheiro / mesesRestantes)
         : parcelaBaseDepois;
       põe('lanceParcelaDepois', brl(parcelaDepois));
     }
@@ -5264,21 +5289,16 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  ligarGrupo('.sim-entrada .calc-modo-mini .calc-modo-bt', function(b){
+  ligarGrupo('.calc-modo-modalidade .calc-modo-bt', function(b){
     modalidade = b.dataset.modomini;
     prazoEscolhido = window.AstroTaxas.perfis[modalidade].N;
     montarPrazosLance();
   });
-  var toggleEmbutido = document.getElementById('lanceEmbutidoToggle');
-  if (toggleEmbutido) {
-    toggleEmbutido.addEventListener('click', function(){
-      embutidoAtivo = !embutidoAtivo;
-      toggleEmbutido.classList.toggle('ativo', embutidoAtivo);
-      toggleEmbutido.setAttribute('aria-pressed', String(embutidoAtivo));
-      atualizar();
-    });
-  }
-  if (livreSl) livreSl.addEventListener('input', atualizar);
+  ligarGrupo('.calc-modo-mecanica .calc-modo-bt', function(b){
+    mecanica = b.dataset.mecanica;
+  });
+  if (totalSl) totalSl.addEventListener('input', atualizar);
+  if (embutidoSl) embutidoSl.addEventListener('input', atualizar);
   ligarGrupo('.calc-atalhos button', function(b){ sl.value = b.dataset.v; if (dica) dica.classList.add('oculta'); });
 
   montarPrazosLance();
