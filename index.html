@@ -1411,13 +1411,20 @@ body.menu-aberto .whatsapp-float,body.menu-aberto .mobile-cta{ opacity:0; pointe
   font-variant-numeric:tabular-nums;
   text-shadow:none;   /* gradiente recortado nunca leva sombra */
 }
+/* background-clip:text (herdado de .calc-valor) não é confiável em campo
+   de formulário entre navegadores — em vez do degradê recortado, cor
+   sólida direto, sobrescrevendo tudo que .calc-valor define pra isso. */
 .calc-valor-input{
   display:block; width:100%; border:none; outline:none; padding:0;
-  background-color:transparent; -webkit-appearance:none; appearance:none;
+  background:none !important; background-color:transparent !important;
+  -webkit-background-clip:initial !important; background-clip:initial !important;
+  color:var(--accent-hi) !important; -webkit-text-fill-color:var(--accent-hi) !important;
+  -webkit-appearance:none; appearance:none;
   cursor:text; border-bottom:1px dashed transparent;
   transition:border-color .25s var(--ease);
 }
 .calc-valor-input:hover, .calc-valor-input:focus{ border-bottom-color:var(--accent-line) }
+.calc-valor-input::selection{ background:var(--accent-line) }
 
 input[type=range]{
   -webkit-appearance:none; appearance:none;
@@ -6946,7 +6953,6 @@ nav{z-index:300!important}
       <img class="nav-palavra" src="img/astro-palavra.webp" width="612" height="250" decoding="async" alt="Astro Consórcios">
     </span>
     <ul class="nav-links">
-      <li><a href="#calculadora">Simulador</a></li>
       <li class="nav-drop">
         <button type="button" class="nav-drop-btn" aria-expanded="false">Nosso Produto
           <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -6958,8 +6964,6 @@ nav{z-index:300!important}
           <li><a href="/exterior.html">Brasileiros no Exterior</a></li>
         </ul>
       </li>
-      <li><a href="/lances.html">Lances</a></li>
-      <li><a href="/seguranca.html">Segurança e privacidade</a></li>
       <li class="nav-drop">
         <button type="button" class="nav-drop-btn" aria-expanded="false">Atendimento
           <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -6970,6 +6974,8 @@ nav{z-index:300!important}
           <li><a href="#saiba-mais">Saiba mais</a></li>
         </ul>
       </li>
+      <li><a href="/lances.html">Simule seu lance</a></li>
+      <li><a href="/seguranca.html">Segurança e privacidade</a></li>
     </ul>
     <div class="nav-acao">
       <div class="busca-caixa">
@@ -7004,7 +7010,6 @@ nav{z-index:300!important}
 <div class="nav-painel" id="navPainel" role="dialog" aria-label="Menu de navegação">
     <ul>
       <li><a href="#main" aria-current="page" class="ativo">Página inicial</a></li>
-      <li><a href="#calculadora">Simulador</a></li>
       <li class="nav-drop">
         <button type="button" class="nav-drop-btn" aria-expanded="false">Nosso Produto
           <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -7016,8 +7021,6 @@ nav{z-index:300!important}
           <li><a href="/exterior.html">Brasileiros no Exterior</a></li>
         </ul>
       </li>
-      <li><a href="/lances.html">Lances</a></li>
-      <li><a href="/seguranca.html">Segurança e privacidade</a></li>
       <li class="nav-drop">
         <button type="button" class="nav-drop-btn" aria-expanded="false">Atendimento
           <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -7028,6 +7031,8 @@ nav{z-index:300!important}
           <li><a href="#saiba-mais">Saiba mais</a></li>
         </ul>
       </li>
+      <li><a href="/lances.html">Simule seu lance</a></li>
+      <li><a href="/seguranca.html">Segurança e privacidade</a></li>
     </ul>
     <a href="#calculadora" class="nav-painel-cta">Ver o custo total</a>
     <a href="https://wa.me/554599999999?text=Ol%C3%A1!%20Quero%20come%C3%A7ar%20meu%20planejamento%20com%20a%20Astro." class="nav-painel-wa" target="_blank" rel="noopener noreferrer">Começar meu planejamento</a>

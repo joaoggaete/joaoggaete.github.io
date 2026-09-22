@@ -4147,13 +4147,20 @@ nav{z-index:300!important}
   font-variant-numeric:tabular-nums;
   text-shadow:none;
 }
+/* background-clip:text (herdado de .calc-valor) não é confiável em campo
+   de formulário entre navegadores — em vez do degradê recortado, cor
+   sólida direto, sobrescrevendo tudo que .calc-valor define pra isso. */
 .calc-valor-input{
   display:block; width:100%; border:none; outline:none; padding:0;
-  background-color:transparent; -webkit-appearance:none; appearance:none;
+  background:none !important; background-color:transparent !important;
+  -webkit-background-clip:initial !important; background-clip:initial !important;
+  color:var(--accent-hi) !important; -webkit-text-fill-color:var(--accent-hi) !important;
+  -webkit-appearance:none; appearance:none;
   cursor:text; border-bottom:1px dashed transparent;
   transition:border-color .25s var(--ease);
 }
 .calc-valor-input:hover, .calc-valor-input:focus{ border-bottom-color:var(--accent-line) }
+.calc-valor-input::selection{ background:var(--accent-line) }
 input[type=range]{
   -webkit-appearance:none; appearance:none;
   width:100%; height:5px; border-radius:100px;
@@ -4358,7 +4365,7 @@ input[type=range]::-moz-range-thumb{
     <ul class="nav-links">
         <li><a href="/como-funciona.html">Como Funciona</a></li>
         <li><a href="/exterior.html">Brasileiros no Exterior</a></li>
-        <li><a href="/lances.html" aria-current="page" class="ativo">Lances</a></li>
+        <li><a href="/lances.html" aria-current="page" class="ativo">Simule seu lance</a></li>
         <li><a href="/#duvidas">Dúvidas</a></li>
         <li><a href="/#onde-estamos">Atendimento</a></li>
     </ul>
