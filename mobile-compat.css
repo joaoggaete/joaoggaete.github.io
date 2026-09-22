@@ -1,0 +1,205 @@
+/* Compatibilidade progressiva para GPUs móveis.
+   A base continua legível sem blur. Navegadores capazes recebem vidro leve,
+   com menos custo que os 22–30px usados nos cartões de desktop. */
+
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .vidro,.modal-card,.pagina-card,.atend-card,.faq-item,.comp-card,.stats-inner,
+  .video-card,.simulador,.form-larga,.calc-resultado,.nav-painel,
+  .btn-fantasma,.nav-cta,.nav-burger,.btn-wa-vidro,.doc-nav-global{
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+}
+
+/* O topo real do painel varia entre 82 e 94px conforme a largura. Reservar
+   104px impede que a borda inferior saia da tela em celulares baixos e em
+   notebooks 1280x720, mantendo rolagem dentro do próprio menu. */
+@media (max-width:1400px){
+  .nav-painel{max-height:calc(100dvh - 104px)!important;overflow-y:auto!important}
+}
+
+/* O painel fica acima do conteúdo, mas o conteúdo não pode competir com os
+   links através do vidro. O véu também cobre as páginas internas, que não
+   possuíam a camada usada pela home. */
+body.menu-aberto::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:298!important;
+  pointer-events:none;
+  background:rgba(2,5,12,.68)!important;
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
+}
+
+body.menu-aberto nav{z-index:300!important}
+body.menu-aberto .nav-painel{z-index:299!important}
+
+/* Tablets não precisam do filtro de 26–30px do desktop. Esta faixa preserva
+   a leitura de vidro e reduz sensivelmente a área recomposta pela GPU. */
+@media (min-width:761px) and (max-width:1100px){
+  @supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+    nav,.doc-nav-global,.nav-painel,.busca-global-painel,
+    :root[data-tema="claro"] nav,:root[data-tema="claro"] .doc-nav-global,
+    :root[data-tema="claro"] .nav-painel,:root[data-tema="claro"] .busca-global-painel{
+      backdrop-filter:blur(18px) saturate(155%)!important;
+      -webkit-backdrop-filter:blur(18px) saturate(155%)!important;
+    }
+    .vidro,.modal-card,.pagina-card,.atend-card,.faq-item,.comp-card,.stats-inner,
+    .video-card,.simulador,.form-larga,.calc-resultado,.aviso-assembleia,
+    :root[data-tema="claro"] .vidro,:root[data-tema="claro"] .modal-card,
+    :root[data-tema="claro"] .pagina-card,:root[data-tema="claro"] .atend-card,
+    :root[data-tema="claro"] .faq-item,:root[data-tema="claro"] .comp-card,
+    :root[data-tema="claro"] .stats-inner,:root[data-tema="claro"] .video-card,
+    :root[data-tema="claro"] .simulador,:root[data-tema="claro"] .form-larga,
+    :root[data-tema="claro"] .calc-resultado,:root[data-tema="claro"] .aviso-assembleia{
+      backdrop-filter:blur(14px) saturate(140%)!important;
+      -webkit-backdrop-filter:blur(14px) saturate(140%)!important;
+    }
+  }
+}
+
+@media (max-width:760px){
+  html,body{max-width:100%;overflow-x:hidden}
+  body{background-attachment:scroll!important}
+
+  /* SVG com ruído e mix-blend-mode sobre toda a tela é uma causa frequente
+     de imagens fantasma em navegadores móveis com composição limitada. */
+  .grao{display:none!important}
+  .ambiente{animation:none!important;transform:none!important}
+  #fluxo,#estrelas,.brilho{filter:none!important}
+
+  /* O vetor oculto atrás da imagem estática não deve ganhar uma camada de
+     composição própria em aparelhos antigos. */
+  .nav-marca{display:none!important}
+  .nav-logo,.nav-gira,.nav-palavra{filter:none!important}
+
+  /* Base opaca o bastante para continuar legível mesmo se o navegador
+     declarar suporte ao blur mas falhar ao compor a camada. */
+  :root[data-tema="escuro"] nav,
+  :root[data-tema="escuro"] .doc-nav-global{
+    background:rgba(241,246,252,.88)!important;
+    color:#0B2149!important;
+    border-color:rgba(255,255,255,.62)!important;
+    box-shadow:0 12px 34px rgba(1,6,17,.24),inset 0 1px 0 rgba(255,255,255,.86)!important;
+  }
+  :root[data-tema="escuro"] .nav-painel{
+    background:linear-gradient(155deg,rgba(250,252,255,.98),rgba(224,234,247,.95))!important;
+    border-color:rgba(255,255,255,.72)!important;
+    box-shadow:0 24px 64px rgba(1,6,17,.34),inset 0 1px 0 rgba(255,255,255,.9)!important;
+  }
+  :root[data-tema="escuro"] .nav-painel ul a{
+    color:#0B2149!important;
+    border-bottom-color:rgba(11,33,73,.12)!important;
+  }
+  body.menu-aberto::after{background:rgba(2,5,12,.72)!important}
+  .mobile-cta{box-shadow:0 -2px 14px rgba(2,5,12,.48)!important}
+
+  .vidro,.modal-card,.pagina-card,.atend-card,.faq-item,.comp-card,.stats-inner,
+  .video-card,.simulador,.form-larga,.calc-resultado,.aviso-assembleia{
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 10px 28px rgba(2,5,12,.34)!important;
+  }
+
+  :is(.vidro,.modal-card,.pagina-card,.atend-card,.faq-item,.comp-card,.stats-inner,
+      .video-card,.simulador,.form-larga,.calc-resultado)::before,
+  :is(.vidro,.modal-card,.pagina-card,.atend-card,.faq-item,.comp-card,.stats-inner,
+      .video-card,.simulador,.form-larga,.calc-resultado)::after{
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+    filter:none!important;
+  }
+
+  /* Muitas sombras de texto sobre vídeo podem parecer uma segunda cópia da
+     frase em telas de menor densidade. Uma sombra curta mantém o contraste. */
+  .hero-title,.hero-sub,.sec-head .section-title,.sec-head .section-sub,
+  .sec-head .eyebrow,.regua-mes,.regua-chave{
+    text-shadow:0 2px 6px rgba(2,5,12,.82)!important;
+  }
+
+  :root[data-tema="escuro"] .nav-palavra{
+    filter:brightness(0) saturate(100%) invert(6%) sepia(30%) saturate(1800%) hue-rotate(186deg)!important;
+  }
+  :root[data-tema="escuro"] .nav-gira{background-image:url('/img/marca-estatica-navy.webp')!important}
+  :root[data-tema="escuro"] .nav-acao .tema-btn,
+  :root[data-tema="escuro"] .nav-burger{color:#0B2149!important}
+  :root[data-tema="escuro"] .nav-burger span{background:#0B2149!important}
+
+  :root[data-tema="claro"] nav,
+  :root[data-tema="claro"] .doc-nav-global{
+    background:rgba(8,20,44,.88)!important;
+    color:#FFFFFF!important;
+    border-color:rgba(147,169,201,.3)!important;
+    box-shadow:0 12px 34px rgba(1,6,17,.26),inset 0 1px 0 rgba(255,255,255,.12)!important;
+  }
+  :root[data-tema="claro"] .nav-painel{
+    background:linear-gradient(155deg,rgba(10,27,58,.98),rgba(5,14,32,.95))!important;
+    border-color:rgba(147,169,201,.28)!important;
+    box-shadow:0 24px 64px rgba(1,6,17,.44),inset 0 1px 0 rgba(255,255,255,.12)!important;
+  }
+  :root[data-tema="claro"] .nav-painel ul a{
+    color:#F2F6FC!important;
+    border-bottom-color:rgba(242,246,252,.13)!important;
+  }
+  :root[data-tema="claro"] .nav-palavra{filter:none!important}
+  :root[data-tema="claro"] .nav-gira{background-image:url('/img/marca-estatica-prata.webp')!important}
+  :root[data-tema="claro"] .nav-acao .tema-btn,
+  :root[data-tema="claro"] .nav-burger{color:#FFFFFF!important}
+  :root[data-tema="claro"] .nav-burger span{background:#FFFFFF!important}
+  :root[data-tema="claro"] .hero-title,
+  :root[data-tema="claro"] .hero-sub,
+  :root[data-tema="claro"] .sec-head .section-title,
+  :root[data-tema="claro"] .sec-head .section-sub,
+  :root[data-tema="claro"] .sec-head .eyebrow{
+    text-shadow:0 1px 4px rgba(255,255,255,.78)!important;
+  }
+}
+
+/* Vidro de baixo custo no celular: uma camada por componente, sem blur nos
+   pseudo-elementos. O filtro menor evita halos e reduz o trabalho da GPU. */
+@media (max-width:760px){
+  @supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+    nav,.doc-nav-global,.nav-painel,.busca-global-painel,
+    :root[data-tema="claro"] nav,:root[data-tema="claro"] .doc-nav-global,
+    :root[data-tema="claro"] .nav-painel,:root[data-tema="claro"] .busca-global-painel{
+      backdrop-filter:blur(16px) saturate(145%)!important;
+      -webkit-backdrop-filter:blur(16px) saturate(145%)!important;
+    }
+    .busca-global-btn,.nav-burger,.tema-btn,.hero-sub,.mobile-cta,
+    .btn-fantasma,.nav-cta,.btn-wa-vidro{
+      backdrop-filter:blur(10px) saturate(130%)!important;
+      -webkit-backdrop-filter:blur(10px) saturate(130%)!important;
+    }
+    .vidro,.modal-card,.pagina-card,.atend-card,.faq-item,.comp-card,.stats-inner,
+    .video-card,.simulador,.form-larga,.calc-resultado,.aviso-assembleia,
+    :root[data-tema="claro"] .vidro,:root[data-tema="claro"] .modal-card,
+    :root[data-tema="claro"] .pagina-card,:root[data-tema="claro"] .atend-card,
+    :root[data-tema="claro"] .faq-item,:root[data-tema="claro"] .comp-card,
+    :root[data-tema="claro"] .stats-inner,:root[data-tema="claro"] .video-card,
+    :root[data-tema="claro"] .simulador,:root[data-tema="claro"] .form-larga,
+    :root[data-tema="claro"] .calc-resultado,:root[data-tema="claro"] .aviso-assembleia{
+      backdrop-filter:blur(9px) saturate(125%)!important;
+      -webkit-backdrop-filter:blur(9px) saturate(125%)!important;
+    }
+  }
+}
+
+/* Preferências de acessibilidade e telas de atualização lenta recebem a
+   reserva sólida. O restante do visual, espaçamento e contraste permanece. */
+@media (max-width:760px) and (prefers-reduced-transparency:reduce),
+       (max-width:760px) and (update:slow){
+  nav,.nav-painel,.doc-nav-global,.busca-global-painel,.busca-global-btn,
+  .nav-burger,.tema-btn,.hero-sub,.mobile-cta,.btn-fantasma,.nav-cta,.btn-wa-vidro,
+  .vidro,.modal-card,.pagina-card,.atend-card,.faq-item,.comp-card,.stats-inner,
+  .video-card,.simulador,.form-larga,.calc-resultado,.aviso-assembleia{
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+}
+
+@media (max-width:760px) and (hover:none){
+  .modal-card:hover,.pagina-card:hover,.atend-card:hover,.video-card:hover,
+  .btn:hover,.nav-cta:hover,.btn-wa-vidro:hover{
+    transform:none!important;
+    filter:none!important;
+  }
+}
