@@ -4272,6 +4272,15 @@ input[type=range]::-moz-range-thumb{
 .res-item b{ font-size:17px; font-weight:600; color:var(--text); letter-spacing:-.01em }
 @media (max-width:520px){ .res-grade{ grid-template-columns:1fr 1fr } }
 
+.calc-lance-modo-ativo{
+  margin-top:clamp(10px,1.4vw,14px); padding:14px 16px;
+  border-radius:14px; background:var(--accent-soft);
+  border:1px solid var(--accent-line);
+}
+.calc-lance-modo-rot{ display:block; font-family:var(--f-mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--text-2) }
+.calc-lance-modo-nome{ display:block; margin-top:4px; font-family:var(--f-display); font-size:1.05rem; font-weight:700; color:var(--accent) }
+.calc-lance-modo-desc{ margin-top:6px; font-size:13px; line-height:1.55; color:var(--text-2) }
+
 /* OS BLOCOS INVERTEM EM RELAÇÃO À PÁGINA (mesmo mecanismo do index.html,
    recortado só pras duas classes que esta página usa: .simulador e
    .calc-resultado). Fundo escuro pede bloco claro, e vice-versa. */
@@ -4410,7 +4419,7 @@ input[type=range]::-moz-range-thumb{
       </div>
       <div class="plan-item">
         <h3>Lance embutido</h3>
-        <p>Você usa uma parte da sua própria carta de crédito — geralmente até 25%, o teto mais comum entre administradoras — pra reforçar sua posição na disputa de lance. Não tira dinheiro do seu bolso, mas reduz o crédito que sobra pra usar.</p>
+        <p>Você usa uma parte da sua própria carta de crédito — geralmente até 30%, o teto mais comum entre administradoras — pra reforçar sua posição na disputa de lance. Não tira dinheiro do seu bolso, mas reduz o crédito que sobra pra usar.</p>
       </div>
       <div class="plan-item">
         <h3>Lance livre</h3>
@@ -4471,8 +4480,8 @@ input[type=range]::-moz-range-thumb{
               <span>Lance embutido</span>
               <small>Sai do seu próprio crédito, sem tirar do bolso — teto mais comum entre administradoras</small>
             </div>
-            <div class="calc-prazo-opcoes" role="group" aria-label="Ativar lance embutido de 25%">
-              <button type="button" id="lanceEmbutidoToggle" class="ativo" aria-pressed="true">25% ligado</button>
+            <div class="calc-prazo-opcoes" role="group" aria-label="Ativar lance embutido de 30%">
+              <button type="button" id="lanceEmbutidoToggle" class="ativo" aria-pressed="true">30% ligado</button>
             </div>
           </div>
 
@@ -4494,14 +4503,20 @@ input[type=range]::-moz-range-thumb{
               <small>Dinheiro do seu bolso — pesa mais na disputa, mas descapitaliza</small>
             </div>
             <div class="calc-valor" id="lanceLivreTexto" style="font-size:clamp(21px,2.6vw,27px)">0%</div>
-            <input type="range" id="lanceLivreSlider" min="0" max="75" step="1" value="0" aria-label="Percentual de lance livre">
-            <div class="calc-escala"><span>0%</span><span id="lanceLivreMaxTxt">75%</span></div>
+            <input type="range" id="lanceLivreSlider" min="0" max="70" step="1" value="0" aria-label="Percentual de lance livre">
+            <div class="calc-escala"><span>0%</span><span id="lanceLivreMaxTxt">70%</span></div>
             <div class="res-grade" id="lanceLivreResultado">
-              <div class="res-item"><span>Lance embutido</span><b id="lanceEmbutidoPctTxt">25%</b></div>
-              <div class="res-item"><span>Lance total ofertado</span><b id="lanceTotalPct">25%</b></div>
+              <div class="res-item"><span>Lance embutido</span><b id="lanceEmbutidoPctTxt">30%</b></div>
+              <div class="res-item"><span>Lance total ofertado</span><b id="lanceTotalPct">30%</b></div>
               <div class="res-item"><span>Valor do lance livre</span><b id="lanceLivreValorR">R$ 0</b></div>
               <div class="res-item"><span>Se esse dinheiro ficasse investido, renderia</span><b id="lanceLivreRendimento">R$ 0</b></div>
             </div>
+          </div>
+
+          <div class="calc-lance-modo-ativo" id="lanceModoAtivo">
+            <span class="calc-lance-modo-rot">Sua simulação equivale a</span>
+            <span class="calc-lance-modo-nome" id="lanceModoNome">Lance fixo, com sorteio de desempate</span>
+            <p class="calc-lance-modo-desc" id="lanceModoDesc">Você entra no grupo de quem oferece os 30% embutidos. Se mais gente oferecer o mesmo nesse mês do que vagas abertas, o desempate entre vocês é por sorteio.</p>
           </div>
 
           <div class="calc-prazo calc-lance-mes">
@@ -5111,7 +5126,7 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   function atualizar(){
-    var PCT_EMBUTIDO = embutidoAtivo ? 25 : 0;
+    var PCT_EMBUTIDO = embutidoAtivo ? 30 : 0;
     var creditoUtil = Math.max(1, Number(sl.value));
     var carta = creditoUtil / (1 - PCT_EMBUTIDO / 100);
     var valorEmbutido = carta - creditoUtil;
@@ -5131,10 +5146,10 @@ document.addEventListener("DOMContentLoaded", function() {
     põe('lancePrazo', r.d.N + ' meses');
 
     /* o teto do lance livre depende do embutido: com embutido ligado, os
-       dois juntos não passam de 100% (25% + até 75%); desligado, o lance
+       dois juntos não passam de 100% (30% + até 70%); desligado, o lance
        livre sozinho pode ir até 100%. */
     if (livreSl) {
-      var tetoLivre = embutidoAtivo ? 75 : 100;
+      var tetoLivre = embutidoAtivo ? 70 : 100;
       livreSl.max = tetoLivre;
       if (Number(livreSl.value) > tetoLivre) livreSl.value = tetoLivre;
       pctLivre = Number(livreSl.value);
@@ -5143,6 +5158,31 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     põe('lanceEmbutidoPctTxt', PCT_EMBUTIDO + '%');
     põe('lanceTotalPct', (PCT_EMBUTIDO + pctLivre) + '%');
+
+    var modo;
+    if (!embutidoAtivo && pctLivre === 0) {
+      modo = {
+        nome: 'Sorteio puro, sem lance',
+        desc: 'Você não está usando lance nenhum: concorre só pelo sorteio mensal da assembleia, sem custo extra e sem previsão de quando sai.'
+      };
+    } else if (embutidoAtivo && pctLivre === 0) {
+      modo = {
+        nome: 'Lance fixo, com sorteio de desempate',
+        desc: 'Você entra no grupo de quem oferece os 30% embutidos. Se mais gente oferecer o mesmo nesse mês do que vagas abertas, o desempate entre vocês é por sorteio.'
+      };
+    } else if (embutidoAtivo && pctLivre > 0) {
+      modo = {
+        nome: 'Lance fixo + lance livre extra',
+        desc: 'Você usa os 30% embutidos e complementa com dinheiro do bolso, furando a fila do sorteio dentro do grupo do lance fixo — quem oferece mais nesse grupo sai na frente.'
+      };
+    } else {
+      modo = {
+        nome: 'Lance livre — leilão sem lance fixo',
+        desc: 'Você disputa só com dinheiro do bolso, fora do grupo do lance fixo — funciona como um leilão à parte: quem oferece o maior percentual nesse mês é quem é contemplado.'
+      };
+    }
+    põe('lanceModoNome', modo.nome);
+    põe('lanceModoDesc', modo.desc);
 
     var valorLivre = 0;
     var resultLivre = document.getElementById('lanceLivreResultado');
@@ -5210,7 +5250,7 @@ document.addEventListener("DOMContentLoaded", function() {
   if (toggleEmbutido) {
     toggleEmbutido.addEventListener('click', function(){
       embutidoAtivo = !embutidoAtivo;
-      toggleEmbutido.textContent = embutidoAtivo ? '25% ligado' : '25% desligado';
+      toggleEmbutido.textContent = embutidoAtivo ? '30% ligado' : '30% desligado';
       toggleEmbutido.classList.toggle('ativo', embutidoAtivo);
       toggleEmbutido.setAttribute('aria-pressed', String(embutidoAtivo));
       atualizar();
