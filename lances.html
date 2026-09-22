@@ -4147,6 +4147,13 @@ nav{z-index:300!important}
   font-variant-numeric:tabular-nums;
   text-shadow:none;
 }
+.calc-valor-input{
+  display:block; width:100%; border:none; outline:none; padding:0;
+  background-color:transparent; -webkit-appearance:none; appearance:none;
+  cursor:text; border-bottom:1px dashed transparent;
+  transition:border-color .25s var(--ease);
+}
+.calc-valor-input:hover, .calc-valor-input:focus{ border-bottom-color:var(--accent-line) }
 input[type=range]{
   -webkit-appearance:none; appearance:none;
   width:100%; height:5px; border-radius:100px;
@@ -4449,8 +4456,8 @@ input[type=range]::-moz-range-thumb{
           </div>
 
           <label class="calc-label" for="calcValor">Crédito que você quer usar</label>
-          <div class="calc-valor" id="calcValorTexto">R$ 300.000</div>
-          <input type="range" id="calcValor" min="50000" max="2000000" step="10000" value="300000" aria-label="Crédito desejado">
+          <input type="text" inputmode="numeric" class="calc-valor calc-valor-input" id="calcValorTexto" value="R$ 300.000" aria-label="Crédito desejado — clique pra digitar um número exato">
+          <input type="range" id="calcValor" min="50000" max="2000000" step="1000" value="300000" aria-label="Crédito desejado">
           <div class="calc-escala"><span>R$ 50 mil</span><span>R$ 2 mi</span></div>
           <p class="calc-dica" id="calcDica">◀ &nbsp;arraste ou toque num valor&nbsp; ▶</p>
           <div class="calc-atalhos">
@@ -4555,12 +4562,12 @@ input[type=range]::-moz-range-thumb{
             <div class="res-item"><span>Parcela até contemplar</span><b id="lanceParcelaAntes">R$ 4.168</b></div>
             <div class="res-item"><span>Parcela depois de contemplado</span><b id="lanceParcelaDepois">R$ 3.125</b></div>
           </div>
-          <p class="calc-lance-mes-nota" id="lanceMesNota">A taxa de administração incide sobre a carta cheia (com o lance embutido) até a contemplação. Depois, ela passa a incidir só sobre o crédito que você realmente recebeu — por isso a parcela cai.</p>
+          <p class="calc-lance-mes-nota" id="lanceMesNota">A taxa de administração é fixa e incide sobre o valor total da carta do início ao fim — ela não muda. O que muda é o saldo devedor: ao usar o lance embutido, parte do crédito já foi consumida como lance, então o saldo que resta pra você pagar cai na mesma proporção — por isso a parcela diminui a partir da contemplação.</p>
         </div>
       </div>
     </div>
 
-    <p class="calc-nota" style="text-align:center;max-width:720px;margin:20px auto 0;">Simulação de estratégia de lance — não é proposta nem garantia de contemplação. Sorteio e lance dependem da assembleia e do comportamento de cada grupo. O percentual máximo de lance embutido varia por administradora; confirmamos o número exato do seu caso antes de qualquer contratação.</p>
+    <p class="calc-nota" style="text-align:center;max-width:720px;margin:20px auto 0;">Esta é uma simulação breve — não é proposta nem garantia de contemplação. Sorteio e lance dependem da assembleia e do comportamento de cada grupo, e o percentual de lance embutido varia por administradora. <a href="https://wa.me/554599999999?text=Ol%C3%A1!%20Fiz%20uma%20simula%C3%A7%C3%A3o%20de%20lance%20no%20site%20e%20quero%20confirmar%20os%20n%C3%BAmeros%20do%20meu%20caso." target="_blank" rel="noopener noreferrer" class="marca" style="text-decoration:underline;">Fale com um dos nossos vendedores</a> pra confirmar o número exato do seu caso antes de qualquer contratação.</p>
   </div>
 </section>
 <div class="cta-solo">
@@ -5203,7 +5210,7 @@ document.addEventListener("DOMContentLoaded", function() {
       };
     });
 
-    if (txt) txt.textContent = brl(creditoUtil);
+    if (txt) txt.value = brl(creditoUtil);
     põe('lanceCarta', brl(carta));
     põe('lanceValorEmbutido', brl(valorEmbutido));
     põe('lanceCreditoUtil', brl(creditoUtil));
@@ -5303,6 +5310,24 @@ document.addEventListener("DOMContentLoaded", function() {
 
   montarPrazosLance();
   sl.addEventListener('input', function(){ atualizar(); if (dica) dica.classList.add('oculta'); });
+  if (txt) {
+    txt.addEventListener('focus', function(){
+      txt.value = String(Math.round(Number(sl.value)));
+      txt.select();
+    });
+    var aplicarValorDigitado = function(){
+      var digitos = txt.value.replace(/\D/g, '');
+      var num = digitos ? Number(digitos) : Number(sl.value);
+      num = Math.min(Number(sl.max), Math.max(Number(sl.min), num));
+      sl.value = num;
+      atualizar();
+      if (dica) dica.classList.add('oculta');
+    };
+    txt.addEventListener('blur', aplicarValorDigitado);
+    txt.addEventListener('keydown', function(e){
+      if (e.key === 'Enter'){ e.preventDefault(); aplicarValorDigitado(); txt.blur(); }
+    });
+  }
   if (mesSl) mesSl.addEventListener('input', atualizar);
 
   atualizar();

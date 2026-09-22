@@ -1411,6 +1411,13 @@ body.menu-aberto .whatsapp-float,body.menu-aberto .mobile-cta{ opacity:0; pointe
   font-variant-numeric:tabular-nums;
   text-shadow:none;   /* gradiente recortado nunca leva sombra */
 }
+.calc-valor-input{
+  display:block; width:100%; border:none; outline:none; padding:0;
+  background-color:transparent; -webkit-appearance:none; appearance:none;
+  cursor:text; border-bottom:1px dashed transparent;
+  transition:border-color .25s var(--ease);
+}
+.calc-valor-input:hover, .calc-valor-input:focus{ border-bottom-color:var(--accent-line) }
 
 input[type=range]{
   -webkit-appearance:none; appearance:none;
@@ -1626,16 +1633,23 @@ input[type=range]::-moz-range-thumb{
 }
 .aviso-assembleia strong{ color:var(--text) }
 
-#cta-lance{ padding:clamp(26px,3.2vw,44px) 0 }
+#cta-lance{ padding:clamp(34px,4.2vw,58px) 0 }
 .lance-callout{
-  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:20px 28px;
-  padding:clamp(20px,2.4vw,28px) clamp(22px,2.8vw,32px);
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:22px 32px;
+  padding:clamp(28px,3.4vw,40px) clamp(28px,3.6vw,44px);
   border-radius:var(--r-l,20px);
-  background:rgba(59,143,224,.08); border:1px solid var(--accent-line);
+  background:linear-gradient(150deg, rgba(59,143,224,.16), rgba(59,143,224,.05));
+  border:1px solid var(--accent-line);
+  box-shadow:0 0 0 1px rgba(127,212,255,.12), 0 22px 50px -12px rgba(59,143,224,.35);
 }
 .lance-callout-eyebrow{
   display:block; font-family:var(--f-mono); font-size:11px; font-weight:600;
-  letter-spacing:.16em; text-transform:uppercase; color:var(--accent-hi); margin-bottom:8px;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--accent-hi); margin-bottom:10px;
+}
+.lance-callout-tit{
+  display:block; font-family:var(--f-display); font-weight:700;
+  font-size:clamp(21px,2.6vw,28px); letter-spacing:-.02em; line-height:1.2;
+  color:var(--text); margin-bottom:10px;
 }
 .lance-callout-txt p{ margin:0; max-width:560px; color:var(--text-2); font-size:15px; line-height:1.62 }
 .lance-callout-btn{ flex:none; white-space:nowrap }
@@ -5552,6 +5566,8 @@ nav.solida{
 .nav-links a{ color:#17305C !important }
 .nav-links a:hover{ color:#0B2149 !important }
 .nav-links a::after{ background:#0B2149 }
+.nav-links .nav-drop-btn{ color:#17305C !important }
+.nav-links .nav-drop-btn:hover, .nav-links .nav-drop.aberto .nav-drop-btn{ color:#0B2149 !important }
 
 .nav-burger{
   background:rgba(11,33,73,.06) !important;
@@ -5625,9 +5641,12 @@ nav.solida{
 /* sobre a pilula marinha a palavra volta a ser o arquivo branco original */
 :root[data-tema="claro"] .nav-palavra{ filter:none !important }
 :root[data-tema="claro"] .nav-links a,
-:root[data-tema="claro"] .nav-links li a{ color:#C7D6EC !important }
+:root[data-tema="claro"] .nav-links li a,
+:root[data-tema="claro"] .nav-links .nav-drop-btn{ color:#C7D6EC !important }
 :root[data-tema="claro"] .nav-links a:hover{ color:#FFFFFF !important }
 :root[data-tema="claro"] .nav-links a::after{ background:#FFFFFF }
+:root[data-tema="claro"] .nav-links .nav-drop-btn:hover,
+:root[data-tema="claro"] .nav-links .nav-drop.aberto .nav-drop-btn{ color:#FFFFFF !important }
 :root[data-tema="claro"] .nav-burger{
   background:rgba(255,255,255,.10) !important;
   border:1px solid rgba(255,255,255,.20) !important;
@@ -5677,9 +5696,12 @@ nav.solida{
 }
 :root:not([data-tema="escuro"]) .nav-palavra{ filter:none !important }
 :root:not([data-tema="escuro"]) .nav-links a,
-:root:not([data-tema="escuro"]) .nav-links li a{ color:#C7D6EC !important }
+:root:not([data-tema="escuro"]) .nav-links li a,
+:root:not([data-tema="escuro"]) .nav-links .nav-drop-btn{ color:#C7D6EC !important }
 :root:not([data-tema="escuro"]) .nav-links a:hover{ color:#FFFFFF !important }
 :root:not([data-tema="escuro"]) .nav-links a::after{ background:#FFFFFF }
+:root:not([data-tema="escuro"]) .nav-links .nav-drop-btn:hover,
+:root:not([data-tema="escuro"]) .nav-links .nav-drop.aberto .nav-drop-btn{ color:#FFFFFF !important }
 :root:not([data-tema="escuro"]) .nav-burger{
   background:rgba(255,255,255,.10) !important;
   border:1px solid rgba(255,255,255,.20) !important;
@@ -7151,8 +7173,8 @@ nav{z-index:300!important}
           <button type="button" class="calc-modo-bt" data-modo="maquinario" aria-pressed="false">Maquinário</button>
         </div>
         <label class="calc-label" for="calcValor">Valor do bem que você quer</label>
-        <div class="calc-valor" id="calcValorTexto">R$ 300.000</div>
-        <input type="range" id="calcValor" min="50000" max="2000000" step="10000" value="300000"
+        <input type="text" inputmode="numeric" class="calc-valor calc-valor-input" id="calcValorTexto" value="R$ 300.000" aria-label="Valor do crédito — clique pra digitar um número exato">
+        <input type="range" id="calcValor" min="50000" max="2000000" step="1000" value="300000"
                aria-label="Valor do crédito desejado">
         <div class="calc-escala"><span>R$ 50 mil</span><span>R$ 2 mi</span></div>
         <p class="calc-dica" id="calcDica">◀ &nbsp;arraste ou toque num valor&nbsp; ▶</p>
@@ -7194,25 +7216,25 @@ nav{z-index:300!important}
           <span><strong>Comparação bancária sob consulta.</strong> Em maquinário, juros, seguros e condições mudam conforme a linha rural ou industrial, o bem e o perfil da empresa. Por isso, mostramos aqui apenas a estimativa do consórcio até recebermos os parâmetros do seu caso.</span>
         </div>
 
-        <div class="calc-barras">
-          <div class="calc-barra ruim">
-            <div class="calc-barra-tit"><span>Financiamento</span><b id="calcFin">R$ 516.494</b></div>
-            <div class="calc-barra-trilho"><div class="calc-barra-fill" id="calcBarFin"></div></div>
-            <p class="calc-barra-sub">custo total estimado</p>
-          </div>
-          <div class="calc-barra bom">
-            <div class="calc-barra-tit"><span>Consórcio</span><b id="calcCon">R$ 354.000</b></div>
-            <div class="calc-barra-trilho"><div class="calc-barra-fill" id="calcBarCon"></div></div>
-            <p class="calc-barra-sub">custo total estimado</p>
-          </div>
-        </div>
-
         <div class="composicao" id="composicao">
           <button class="comp-abre" id="compAbre" type="button" aria-expanded="false" aria-controls="compCorpo">
-            <span>Ver a parcela por dentro</span>
+            <span>Ver a comparação completa</span>
             <span class="comp-sinal" aria-hidden="true"></span>
           </button>
           <div class="comp-corpo" id="compCorpo" hidden>
+            <div class="calc-barras">
+              <div class="calc-barra ruim">
+                <div class="calc-barra-tit"><span>Financiamento</span><b id="calcFin">R$ 516.494</b></div>
+                <div class="calc-barra-trilho"><div class="calc-barra-fill" id="calcBarFin"></div></div>
+                <p class="calc-barra-sub">custo total estimado</p>
+              </div>
+              <div class="calc-barra bom">
+                <div class="calc-barra-tit"><span>Consórcio</span><b id="calcCon">R$ 354.000</b></div>
+                <div class="calc-barra-trilho"><div class="calc-barra-fill" id="calcBarCon"></div></div>
+                <p class="calc-barra-sub">custo total estimado</p>
+              </div>
+            </div>
+
             <p class="comp-intro">Parcela média no prazo escolhido, com <strong class="marca">todas as linhas
               abertas</strong> nos dois lados. Nenhuma taxa escondida, nem a nossa.</p>
 
@@ -7303,7 +7325,7 @@ nav{z-index:300!important}
           </svg>
         </div>
 
-      <p class="calc-nota">Estimativa conforme a modalidade, o valor e o prazo selecionados. Valores reais variam conforme a administradora, o grupo e o seu perfil.</p>
+      <p class="calc-nota">Esta é uma simulação breve, só pra você ter uma ideia — os números reais variam de administradora pra administradora e de grupo pra grupo. <a href="https://wa.me/554599999999?text=Ol%C3%A1!%20Fiz%20uma%20simula%C3%A7%C3%A3o%20no%20site%20e%20quero%20confirmar%20os%20n%C3%BAmeros%20do%20meu%20caso." target="_blank" rel="noopener noreferrer" class="marca" style="text-decoration:underline;">Fale com um dos nossos vendedores</a> pra confirmar os números certos do seu caso antes de qualquer decisão.</p>
 
     </div>
   </div>
@@ -7320,9 +7342,10 @@ nav{z-index:300!important}
     <div class="lance-callout">
       <div class="lance-callout-txt">
         <span class="lance-callout-eyebrow">Estratégia de lance</span>
-        <p>Sorteio, lance embutido ou lance livre — cada forma muda sua parcela e sua chance de contemplar antes do fim do prazo.</p>
+        <strong class="lance-callout-tit">Quer ser contemplado antes do fim do prazo?</strong>
+        <p>Sorteio, lance fixo ou lance livre — cada forma muda sua parcela e sua chance de contemplar. Simule as três com as taxas reais.</p>
       </div>
-      <a href="/lances.html" class="btn btn-primario lance-callout-btn">Ver as 3 estratégias e simular</a>
+      <a href="/lances.html" class="btn btn-primario btn-largo lance-callout-btn">Ver as 3 estratégias e simular</a>
     </div>
   </div>
 </section>
@@ -9316,10 +9339,11 @@ document.addEventListener('DOMContentLoaded', function () {
       if (elPrazo) elPrazo.textContent = p.N + ' meses';
       var nota = document.querySelector('.simulador > .calc-nota');
       if (nota) {
+        var notaWa = ' <a href="https://wa.me/554599999999?text=Ol%C3%A1!%20Fiz%20uma%20simula%C3%A7%C3%A3o%20no%20site%20e%20quero%20confirmar%20os%20n%C3%BAmeros%20do%20meu%20caso." target="_blank" rel="noopener noreferrer" class="marca" style="text-decoration:underline;">Fale com um dos nossos vendedores</a> pra confirmar os números certos do seu caso antes de qualquer decisão.';
         if (semComparacao) {
-          nota.innerHTML = 'Estimativa de consórcio para <span data-nota-prazo>' + p.N + '</span> meses, com taxa de administração de <span data-nota-adm>' + admTexto + '</span> diluída. Fundo de reserva e seguro variam conforme a administradora e o perfil. A comparação com crédito bancário será preparada com a linha rural ou industrial adequada ao seu caso.';
+          nota.innerHTML = 'Esta é uma simulação breve de consórcio para <span data-nota-prazo>' + p.N + '</span> meses, com taxa de administração de <span data-nota-adm>' + admTexto + '</span> diluída — só pra ter uma ideia. Fundo de reserva, seguro e a comparação com crédito bancário variam conforme a administradora, o perfil e a linha rural ou industrial do seu caso.' + notaWa;
         } else {
-          nota.innerHTML = 'Estimativa para <span data-nota-prazo>' + p.N + '</span> meses, com juros de <span data-nota-juros>' + (p.I*100).toFixed(2).replace('.',',') + '%</span> ao mês e taxa de administração de <span data-nota-adm>' + admTexto + '</span> diluída. Valores reais variam conforme a administradora, o grupo e o seu perfil. Cada participante pode deter no máximo 10% das cotas de um mesmo grupo — créditos maiores são montados com cotas em grupos diferentes.';
+          nota.innerHTML = 'Esta é uma simulação breve para <span data-nota-prazo>' + p.N + '</span> meses, com juros de <span data-nota-juros>' + (p.I*100).toFixed(2).replace('.',',') + '%</span> ao mês e taxa de administração de <span data-nota-adm>' + admTexto + '</span> diluída — só pra ter uma ideia. Valores reais variam conforme a administradora, o grupo e o seu perfil.' + notaWa;
         }
       }
       var introComposicao = document.querySelector('.comp-intro');
@@ -9342,7 +9366,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var elRP = document.getElementById('rPrazo');
       if (elRP) elRP.textContent = p.N + ' meses';
 
-      txt.textContent = brl(pv);
+      txt.value = brl(pv);
       fin.textContent = brl(totalFin);
       con.textContent = brl(totalCon);
       eco.textContent = brl(totalFin - totalCon);
@@ -9364,7 +9388,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var aberto = compAbre.getAttribute('aria-expanded') === 'true';
       compAbre.setAttribute('aria-expanded', String(!aberto));
       compCorpo.hidden = aberto;
-      compAbre.querySelector('span').textContent = aberto ? 'Ver a parcela por dentro' : 'Fechar a composição';
+      compAbre.querySelector('span').textContent = aberto ? 'Ver a comparação completa' : 'Fechar a composição';
       if (!aberto) rastrear('ViewContent', { origem:'composicao-parcela' });
     });
 
@@ -9451,6 +9475,24 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     sl.addEventListener('input', function(){ atualizar(); if (dica) dica.classList.add('oculta'); });
+    if (txt) {
+      txt.addEventListener('focus', function(){
+        txt.value = String(Math.round(Number(sl.value)));
+        txt.select();
+      });
+      var aplicarValorDigitado = function(){
+        var digitos = txt.value.replace(/\D/g, '');
+        var num = digitos ? Number(digitos) : Number(sl.value);
+        num = Math.min(Number(sl.max), Math.max(Number(sl.min), num));
+        sl.value = num;
+        atualizar();
+        if (dica) dica.classList.add('oculta');
+      };
+      txt.addEventListener('blur', aplicarValorDigitado);
+      txt.addEventListener('keydown', function(e){
+        if (e.key === 'Enter'){ e.preventDefault(); aplicarValorDigitado(); txt.blur(); }
+      });
+    }
     atalhos.forEach(function(bt){
       bt.addEventListener('click', function(){
         sl.value = bt.dataset.v; atualizar();

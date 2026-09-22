@@ -70,7 +70,7 @@ nav.solida{ background:rgba(3,6,15,.9); border-bottom-color:var(--line) }
 .nav-drop-btn{
   display:inline-flex; align-items:center; gap:6px;
   font-family:inherit; background:none; border:none; cursor:pointer; padding:8px 0;
-  font-size:15px; font-weight:600; color:#93A9C9;
+  font-size:15px; font-weight:600; color:var(--text-2);
   letter-spacing:-.005em; transition:color .35s var(--ease);
 }
 .nav-drop-btn:hover{ color:var(--text) }
@@ -79,26 +79,50 @@ nav.solida{ background:rgba(3,6,15,.9); border-bottom-color:var(--line) }
 .nav-drop.aberto .nav-drop-caret{ transform:rotate(180deg) }
 
 .nav-links .nav-drop-menu{
-  position:absolute; top:calc(100% + 14px); left:50%; z-index:120;
+  position:absolute; top:calc(100% + 14px); left:0; z-index:120;
   min-width:230px; list-style:none; margin:0; padding:10px;
-  background:rgba(8,14,28,.92);
-  border:1px solid rgba(255,255,255,.1); border-radius:var(--r-l);
+  background:rgba(255,255,255,.96) !important;
+  border:1px solid rgba(11,33,73,.12) !important; border-radius:var(--r-l);
   backdrop-filter:blur(24px) saturate(180%); -webkit-backdrop-filter:blur(24px) saturate(180%);
-  box-shadow:0 24px 60px rgba(2,5,12,.5), inset 0 1px 0 rgba(255,255,255,.08);
+  box-shadow:0 24px 60px rgba(11,33,73,.18), inset 0 1px 0 rgba(255,255,255,.6) !important;
   opacity:0; visibility:hidden; pointer-events:none;
-  transform:translate(-50%,-6px);
+  transform:translateY(-6px);
   transition:opacity .25s var(--ease), transform .25s var(--ease), visibility .25s;
 }
 .nav-links .nav-drop.aberto .nav-drop-menu{
-  opacity:1; visibility:visible; pointer-events:auto; transform:translate(-50%,0);
+  opacity:1; visibility:visible; pointer-events:auto; transform:translateY(0);
 }
+/* !important pra nunca ser sequestrado pelo ".nav-links a{color:...!important}"
+   da pílula (mais amplo, pega qualquer <a> dentro de .nav-links, inclusive
+   os de dentro deste menu) — este cartão inverte em relação à PÁGINA, não
+   acompanha a cor da pílula. */
 .nav-links .nav-drop-menu a{
   display:block; padding:9px 12px; border-radius:10px; white-space:nowrap;
-  font-size:14px; font-weight:600; color:var(--text-2); text-decoration:none;
+  font-size:14px; font-weight:600; color:#35465C !important; text-decoration:none;
   transition:background-color .2s var(--ease), color .2s var(--ease);
 }
-.nav-links .nav-drop-menu a:hover{ background:rgba(127,212,255,.1); color:var(--text) }
-.nav-links .nav-drop-menu a[aria-current="page"]{ color:var(--accent-hi) }
+.nav-links .nav-drop-menu a:hover{ background:rgba(18,100,196,.08); color:#0A1524 !important }
+.nav-links .nav-drop-menu a[aria-current="page"]{ color:#0E56AE !important }
+/* tema claro: a pílula inverte pra navy, o cartão do menu inverte junto
+   (claro sobre escuro), mesma lógica de .calc-resultado/.simulador. */
+:root[data-tema="claro"] .nav-links .nav-drop-menu{
+  background:rgba(8,14,28,.94) !important;
+  border-color:rgba(255,255,255,.1) !important;
+  box-shadow:0 24px 60px rgba(2,5,12,.5), inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+:root[data-tema="claro"] .nav-links .nav-drop-menu a{ color:#C7D6EC !important }
+:root[data-tema="claro"] .nav-links .nav-drop-menu a:hover{ background:rgba(127,212,255,.1); color:#FFFFFF !important }
+:root[data-tema="claro"] .nav-links .nav-drop-menu a[aria-current="page"]{ color:#7FD4FF !important }
+@media (prefers-color-scheme: light){
+  :root:not([data-tema="escuro"]) .nav-links .nav-drop-menu{
+    background:rgba(8,14,28,.94) !important;
+    border-color:rgba(255,255,255,.1) !important;
+    box-shadow:0 24px 60px rgba(2,5,12,.5), inset 0 1px 0 rgba(255,255,255,.08) !important;
+  }
+  :root:not([data-tema="escuro"]) .nav-links .nav-drop-menu a{ color:#C7D6EC !important }
+  :root:not([data-tema="escuro"]) .nav-links .nav-drop-menu a:hover{ background:rgba(127,212,255,.1); color:#FFFFFF !important }
+  :root:not([data-tema="escuro"]) .nav-links .nav-drop-menu a[aria-current="page"]{ color:#7FD4FF !important }
+}
 
 /* mobile: o mesmo grupo, só que expande dentro do próprio menu */
 .nav-painel .nav-drop-btn{
