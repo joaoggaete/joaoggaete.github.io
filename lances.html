@@ -4192,7 +4192,7 @@ input[type=range]::-moz-range-thumb{
 .calc-dica{
   margin-top:8px; text-align:center;
   font-family:var(--f-mono); font-size:11px; letter-spacing:.12em;
-  color:var(--accent-hi); opacity:.85;
+  color:var(--accent-hi) !important; opacity:.85;
   transition:opacity .6s var(--ease), transform .6s var(--ease);
 }
 .calc-dica.oculta{ opacity:0; transform:translateY(-4px) }
@@ -4292,9 +4292,55 @@ input[type=range]::-moz-range-thumb{
   border-radius:14px; background:var(--accent-soft);
   border:1px solid var(--accent-line);
 }
-.calc-lance-modo-rot{ display:block; font-family:var(--f-mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--text-2) }
-.calc-lance-modo-nome{ display:block; margin-top:4px; font-family:var(--f-display); font-size:1.05rem; font-weight:700; color:var(--accent) }
-.calc-lance-modo-desc{ margin-top:6px; font-size:13px; line-height:1.55; color:var(--text-2) }
+.calc-lance-modo-rot{ display:block; font-family:var(--f-mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--text-2) !important }
+.calc-lance-modo-nome{ display:block; margin-top:4px; font-family:var(--f-display); font-size:1.05rem; font-weight:700; color:var(--accent) !important }
+/* !important: uma regra global "p{color:var(--txt2)!important}" pega
+   qualquer <p> solto, inclusive estes dentro do cartão invertido — sem
+   isso o texto vira quase ilegível (--txt2 é da página, não do cartão). */
+.calc-lance-modo-desc{ margin-top:6px; font-size:13px; line-height:1.55; color:var(--text-2) !important }
+.calc-lance-mes-nota{
+  margin-top:16px; padding-top:16px; border-top:1px solid var(--line);
+  font-size:13px; line-height:1.62; color:var(--text-2) !important;
+}
+
+.calc-barras{ margin-top:16px; display:flex; flex-direction:column; gap:14px }
+.calc-barra-tit{
+  display:flex; align-items:baseline; justify-content:space-between; gap:14px;
+  margin-bottom:9px;
+}
+.calc-barra-tit span{
+  font-family:var(--f-mono); font-size:11px; letter-spacing:.15em;
+  color:var(--text-2);
+}
+.calc-barra-tit b{
+  font-family:var(--f-display); font-size:clamp(22.2px,2.4vw,30px);
+  letter-spacing:-.03em; font-variant-numeric:tabular-nums; color:var(--text);
+}
+.calc-barra-trilho{
+  height:12px; border-radius:100px; overflow:hidden;
+  background:rgba(147,169,201,.09);
+}
+.calc-barra-fill{
+  height:100%; border-radius:100px; width:0;
+  transition:width .9s var(--ease);
+}
+/* IDs em vez de .calc-barra.ruim/.bom b: esta folha tem regras globais
+   de alta prioridade tipo "p b, li b{color:...!important}" que competem
+   por especificidade com seletores de classe — um seletor por id vence
+   qualquer combinação de classes, sem precisar decifrar a cascata toda. */
+#lanceBarFinTxt{ color:#8A5A22 !important }
+:root[data-tema="claro"] #lanceBarFinTxt{ color:#F0B7B1 !important }
+@media (prefers-color-scheme: light){
+  :root:not([data-tema="escuro"]) #lanceBarFinTxt{ color:#F0B7B1 !important }
+}
+.calc-barra.ruim .calc-barra-fill{ background:linear-gradient(90deg, rgba(168,118,58,.5), var(--alerta)) }
+#lanceBarConTxt{ color:#0E4F9E !important }
+:root[data-tema="claro"] #lanceBarConTxt{ color:#7FD4FF !important }
+@media (prefers-color-scheme: light){
+  :root:not([data-tema="escuro"]) #lanceBarConTxt{ color:#7FD4FF !important }
+}
+.calc-barra.bom .calc-barra-fill{ background:linear-gradient(90deg, var(--accent-deep), var(--accent) 55%, var(--accent-hi)) }
+.calc-barra-sub{ margin-top:7px; font-size:13px; color:var(--text-3) !important }
 
 /* OS BLOCOS INVERTEM EM RELAÇÃO À PÁGINA (mesmo mecanismo do index.html,
    recortado só pras duas classes que esta página usa: .simulador e
@@ -4542,6 +4588,20 @@ input[type=range]::-moz-range-thumb{
             <div class="res-item"><span>Crédito que sobra pra você</span><b id="lanceCreditoUtil">R$ 150.000</b></div>
             <div class="res-item"><span>Prazo</span><b id="lancePrazo">120 meses</b></div>
           </div>
+
+          <div class="calc-barras" id="lanceBarras">
+            <div class="calc-barra ruim">
+              <div class="calc-barra-tit"><span>Financiamento</span><b id="lanceBarFinTxt">R$ 0</b></div>
+              <div class="calc-barra-trilho"><div class="calc-barra-fill" id="lanceBarFin"></div></div>
+              <p class="calc-barra-sub">custo total estimado dessa carta</p>
+            </div>
+            <div class="calc-barra bom">
+              <div class="calc-barra-tit"><span>Consórcio</span><b id="lanceBarConTxt">R$ 0</b></div>
+              <div class="calc-barra-trilho"><div class="calc-barra-fill" id="lanceBarCon"></div></div>
+              <p class="calc-barra-sub">custo total estimado dessa carta</p>
+            </div>
+          </div>
+          <p class="calc-lance-mes-nota" id="lanceComparacaoAviso" hidden style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line);">Em maquinário, juros e condições mudam conforme a linha rural ou industrial e o perfil da empresa — por isso não mostramos aqui uma comparação genérica com financiamento.</p>
 
           <div class="res-grade" id="lanceLivreResultado">
             <div class="res-item"><span>Lance total ofertado</span><b id="lanceTotalPct">25%</b></div>
@@ -5086,10 +5146,23 @@ document.addEventListener("DOMContentLoaded", function() {
       var credito = pv / N, adm = pv * t.ADM / N, fundo = pv * t.FR / N;
       var segTot = 0;
       for (var m = 0; m < N; m++) segTot += (pv - credito * m) * t.SEG;
+
+      var pmt = pv * t.I / (1 - Math.pow(1 + t.I, -N));
+      var saldo = pv, jurosTot = 0, mipTot = 0;
+      for (var k = 0; k < N; k++){
+        var j = saldo * t.I;
+        jurosTot += j; mipTot += saldo * t.MIP; saldo -= (pmt - j);
+      }
+      var dfiTot = pv * t.DFI * N, bancoTot = t.TXB * N, iofTot = pv * t.IOF;
+
       return {
         con: { credito:credito, adm:adm, fundo:fundo, seg:segTot/N,
                parcela: credito + adm + fundo + segTot/N,
-               total: pv + pv*t.ADM + pv*t.FR + segTot }
+               total: pv + pv*t.ADM + pv*t.FR + segTot },
+        fin: { amort: pv/N, juros: jurosTot/N, seg:(mipTot+dfiTot)/N,
+               banco:(bancoTot + iofTot)/N,
+               parcela: pmt + (mipTot+dfiTot)/N + (bancoTot+iofTot)/N,
+               total: pmt*N + mipTot + dfiTot + bancoTot + iofTot }
       };
     }
   };
@@ -5222,6 +5295,24 @@ document.addEventListener("DOMContentLoaded", function() {
     põe('lanceValorEmbutido', brl(valorEmbutido));
     põe('lanceCreditoUtil', brl(creditoUtil));
     põe('lancePrazo', r.d.N + ' meses');
+
+    /* custo total: financiamento x consórcio pra essa mesma carta —
+       maquinário não entra na comparação (juros variam demais por linha
+       rural/industrial e perfil da empresa pra dar um número genérico). */
+    var barras = document.getElementById('lanceBarras');
+    var avisoComparacao = document.getElementById('lanceComparacaoAviso');
+    var semComparacao = r.d.comparacao === false;
+    if (barras) barras.hidden = semComparacao;
+    if (avisoComparacao) avisoComparacao.hidden = !semComparacao;
+    if (!semComparacao) {
+      var totalFin = r.cCarta.fin.total, totalCon = r.cCarta.con.total;
+      põe('lanceBarFinTxt', brl(totalFin));
+      põe('lanceBarConTxt', brl(totalCon));
+      var barFin = document.getElementById('lanceBarFin');
+      var barCon = document.getElementById('lanceBarCon');
+      if (barFin) barFin.style.width = '100%';
+      if (barCon) barCon.style.width = Math.max(4, (totalCon / totalFin) * 100).toFixed(1) + '%';
+    }
 
     põe('lanceEmbutidoPctTxt', pctEmbutido + '%');
     põe('lanceTotalPct', pctTotal + '%');
