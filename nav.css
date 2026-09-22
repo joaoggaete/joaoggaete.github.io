@@ -333,5 +333,5 @@ body.menu-aberto::after{
 }
 @media (max-width:400px){
   .nav-painel{ padding:16px 20px 24px }
-  .nav-painel ul a{ padding:11px 4px; font-size:17px }
+  .nav-painel ul a, .nav-painel .nav-drop-btn{ padding:11px 4px; font-size:17px }
 }
