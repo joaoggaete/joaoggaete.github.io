@@ -130,7 +130,7 @@ exports.handler = async function (event) {
   if (!chave) {
     return {
       statusCode: 200, headers: cors, body: JSON.stringify({
-        resposta: 'O Apollo ainda não está ligado. Fale com a gente no WhatsApp que respondemos no mesmo dia.',
+        resposta: 'O Apollo ainda não está ligado. Fale com a gente no WhatsApp e responderemos o mais breve possível.',
         semChave: true
       })
     };
@@ -200,7 +200,7 @@ exports.handler = async function (event) {
       console.error('gemini ' + r.status + ' [' + modelo + ']: ' + detalhe);
       return {
         statusCode: 200, headers: cors, body: JSON.stringify({
-          resposta: 'Não consegui responder agora. Fale com a gente no WhatsApp que respondemos no mesmo dia.'
+          resposta: 'Não consegui responder agora. Fale com a gente no WhatsApp e responderemos o mais breve possível.'
         })
       };
     }
@@ -226,7 +226,7 @@ exports.handler = async function (event) {
     console.error('falha na chamada: ' + (e && e.message));
     return {
       statusCode: 200, headers: cors, body: JSON.stringify({
-        resposta: 'Não consegui responder agora. Fale com a gente no WhatsApp que respondemos no mesmo dia.'
+        resposta: 'Não consegui responder agora. Fale com a gente no WhatsApp e responderemos o mais breve possível.'
       })
     };
   }

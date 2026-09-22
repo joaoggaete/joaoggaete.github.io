@@ -8,6 +8,8 @@
 <meta name="description" content="Escolha um horário e converse por vídeo com um especialista da Astro Consórcios sobre o seu consórcio.">
 <meta name="robots" content="noindex, follow">
 <link rel="canonical" href="https://astroconsorcios.netlify.app/agendar.html">
+<link rel="stylesheet" href="/nav.css">
+<script src="/nav.js" defer></script>
 <script>
 /* Antes de qualquer pintura: sem isto a pagina nasce escura e pisca para o
    claro assim que o script principal roda. Fica inline de proposito. */
@@ -160,47 +162,7 @@ textarea{ min-height:84px; resize:vertical }
 [hidden]{ display:none !important }
 @media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important } }
 
-/* ---------- a barra do topo, igual a das outras paginas ---------- */
-nav{
-  position:sticky; top:0; z-index:60;
-  height:74px; display:flex; align-items:center;
-  background:rgba(3,6,15,.9);
-  backdrop-filter:blur(16px) saturate(1.4); -webkit-backdrop-filter:blur(16px) saturate(1.4);
-  border-bottom:1px solid var(--line);
-}
-:root[data-tema="claro"] nav, :root:not([data-tema="escuro"]).t-claro nav{
-  background:rgba(255,255,255,.86);
-}
-.nav-inner{
-  width:100%; max-width:1180px; margin:0 auto; padding:0 20px;
-  display:flex; align-items:center; gap:20px;
-}
-.nav-logo{ height:44px; width:auto; display:inline-flex; align-items:center; gap:11px }
-.nav-cracha{ position:relative; flex:none; height:86%; aspect-ratio:400 / 252; }
-.nav-marca{ position:absolute; inset:0; width:100%; height:100%; display:block; color:#0B2149; visibility:hidden; }
-.nav-gira{
-  position:absolute; inset:0;
-  background-image:url('img/marca-estatica-prata.webp');
-  background-repeat:no-repeat; background-size:contain; background-position:center;
-}
-.nav-palavra{ height:66%; width:auto; display:block; flex:none }
-/* o PNG e branco: no claro vira azul-marinho, mesmo filtro do resto do site */
-:root[data-tema="claro"] .nav-gira, :root:not([data-tema="escuro"]).t-claro .nav-gira{
-  background-image:url('img/marca-estatica-navy.webp');
-}
-:root[data-tema="claro"] .nav-palavra, :root:not([data-tema="escuro"]).t-claro .nav-palavra{
-  filter:brightness(0) saturate(100%) invert(6%) sepia(30%) saturate(1800%) hue-rotate(186deg);
-}
-.nav-volta{
-  margin-left:auto; font-size:14.5px; font-weight:600; color:var(--text-2);
-  text-decoration:none; padding:8px 0;
-}
-.nav-volta:hover{ color:var(--text) }
-@media (max-width:640px){
-  nav{ height:62px }
-  .nav-logo{ height:36px }
-  .nav-inner{ padding:0 14px }
-}
+/* a barra do topo agora vem inteira do nav.css compartilhado */
 
 
 /* ==========================================================================
@@ -307,9 +269,88 @@ html.consent-aberto .mobile-cta:not(.recolhido){
         <img class="nav-palavra" src="img/astro-palavra.webp" width="612" height="250" decoding="async" alt="Astro Consórcios">
       </span>
     </a>
-    <a class="nav-volta" href="/">Voltar ao site</a>
+    <ul class="nav-links">
+        <li><a href="/#calculadora">Simulador</a></li>
+        <li class="nav-drop">
+          <button type="button" class="nav-drop-btn" aria-expanded="false">Nosso Produto
+            <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul class="nav-drop-menu">
+            <li><a href="/como-funciona.html">Como Funciona</a></li>
+            <li><a href="/#diferencial-astro">Diferencial da Astro</a></li>
+            <li><a href="/#estruturas">Modalidades</a></li>
+            <li><a href="/exterior.html">Brasileiros no Exterior</a></li>
+          </ul>
+        </li>
+        <li><a href="/seguranca.html">Segurança e privacidade</a></li>
+        <li class="nav-drop">
+          <button type="button" class="nav-drop-btn" aria-expanded="false">Atendimento
+            <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul class="nav-drop-menu">
+            <li><a href="/#duvidas">Dúvidas</a></li>
+            <li><a href="/#onde-estamos">Fale com a gente</a></li>
+            <li><a href="/#saiba-mais">Saiba mais</a></li>
+          </ul>
+        </li>
+    </ul>
+    <div class="nav-acao">
+      <div class="busca-caixa">
+        <button class="busca-btn" id="buscaBtn" type="button" aria-label="Buscar no site" aria-expanded="false" aria-controls="buscaPainel">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.9"/><path d="m20.5 20.5-4-4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+        </button>
+        <div class="busca-painel" id="buscaPainel" role="search" hidden>
+          <div class="busca-campo">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.9"/><path d="m20.5 20.5-4-4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+            <input type="search" id="buscaInput" placeholder="Buscar no site" aria-label="Buscar no site" autocomplete="off">
+          </div>
+          <ul class="busca-resultados" id="buscaResultados"></ul>
+          <p class="busca-vazio" id="buscaVazio" hidden>Nenhum resultado encontrado.</p>
+        </div>
+      </div>
+      <button class="tema-btn" type="button" aria-label="Mudar para o modo claro" aria-pressed="false"><svg class="sol" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.9"/><path d="M12 2.6v2.2M12 19.2v2.2M21.4 12h-2.2M4.8 12H2.6M18.6 5.4l-1.6 1.6M7 17l-1.6 1.6M18.6 18.6L17 17M7 7 5.4 5.4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><svg class="lua" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.5 14.2A8.6 8.6 0 0 1 9.8 3.5a8.6 8.6 0 1 0 10.7 10.7Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg></button>
+      <a href="/#form-simulador" class="nav-cta">Planejar minha conquista</a>
+    </div>
+    <button class="nav-burger" id="navBurger" aria-label="Abrir menu" aria-expanded="false" aria-controls="navPainel">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<div class="nav-painel" id="navPainel" role="dialog" aria-modal="true" aria-label="Menu de navegação">
+    <ul>
+      <li><a href="/">Página inicial</a></li>
+      <li><a href="/#calculadora">Simulador</a></li>
+      <li class="nav-drop">
+        <button type="button" class="nav-drop-btn" aria-expanded="false">Nosso Produto
+          <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="nav-drop-menu">
+          <li><a href="/como-funciona.html">Como Funciona</a></li>
+          <li><a href="/#diferencial-astro">Diferencial da Astro</a></li>
+          <li><a href="/#estruturas">Modalidades</a></li>
+          <li><a href="/exterior.html">Brasileiros no Exterior</a></li>
+        </ul>
+      </li>
+      <li><a href="/seguranca.html">Segurança e privacidade</a></li>
+      <li class="nav-drop">
+        <button type="button" class="nav-drop-btn" aria-expanded="false">Atendimento
+          <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="nav-drop-menu">
+          <li><a href="/#duvidas">Dúvidas</a></li>
+          <li><a href="/#onde-estamos">Fale com a gente</a></li>
+          <li><a href="/#saiba-mais">Saiba mais</a></li>
+        </ul>
+      </li>
+    </ul>
+    <a href="/#form-simulador" class="nav-painel-cta">Ver quanto vou economizar</a>
+    <a href="https://wa.me/554599999999?text=Ol%C3%A1!%20Quero%20come%C3%A7ar%20meu%20planejamento%20com%20a%20Astro." class="nav-painel-wa" target="_blank" rel="noopener noreferrer">Começar meu planejamento</a>
+    <div class="tema-linha">
+      <span class="rotulo">Modo escuro</span>
+      <button class="tema-btn" type="button" aria-label="Mudar para o modo claro" aria-pressed="false"><svg class="sol" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.9"/><path d="M12 2.6v2.2M12 19.2v2.2M21.4 12h-2.2M4.8 12H2.6M18.6 5.4l-1.6 1.6M7 17l-1.6 1.6M18.6 18.6L17 17M7 7 5.4 5.4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><svg class="lua" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.5 14.2A8.6 8.6 0 0 1 9.8 3.5a8.6 8.6 0 1 0 10.7 10.7Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
 
 <div class="wrap">
 
@@ -629,6 +670,9 @@ html.consent-aberto .mobile-cta:not(.recolhido){
     grava('nao'); fecha();
   });
 })();
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){ if (window.AstroNav) AstroNav.tudo(); });
 </script>
 </body>
 </html>

@@ -6543,12 +6543,10 @@ nav .nav-acao{justify-self:end;flex-shrink:0}
  .hero-acao{margin-top:4px;align-items:center}
  .hero-acao .hero-microcopy{justify-content:center}
 }
-@media(max-width:1399px){
- nav .nav-inner{grid-template-columns:auto 1fr auto;gap:14px}
- nav .nav-links{display:none}
- nav .nav-acao{grid-column:2;grid-row:1}
- nav .nav-burger{display:flex;grid-column:3;grid-row:1}
-}
+/* O corte pra menu hambúrguer agora é o mesmo em todo o site (1024px, ver
+   bloco @media(max-width:1024px) acima) — este bloco escondia .nav-links a
+   partir de 1399px, bem antes do corte oficial, e deixava o dropdown
+   "Nosso Produto"/"Atendimento" inacessível em telas de 1025 a 1399px. */
 @media(max-width:760px){
  .hero-lado-video{width:100%;max-width:none}
  .video-pilha{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
@@ -8154,6 +8152,7 @@ window.AstroTaxas = {
       TXB:25,          /* taxa mensal do banco */
       indice:'INCC',   /* crédito imobiliário é corrigido pelo INCC */
       ENT:0.20,        /* entrada que um financiamento imobiliário costuma pedir */
+      EMBUTIDO:0.30,   /* teto de lance embutido em imóvel, o mais comum entre administradoras */
       min:50000, max:2000000, passo:10000, padrao:300000,
       atalhos:[[50000,'50 mil'],[150000,'150 mil'],[300000,'300 mil'],[500000,'500 mil'],[800000,'800 mil'],[1000000,'1 mi']]
     },
@@ -8171,6 +8170,7 @@ window.AstroTaxas = {
       TXB:25,
       indice:'IPCA',   /* veículo segue IPCA ou tabela do fabricante */
       ENT:0.20,        /* entrada típica de CDC de veículo */
+      EMBUTIDO:0.25,   /* teto de lance embutido em veículo, mais conservador que o de imóvel */
       /* teto em 2 milhões, não só carro popular: linha alta (Porsche,
          Ferrari, BMW) também fecha consórcio de automóvel e tem
          demanda real — limitar a 400 mil escondia esse público. */
@@ -8192,6 +8192,7 @@ window.AstroTaxas = {
       prazos:[60,80,100,120,140],
       I:0.0175, ADM:0.125, FR:0.02, SEG:0.0004, MIP:0.00030, DFI:0,
       IOF:0.0338, TXB:25, indice:'IPCA', ENT:0.20,
+      EMBUTIDO:0.25,   /* mesmo teto do veículo: maquinário segue a linha mais conservadora */
       /* teto em 3 milhões: maquinário agrícola (colheitadeira, trator
          grande) passa de 1 milhão com frequência — 1 milhão como teto
          escondia justo o ticket mais comum desse público. */
@@ -9577,10 +9578,12 @@ document.addEventListener('DOMContentLoaded', function () {
       { tit:'Segurança e privacidade', cat:'Página', url:'/seguranca.html' },
       { tit:'Como o consórcio realmente funciona', cat:'Seção', url:'#verdade' },
       { tit:'Modalidades: imóveis, veículos e maquinário', cat:'Seção', url:'#estruturas' },
+      { tit:'O que muda quando a Astro acompanha', cat:'Seção', url:'#diferencial-astro' },
       { tit:'Atendimento: WhatsApp, vídeo ou presencial', cat:'Seção', url:'#onde-estamos' },
+      { tit:'Três leituras que valem o seu tempo', cat:'Seção', url:'#saiba-mais' },
       { tit:'Simule seu crédito', cat:'Seção', url:'#form-simulador' },
       { tit:'Simulador de parcela mês a mês', cat:'Seção', url:'#calculadora' },
-      { tit:'Um vídeo pra cada forma de usar', cat:'Seção', url:'#estruturas' },
+      { tit:'Um vídeo pra cada forma de usar', cat:'Seção', url:'#lequeCarrossel' },
       { tit:'O que é consórcio e como funciona', cat:'Vídeo', url:'#videoPlay' },
       { tit:'Diferencial da Astro', cat:'Vídeo', url:'#videoPlayDiferencial' },
       { tit:'Atendimento do seu jeito', cat:'Vídeo', url:'#videoPlayAtendimento' },
