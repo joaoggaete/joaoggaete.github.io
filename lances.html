@@ -4217,6 +4217,7 @@ input[type=range]::-moz-range-thumb{
 }
 .sim-entrada{ display:flex; flex-direction:column }
 .sim-entrada .calc-valor{ margin:8px 0 12px }
+@media (min-width:901px){ .sim-entrada{ position:sticky; top:90px } }
 @media (max-width:900px){ .simulador-controle{ grid-template-columns:1fr; gap:26px } }
 
 .calc-modo{ display:inline-flex; align-self:flex-start; gap:0; margin-bottom:12px;
@@ -4419,7 +4420,7 @@ input[type=range]::-moz-range-thumb{
       </div>
       <div class="plan-item">
         <h3>Lance embutido</h3>
-        <p>Você usa uma parte da sua própria carta de crédito — geralmente até 30%, o teto mais comum entre administradoras — pra reforçar sua posição na disputa de lance. Não tira dinheiro do seu bolso, mas reduz o crédito que sobra pra usar.</p>
+        <p>Você usa uma parte da sua própria carta de crédito — geralmente até 25% em automóvel e maquinário, e até 30% em imóvel, os tetos mais comuns entre administradoras — pra reforçar sua posição na disputa de lance. Não tira dinheiro do seu bolso, mas reduz o crédito que sobra pra usar.</p>
       </div>
       <div class="plan-item">
         <h3>Lance livre</h3>
@@ -4439,7 +4440,12 @@ input[type=range]::-moz-range-thumb{
 
     <div class="simulador vidro" id="calculadora">
       <div class="simulador-controle">
-        <div class="sim-entrada">
+        <div class="sim-entrada calc-resultado">
+          <div class="calc-prazo-cab calc-lance-cab">
+            <span>1. Configure sua simulação</span>
+            <small>Ajuste conforme o seu caso</small>
+          </div>
+
           <label class="calc-label" for="calcValor">Crédito que você quer usar</label>
           <div class="calc-valor" id="calcValorTexto">R$ 300.000</div>
           <input type="range" id="calcValor" min="50000" max="2000000" step="10000" value="300000" aria-label="Crédito desejado">
@@ -4453,12 +4459,10 @@ input[type=range]::-moz-range-thumb{
             <button type="button" data-v="800000">800 mil</button>
             <button type="button" data-v="1000000">1 mi</button>
           </div>
-        </div>
 
-        <div class="calc-resultado calc-lance-painel" id="lancePainel">
-          <div class="calc-prazo-cab calc-lance-cab">
-            <span>Taxas usadas na conta</span>
-            <small>Escolha a modalidade da carta</small>
+          <div class="calc-prazo-cab" style="margin-top:22px;">
+            <span>Modalidade da carta</span>
+            <small>Muda as taxas usadas na conta</small>
           </div>
           <div class="calc-modo calc-modo-mini" role="group" aria-label="Modalidade usada na estratégia de lance">
             <button type="button" class="calc-modo-bt ativo" data-modomini="imovel" aria-pressed="true">Imóvel</button>
@@ -4480,9 +4484,26 @@ input[type=range]::-moz-range-thumb{
               <span>Lance embutido</span>
               <small>Sai do seu próprio crédito, sem tirar do bolso — teto mais comum entre administradoras</small>
             </div>
-            <div class="calc-prazo-opcoes" role="group" aria-label="Ativar lance embutido de 30%">
+            <div class="calc-prazo-opcoes" id="lanceEmbutidoGrupo" role="group" aria-label="Ativar lance embutido de 30%">
               <button type="button" id="lanceEmbutidoToggle" class="ativo" aria-pressed="true">30% ligado</button>
             </div>
+          </div>
+
+          <div class="calc-prazo calc-lance-livre">
+            <div class="calc-prazo-cab">
+              <span>Lance livre (recurso próprio, além do embutido)</span>
+              <small>Dinheiro do seu bolso — pesa mais na disputa, mas descapitaliza</small>
+            </div>
+            <div class="calc-valor" id="lanceLivreTexto" style="font-size:clamp(21px,2.6vw,27px)">0%</div>
+            <input type="range" id="lanceLivreSlider" min="0" max="70" step="1" value="0" aria-label="Percentual de lance livre">
+            <div class="calc-escala"><span>0%</span><span id="lanceLivreMaxTxt">70%</span></div>
+          </div>
+        </div>
+
+        <div class="calc-resultado calc-lance-painel" id="lancePainel">
+          <div class="calc-prazo-cab calc-lance-cab">
+            <span>2. O que isso significa</span>
+            <small>Atualiza conforme você mexe ao lado</small>
           </div>
 
           <div class="res-alto">
@@ -4497,20 +4518,11 @@ input[type=range]::-moz-range-thumb{
             <div class="res-item"><span>Prazo</span><b id="lancePrazo">120 meses</b></div>
           </div>
 
-          <div class="calc-prazo calc-lance-livre">
-            <div class="calc-prazo-cab">
-              <span>Lance livre (recurso próprio, além do embutido)</span>
-              <small>Dinheiro do seu bolso — pesa mais na disputa, mas descapitaliza</small>
-            </div>
-            <div class="calc-valor" id="lanceLivreTexto" style="font-size:clamp(21px,2.6vw,27px)">0%</div>
-            <input type="range" id="lanceLivreSlider" min="0" max="70" step="1" value="0" aria-label="Percentual de lance livre">
-            <div class="calc-escala"><span>0%</span><span id="lanceLivreMaxTxt">70%</span></div>
-            <div class="res-grade" id="lanceLivreResultado">
-              <div class="res-item"><span>Lance embutido</span><b id="lanceEmbutidoPctTxt">30%</b></div>
-              <div class="res-item"><span>Lance total ofertado</span><b id="lanceTotalPct">30%</b></div>
-              <div class="res-item"><span>Valor do lance livre</span><b id="lanceLivreValorR">R$ 0</b></div>
-              <div class="res-item"><span>Se esse dinheiro ficasse investido, renderia</span><b id="lanceLivreRendimento">R$ 0</b></div>
-            </div>
+          <div class="res-grade" id="lanceLivreResultado">
+            <div class="res-item"><span>Lance embutido</span><b id="lanceEmbutidoPctTxt">30%</b></div>
+            <div class="res-item"><span>Lance total ofertado</span><b id="lanceTotalPct">30%</b></div>
+            <div class="res-item"><span>Valor do lance livre</span><b id="lanceLivreValorR">R$ 0</b></div>
+            <div class="res-item"><span>Se esse dinheiro ficasse investido, renderia</span><b id="lanceLivreRendimento">R$ 0</b></div>
           </div>
 
           <div class="calc-lance-modo-ativo" id="lanceModoAtivo">
@@ -5065,6 +5077,10 @@ document.addEventListener("DOMContentLoaded", function() {
   var dica = document.getElementById('calcDica');
   var modalidade = 'imovel';
   var embutidoAtivo = true;
+  /* teto do lance embutido varia por modalidade: padrão de mercado é
+     mais alto em imóvel do que em bens móveis (automóvel/moto e
+     maquinário, tratado aqui como bem móvel também). */
+  var PCT_EMBUTIDO_MODALIDADE = { imovel: 30, carro: 25, maquinario: 25 };
   var pctLivre = 0;
   var prazoEscolhido = window.AstroTaxas.perfis[modalidade].N;
   var mesSl = document.getElementById('lanceMes');
@@ -5126,7 +5142,14 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   function atualizar(){
-    var PCT_EMBUTIDO = embutidoAtivo ? 30 : 0;
+    var PCT_EMBUTIDO_MAX = PCT_EMBUTIDO_MODALIDADE[modalidade];
+    var PCT_EMBUTIDO = embutidoAtivo ? PCT_EMBUTIDO_MAX : 0;
+    var toggleEmbutidoEl = document.getElementById('lanceEmbutidoToggle');
+    if (toggleEmbutidoEl) {
+      toggleEmbutidoEl.textContent = PCT_EMBUTIDO_MAX + '%' + (embutidoAtivo ? ' ligado' : ' desligado');
+      var grupoEmbutido = document.getElementById('lanceEmbutidoGrupo');
+      if (grupoEmbutido) grupoEmbutido.setAttribute('aria-label', 'Ativar lance embutido de ' + PCT_EMBUTIDO_MAX + '%');
+    }
     var creditoUtil = Math.max(1, Number(sl.value));
     var carta = creditoUtil / (1 - PCT_EMBUTIDO / 100);
     var valorEmbutido = carta - creditoUtil;
@@ -5146,10 +5169,10 @@ document.addEventListener("DOMContentLoaded", function() {
     põe('lancePrazo', r.d.N + ' meses');
 
     /* o teto do lance livre depende do embutido: com embutido ligado, os
-       dois juntos não passam de 100% (30% + até 70%); desligado, o lance
-       livre sozinho pode ir até 100%. */
+       dois juntos não passam de 100% (o % embutido da modalidade + o
+       resto); desligado, o lance livre sozinho pode ir até 100%. */
     if (livreSl) {
-      var tetoLivre = embutidoAtivo ? 70 : 100;
+      var tetoLivre = embutidoAtivo ? (100 - PCT_EMBUTIDO_MAX) : 100;
       livreSl.max = tetoLivre;
       if (Number(livreSl.value) > tetoLivre) livreSl.value = tetoLivre;
       pctLivre = Number(livreSl.value);
@@ -5168,12 +5191,12 @@ document.addEventListener("DOMContentLoaded", function() {
     } else if (embutidoAtivo && pctLivre === 0) {
       modo = {
         nome: 'Lance fixo, com sorteio de desempate',
-        desc: 'Você entra no grupo de quem oferece os 30% embutidos. Se mais gente oferecer o mesmo nesse mês do que vagas abertas, o desempate entre vocês é por sorteio.'
+        desc: 'Você entra no grupo de quem oferece os ' + PCT_EMBUTIDO_MAX + '% embutidos. Se mais gente oferecer o mesmo nesse mês do que vagas abertas, o desempate entre vocês é por sorteio.'
       };
     } else if (embutidoAtivo && pctLivre > 0) {
       modo = {
         nome: 'Lance fixo + lance livre extra',
-        desc: 'Você usa os 30% embutidos e complementa com dinheiro do bolso, furando a fila do sorteio dentro do grupo do lance fixo — quem oferece mais nesse grupo sai na frente.'
+        desc: 'Você usa os ' + PCT_EMBUTIDO_MAX + '% embutidos e complementa com dinheiro do bolso, furando a fila do sorteio dentro do grupo do lance fixo — quem oferece mais nesse grupo sai na frente.'
       };
     } else {
       modo = {
@@ -5241,7 +5264,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  ligarGrupo('#lancePainel .calc-modo-mini .calc-modo-bt', function(b){
+  ligarGrupo('.sim-entrada .calc-modo-mini .calc-modo-bt', function(b){
     modalidade = b.dataset.modomini;
     prazoEscolhido = window.AstroTaxas.perfis[modalidade].N;
     montarPrazosLance();
@@ -5250,7 +5273,6 @@ document.addEventListener("DOMContentLoaded", function() {
   if (toggleEmbutido) {
     toggleEmbutido.addEventListener('click', function(){
       embutidoAtivo = !embutidoAtivo;
-      toggleEmbutido.textContent = embutidoAtivo ? '30% ligado' : '30% desligado';
       toggleEmbutido.classList.toggle('ativo', embutidoAtivo);
       toggleEmbutido.setAttribute('aria-pressed', String(embutidoAtivo));
       atualizar();
