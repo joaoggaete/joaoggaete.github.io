@@ -4607,7 +4607,6 @@ input[type=range]::-moz-range-thumb{
             <div class="res-item"><span>Lance total ofertado</span><b id="lanceTotalPct">25%</b></div>
             <div class="res-item"><span>Pago com embutido</span><b id="lanceEmbutidoPctTxt">25%</b></div>
             <div class="res-item"><span>Pago em dinheiro</span><b id="lanceDinheiroValorR">R$ 0</b></div>
-            <div class="res-item"><span>Se esse dinheiro ficasse investido, renderia</span><b id="lanceDinheiroRendimento">R$ 0</b></div>
           </div>
 
           <div class="calc-lance-modo-ativo" id="lanceModoAtivo">
@@ -4630,6 +4629,7 @@ input[type=range]::-moz-range-thumb{
             <div class="res-item"><span>Parcela depois de contemplado</span><b id="lanceParcelaDepois">R$ 3.125</b></div>
           </div>
           <p class="calc-lance-mes-nota" id="lanceMesNota">A taxa de administração é fixa e incide sobre o valor total da carta do início ao fim — ela não muda. O que muda é o saldo devedor: ao usar o lance embutido, parte do crédito já foi consumida como lance, então o saldo que resta pra você pagar cai na mesma proporção — por isso a parcela diminui a partir da contemplação.</p>
+          <p class="calc-lance-mes-nota" id="lanceEmbutidoTardeAviso" hidden style="border-top:1px solid var(--line);margin-top:16px;padding-top:16px;">Faltam só <b id="lanceTardeRestam">6</b> de <span id="lanceTardeTotal">120</span> meses pro fim do prazo. Contemplar tão perto do fim antecipa pouco tempo de espera — usar lance embutido aqui abre mão de parte do seu crédito por um ganho pequeno. Pode valer mais usar um lance embutido menor (ou só em dinheiro) neste cenário.</p>
         </div>
       </div>
     </div>
@@ -5125,17 +5125,6 @@ document.addEventListener("DOMContentLoaded", function() {
         atalhos:[[100000,'100 mil'],[300000,'300 mil'],[600000,'600 mil'],[1200000,'1,2 mi'],[3000000,'3 mi']]
       }
     },
-    CDI: 0.139,
-    IR:  0.15,
-    rendimento: function(pv){
-      var p = this.def();
-      var entrada = pv * p.ENT;
-      var anos = p.N / 12;
-      var bruto = entrada * Math.pow(1 + this.CDI, anos);
-      var ganhoBruto = bruto - entrada;
-      var liquido = entrada + ganhoBruto * (1 - this.IR);
-      return { entrada: entrada, liquido: liquido, ganho: liquido - entrada };
-    },
     def: function(){
       var base = this.perfis[this.modalidade];
       var prazo = base.prazos.indexOf(this.prazo) > -1 ? this.prazo : base.N;
@@ -5285,8 +5274,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var r = comModalidade(modalidade, prazoEscolhido, function(){
       return {
         d: window.AstroTaxas.def(),
-        cCarta: window.AstroTaxas.compor(carta),
-        cUtil: window.AstroTaxas.compor(creditoUtil)
+        cCarta: window.AstroTaxas.compor(carta)
       };
     });
 
@@ -5295,24 +5283,6 @@ document.addEventListener("DOMContentLoaded", function() {
     põe('lanceValorEmbutido', brl(valorEmbutido));
     põe('lanceCreditoUtil', brl(creditoUtil));
     põe('lancePrazo', r.d.N + ' meses');
-
-    /* custo total: financiamento x consórcio pra essa mesma carta —
-       maquinário não entra na comparação (juros variam demais por linha
-       rural/industrial e perfil da empresa pra dar um número genérico). */
-    var barras = document.getElementById('lanceBarras');
-    var avisoComparacao = document.getElementById('lanceComparacaoAviso');
-    var semComparacao = r.d.comparacao === false;
-    if (barras) barras.hidden = semComparacao;
-    if (avisoComparacao) avisoComparacao.hidden = !semComparacao;
-    if (!semComparacao) {
-      var totalFin = r.cCarta.fin.total, totalCon = r.cCarta.con.total;
-      põe('lanceBarFinTxt', brl(totalFin));
-      põe('lanceBarConTxt', brl(totalCon));
-      var barFin = document.getElementById('lanceBarFin');
-      var barCon = document.getElementById('lanceBarCon');
-      if (barFin) barFin.style.width = '100%';
-      if (barCon) barCon.style.width = Math.max(4, (totalCon / totalFin) * 100).toFixed(1) + '%';
-    }
 
     põe('lanceEmbutidoPctTxt', pctEmbutido + '%');
     põe('lanceTotalPct', pctTotal + '%');
@@ -5337,24 +5307,28 @@ document.addEventListener("DOMContentLoaded", function() {
     põe('lanceModoNome', modo.nome);
     põe('lanceModoDesc', modo.desc);
 
-    var valorDinheiro = 0;
+    var valorDinheiro = pctDinheiro > 0 ? carta * (pctDinheiro / 100) : 0;
+    põe('lanceDinheiroValorR', brl(valorDinheiro));
     var resultLivre = document.getElementById('lanceLivreResultado');
-    if (pctDinheiro > 0) {
-      valorDinheiro = carta * (pctDinheiro / 100);
-      var anos = r.d.N / 12;
-      var bruto = valorDinheiro * Math.pow(1 + window.AstroTaxas.CDI, anos);
-      var liquido = valorDinheiro + (bruto - valorDinheiro) * (1 - window.AstroTaxas.IR);
-      põe('lanceDinheiroValorR', brl(valorDinheiro));
-      põe('lanceDinheiroRendimento', brl(liquido));
-    } else {
-      põe('lanceDinheiroValorR', brl(0));
-      põe('lanceDinheiroRendimento', brl(0));
-    }
     if (resultLivre) resultLivre.style.display = 'grid';
 
     var parcelaAntes = r.cCarta.con.parcela;
-    var parcelaBaseDepois = r.cUtil.con.parcela;
     põe('lanceParcelaAntes', brl(parcelaAntes));
+
+    /* a taxa de administração e o fundo incidem sobre a carta cheia do
+       início ao fim e não mudam com o lance (nota acima, #lanceMesNota) —
+       o que o lance embutido (e o dinheiro, se houver) amortiza é só o
+       saldo devedor (a parte de crédito da parcela), e esse valor é
+       diluído nos meses que sobram depois da contemplação. Por isso a
+       parcela depois PRECISA depender de quando a contemplação acontece:
+       contemplar cedo dilui o mesmo desconto por mais meses (parcela cai
+       pouco, mas por muito tempo); contemplar tarde dilui por poucos
+       meses (parcela cai bem mais, mas por pouco tempo). */
+    var barras = document.getElementById('lanceBarras');
+    var avisoComparacao = document.getElementById('lanceComparacaoAviso');
+    var semComparacao = r.d.comparacao === false;
+    if (barras) barras.hidden = semComparacao;
+    if (avisoComparacao) avisoComparacao.hidden = !semComparacao;
 
     if (mesSl) {
       var tetoMes = Math.max(1, r.d.N - 1);
@@ -5366,10 +5340,34 @@ document.addEventListener("DOMContentLoaded", function() {
       põe('lanceMesTexto', mes);
       põe('lanceMesTotal', r.d.N);
 
-      var parcelaDepois = valorDinheiro > 0
-        ? Math.max(0, parcelaBaseDepois - valorDinheiro / mesesRestantes)
-        : parcelaBaseDepois;
+      var totalLance = valorEmbutido + valorDinheiro;
+      var parcelaDepois = Math.max(0, parcelaAntes - totalLance / mesesRestantes);
       põe('lanceParcelaDepois', brl(parcelaDepois));
+
+      /* sem dado real de probabilidade de sorteio por grupo, usamos um
+         proxy simples: perto do fim do prazo, sobra pouco tempo pra
+         diluir o desconto do embutido, então a antecipação que ele compra
+         vale cada vez menos frente ao crédito que se abre mão. */
+      var avisoTarde = document.getElementById('lanceEmbutidoTardeAviso');
+      if (avisoTarde) {
+        var pertoDoFim = pctEmbutido > 0 && (mesesRestantes / r.d.N) < 0.15;
+        avisoTarde.hidden = !pertoDoFim;
+        if (pertoDoFim) {
+          põe('lanceTardeRestam', mesesRestantes);
+          põe('lanceTardeTotal', r.d.N);
+        }
+      }
+
+      if (!semComparacao) {
+        var totalFin = r.cCarta.fin.total;
+        var totalCon = parcelaAntes * mes + parcelaDepois * mesesRestantes;
+        põe('lanceBarFinTxt', brl(totalFin));
+        põe('lanceBarConTxt', brl(totalCon));
+        var barFin = document.getElementById('lanceBarFin');
+        var barCon = document.getElementById('lanceBarCon');
+        if (barFin) barFin.style.width = '100%';
+        if (barCon) barCon.style.width = Math.max(4, Math.min(100, (totalCon / totalFin) * 100)).toFixed(1) + '%';
+      }
     }
 
     var pct = ((sl.value - sl.min) / (sl.max - sl.min)) * 100;
