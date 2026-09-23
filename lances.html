@@ -1551,9 +1551,15 @@ footer { background: #020509 !important; }
   .stats-bar .stat-label { color: rgba(10,20,40,.78) !important; }
 }
 
-nav .nav-links { display:flex !important; gap:clamp(12px,1.6vw,34px) !important; flex-wrap:nowrap !important; justify-self:center; }
-nav .nav-links li { white-space:nowrap; }
-nav .nav-links a { padding:6px 2px; font-size:clamp(12.5px,1.05vw,15px) !important; }
+/* "display:flex !important" sem media query aqui vencia até a regra de
+   nav.css que esconde .nav-links abaixo de 1024px — os links ficavam
+   sobrepostos com a busca/tema/hambúrguer no celular. O corte de exibição
+   é só do nav.css agora; aqui fica só o espaçamento pra tela larga. */
+@media (min-width:1025px){
+  nav .nav-links { gap:clamp(12px,1.6vw,34px) !important; flex-wrap:nowrap !important; justify-self:center; }
+  nav .nav-links li { white-space:nowrap; }
+  nav .nav-links a { padding:6px 2px; font-size:clamp(12.5px,1.05vw,15px) !important; }
+}
 
 .hero-topo { max-width:960px; margin:0 auto 34px; text-align:center; }
 .hero-topo .eyebrow { text-align:center; }
@@ -1603,18 +1609,11 @@ nav .nav-links a { padding:6px 2px; font-size:clamp(12.5px,1.05vw,15px) !importa
   .atend-mapa iframe { height:220px !important; }
 }
 
-/* ===== MENU: hambúrguer antes de apertar ===== */
-@media (max-width: 1319px){
-  .nav-links { display: none !important; }
-  .nav-burger { display: block !important; width:44px !important; height:44px !important;
-                background: transparent !important; }
-  .nav-inner { justify-content: space-between !important; }
-}
-@media (min-width: 1320px){
-  .nav-links { display:flex !important; gap:30px !important; }
-  .nav-burger { display: none !important; }
-}
-@media (max-width: 520px){ .nav-cta { display:none !important; } }
+/* Corte pro menu hambúrguer: o mesmo 1024px usado em todo o site, via
+   nav.css — os blocos que existiam aqui escondiam .nav-links a partir de
+   1319px (bem antes do corte oficial) e forçavam .nav-inner de volta a
+   flex, brigando com o grid elástico de nav.css e causando sobreposição
+   entre os links e a busca/tema/CTA nessa faixa. Removidos. */
 
 /* ===== COLUNAS DA PRIMEIRA DOBRA COM MESMA ALTURA ===== */
 @media (min-width: 1025px){
@@ -1626,19 +1625,10 @@ nav .nav-links a { padding:6px 2px; font-size:clamp(12.5px,1.05vw,15px) !importa
                              position:static !important; }
 }
 
-@media (max-width:1319px){ nav .nav-links{ display:none !important; } }
 /* topo dos cartões alinhado */
 @media (min-width:1025px){
   .hero-grid > .hero-left > .calc { margin-top:0 !important; }
   .hero-grid > .hero-right > .form-card { margin-top:0 !important; }
-}
-
-/* cabeçalho: logo à esquerda, hambúrguer à direita, CTA junto dele */
-@media (max-width:1319px){
-  .nav-inner { display:flex !important; align-items:center !important;
-               justify-content:space-between !important; gap:14px !important; }
-  .nav-inner > .nav-cta { margin-left:auto; order:2; }
-  .nav-inner > .nav-burger { order:3; }
 }
 
 /* ===== TEXTO DOS BLOCOS: tudo à esquerda, alturas iguais ===== */
@@ -4024,23 +4014,12 @@ section:last-of-type, .cta-solo:last-of-type{ padding-bottom:134px !important }
 }
 
 
-/* ===== barra do topo entre 1025px e 1319px =====
-   Nessa faixa o hamburguer aparece e os links somem, mas .nav-acao (linha
-   ~3890) e .nav-burger (linha ~2013) estavam os DOIS em grid-column:3.
-   Dois itens na mesma coluna viram duas fileiras: 132px de conteudo dentro
-   de uma barra de 74px. Por isso a logo saia cortada por cima e o
-   hamburguer aparecia solto por baixo da barra.
-   Cada um na sua coluna resolve, e tudo volta para uma fileira so. */
-@media (min-width:1025px) and (max-width:1319px){
-  nav .nav-inner{
-    grid-template-columns:1fr auto auto !important;
-    padding-top:12px !important; padding-bottom:12px !important;
-  }
-  nav .nav-inner > .nav-acao{ grid-column:2 !important; grid-row:1 !important }
-  nav .nav-inner > .nav-burger{
-    grid-column:3 !important; grid-row:1 !important; justify-self:end !important;
-  }
-}
+/* O ajuste que existia aqui pra faixa 1025-1319px partia da premissa de que
+   .nav-links já estava escondido nela (regra legada removida acima) e o
+   hambúrguer sozinho precisava de colunas próprias. Com o corte real de
+   1024px (nav.css) restaurado, essa faixa volta a mostrar os links normais
+   — o bloco antigo só forçava .nav-acao pra coluna errada do grid e foi
+   removido. */
 
 
 /* ==========================================================================
@@ -4127,6 +4106,23 @@ main,section,.container,.pagina-capa,.stats-bar{background:transparent!important
 nav{z-index:300!important}
 .nav-painel{z-index:299!important;max-height:calc(100dvh - 72px)!important;overflow-y:auto!important;overscroll-behavior:contain}
 @media(max-width:1024px){nav .nav-inner{display:grid!important;grid-template-columns:auto 1fr auto!important}.nav-acao{display:flex!important;grid-column:2!important;justify-self:end!important}.nav-acao .nav-cta{display:none!important}.nav-burger{grid-column:3!important}.nav-logo{grid-column:1!important}}
+
+/* Entre 1025 e ~1600px, o conjunto "5 links + busca + botão inicial + tema
+   + CTA" é mais apertado aqui do que no index (tem um link a mais, "Página
+   inicial"), e as regras antigas de nav (~linha 161 e outras, de antes desta
+   página adotar nav.css) ainda ganham da cascata em parte dessa faixa —
+   gap/fonte fixos que não cedem espaço, fazendo nav-acao passar por cima do
+   texto dos links. Mesmo ajuste que resolveu isso no index.html: grid
+   elástico + fonte em clamp(), tudo !important pra nunca perder pro CSS
+   antigo. */
+nav .nav-inner{grid-template-columns:auto minmax(0,1fr) auto!important;gap:16px!important}
+nav .nav-logo{flex-shrink:0!important;width:max-content!important}
+nav .nav-links{gap:clamp(8px,1vw,20px)!important;margin:0!important;padding:0!important;justify-self:center!important}
+nav .nav-links a{white-space:nowrap;font-size:clamp(12px,0.9vw,14px)!important;padding:8px 0!important}
+nav .nav-acao{justify-self:end!important;flex-shrink:0!important;gap:8px!important}
+nav .nav-cta{font-size:13px!important;padding:10px 16px!important}
+nav .nav-inicio{font-size:clamp(11.5px,0.85vw,13px)!important;white-space:nowrap}
+@media(max-width:1240px){ nav .nav-inicio{ display:none!important } }
 
 /* ==========================================================================
    SIMULADOR DE LANCE — portado do index.html (mesma calculadora, mesmas
@@ -4607,7 +4603,6 @@ input[type=range]::-moz-range-thumb{
             <div class="res-item"><span>Lance total ofertado</span><b id="lanceTotalPct">25%</b></div>
             <div class="res-item"><span>Pago com embutido</span><b id="lanceEmbutidoPctTxt">25%</b></div>
             <div class="res-item"><span>Pago em dinheiro</span><b id="lanceDinheiroValorR">R$ 0</b></div>
-            <div class="res-item"><span>Se esse dinheiro ficasse investido, renderia</span><b id="lanceDinheiroRendimento">R$ 0</b></div>
           </div>
 
           <div class="calc-lance-modo-ativo" id="lanceModoAtivo">
@@ -4623,6 +4618,7 @@ input[type=range]::-moz-range-thumb{
             </div>
             <label class="calc-label calc-lance-mes-label" for="lanceMes">Contemplação no mês <b id="lanceMesTexto">30</b> de <span id="lanceMesTotal">120</span></label>
             <input type="range" id="lanceMes" min="1" max="119" step="1" value="30" aria-label="Mês da contemplação">
+            <p class="calc-lance-mes-nota" id="lanceMesLimiteNota" hidden style="margin-top:10px;">Com esse lance, só dá pra contemplar até o mês <b id="lanceMesLimiteMes">0</b> — depois disso o lance seria maior do que o saldo que ainda falta pagar, e a conta não fecha. Ajustamos o limite do controle acima pra esse valor.</p>
           </div>
 
           <div class="res-grade calc-lance-comparacao">
@@ -5125,17 +5121,6 @@ document.addEventListener("DOMContentLoaded", function() {
         atalhos:[[100000,'100 mil'],[300000,'300 mil'],[600000,'600 mil'],[1200000,'1,2 mi'],[3000000,'3 mi']]
       }
     },
-    CDI: 0.139,
-    IR:  0.15,
-    rendimento: function(pv){
-      var p = this.def();
-      var entrada = pv * p.ENT;
-      var anos = p.N / 12;
-      var bruto = entrada * Math.pow(1 + this.CDI, anos);
-      var ganhoBruto = bruto - entrada;
-      var liquido = entrada + ganhoBruto * (1 - this.IR);
-      return { entrada: entrada, liquido: liquido, ganho: liquido - entrada };
-    },
     def: function(){
       var base = this.perfis[this.modalidade];
       var prazo = base.prazos.indexOf(this.prazo) > -1 ? this.prazo : base.N;
@@ -5285,8 +5270,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var r = comModalidade(modalidade, prazoEscolhido, function(){
       return {
         d: window.AstroTaxas.def(),
-        cCarta: window.AstroTaxas.compor(carta),
-        cUtil: window.AstroTaxas.compor(creditoUtil)
+        cCarta: window.AstroTaxas.compor(carta)
       };
     });
 
@@ -5295,24 +5279,6 @@ document.addEventListener("DOMContentLoaded", function() {
     põe('lanceValorEmbutido', brl(valorEmbutido));
     põe('lanceCreditoUtil', brl(creditoUtil));
     põe('lancePrazo', r.d.N + ' meses');
-
-    /* custo total: financiamento x consórcio pra essa mesma carta —
-       maquinário não entra na comparação (juros variam demais por linha
-       rural/industrial e perfil da empresa pra dar um número genérico). */
-    var barras = document.getElementById('lanceBarras');
-    var avisoComparacao = document.getElementById('lanceComparacaoAviso');
-    var semComparacao = r.d.comparacao === false;
-    if (barras) barras.hidden = semComparacao;
-    if (avisoComparacao) avisoComparacao.hidden = !semComparacao;
-    if (!semComparacao) {
-      var totalFin = r.cCarta.fin.total, totalCon = r.cCarta.con.total;
-      põe('lanceBarFinTxt', brl(totalFin));
-      põe('lanceBarConTxt', brl(totalCon));
-      var barFin = document.getElementById('lanceBarFin');
-      var barCon = document.getElementById('lanceBarCon');
-      if (barFin) barFin.style.width = '100%';
-      if (barCon) barCon.style.width = Math.max(4, (totalCon / totalFin) * 100).toFixed(1) + '%';
-    }
 
     põe('lanceEmbutidoPctTxt', pctEmbutido + '%');
     põe('lanceTotalPct', pctTotal + '%');
@@ -5337,27 +5303,35 @@ document.addEventListener("DOMContentLoaded", function() {
     põe('lanceModoNome', modo.nome);
     põe('lanceModoDesc', modo.desc);
 
-    var valorDinheiro = 0;
+    var valorDinheiro = pctDinheiro > 0 ? carta * (pctDinheiro / 100) : 0;
+    põe('lanceDinheiroValorR', brl(valorDinheiro));
     var resultLivre = document.getElementById('lanceLivreResultado');
-    if (pctDinheiro > 0) {
-      valorDinheiro = carta * (pctDinheiro / 100);
-      var anos = r.d.N / 12;
-      var bruto = valorDinheiro * Math.pow(1 + window.AstroTaxas.CDI, anos);
-      var liquido = valorDinheiro + (bruto - valorDinheiro) * (1 - window.AstroTaxas.IR);
-      põe('lanceDinheiroValorR', brl(valorDinheiro));
-      põe('lanceDinheiroRendimento', brl(liquido));
-    } else {
-      põe('lanceDinheiroValorR', brl(0));
-      põe('lanceDinheiroRendimento', brl(0));
-    }
     if (resultLivre) resultLivre.style.display = 'grid';
 
     var parcelaAntes = r.cCarta.con.parcela;
-    var parcelaBaseDepois = r.cUtil.con.parcela;
     põe('lanceParcelaAntes', brl(parcelaAntes));
 
+    /* a taxa de administração e o fundo incidem sobre a carta cheia do
+       início ao fim e não mudam com o lance (nota acima, #lanceMesNota) —
+       o que o lance embutido (e o dinheiro, se houver) amortiza é o
+       saldo devedor inteiro que ainda falta pagar (parcelaAntes vezes os
+       meses restantes), diluído nos meses que sobram depois da
+       contemplação. Isso trava um limite real: se o lance total for
+       maior do que tudo o que ainda falta pagar naquele mês, a conta não
+       fecha — daí o teto do slider abaixo muda com o tamanho do lance,
+       não só com o prazo do grupo. */
+    var totalLance = valorEmbutido + valorDinheiro;
+
+    var barras = document.getElementById('lanceBarras');
+    var avisoComparacao = document.getElementById('lanceComparacaoAviso');
+    var semComparacao = r.d.comparacao === false;
+    if (barras) barras.hidden = semComparacao;
+    if (avisoComparacao) avisoComparacao.hidden = !semComparacao;
+
     if (mesSl) {
-      var tetoMes = Math.max(1, r.d.N - 1);
+      var tetoMesPrazo = Math.max(1, r.d.N - 1);
+      var tetoMesLance = parcelaAntes > 0 ? Math.floor(r.d.N - totalLance / parcelaAntes) : tetoMesPrazo;
+      var tetoMes = Math.max(1, Math.min(tetoMesPrazo, tetoMesLance));
       mesSl.max = tetoMes;
       if (Number(mesSl.value) > tetoMes) mesSl.value = tetoMes;
       var mes = Number(mesSl.value);
@@ -5366,10 +5340,26 @@ document.addEventListener("DOMContentLoaded", function() {
       põe('lanceMesTexto', mes);
       põe('lanceMesTotal', r.d.N);
 
-      var parcelaDepois = valorDinheiro > 0
-        ? Math.max(0, parcelaBaseDepois - valorDinheiro / mesesRestantes)
-        : parcelaBaseDepois;
+      var parcelaDepois = Math.max(0, parcelaAntes - totalLance / mesesRestantes);
       põe('lanceParcelaDepois', brl(parcelaDepois));
+
+      var limiteNota = document.getElementById('lanceMesLimiteNota');
+      if (limiteNota) {
+        var limitado = tetoMesLance < tetoMesPrazo;
+        limiteNota.hidden = !limitado;
+        if (limitado) põe('lanceMesLimiteMes', tetoMes);
+      }
+
+      if (!semComparacao) {
+        var totalFin = r.cCarta.fin.total;
+        var totalCon = parcelaAntes * mes + parcelaDepois * mesesRestantes;
+        põe('lanceBarFinTxt', brl(totalFin));
+        põe('lanceBarConTxt', brl(totalCon));
+        var barFin = document.getElementById('lanceBarFin');
+        var barCon = document.getElementById('lanceBarCon');
+        if (barFin) barFin.style.width = '100%';
+        if (barCon) barCon.style.width = Math.max(4, Math.min(100, (totalCon / totalFin) * 100)).toFixed(1) + '%';
+      }
     }
 
     var pct = ((sl.value - sl.min) / (sl.max - sl.min)) * 100;
