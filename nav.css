@@ -48,8 +48,13 @@ nav.solida{ background:rgba(3,6,15,.9); border-bottom-color:var(--line) }
 .nav-palavra{ height:66%; width:auto; display:block; flex:none }
 
 .nav-links{ list-style:none; display:flex; flex-wrap:wrap; gap:8px 32px; justify-self:center; margin:0; padding:0 }
+/* <button> (item com submenu) e <a> (item simples) têm métricas de
+   line-height diferentes por padrão do navegador — sem isto, o texto do
+   botão fica alguns pixels mais baixo que o dos links ao lado, e o menu
+   parece desalinhado mesmo com a mesma fonte/tamanho nos dois. */
+.nav-links > li{ display:flex; align-items:center }
 .nav-links a{
-  font-size:15px; font-weight:600; color:#93A9C9;
+  font-size:15px; font-weight:600; color:#93A9C9; line-height:1;
   letter-spacing:-.005em; position:relative; padding:8px 0;
   transition:color .35s var(--ease); text-decoration:none;
 }
@@ -70,7 +75,7 @@ nav.solida{ background:rgba(3,6,15,.9); border-bottom-color:var(--line) }
 .nav-drop-btn{
   display:inline-flex; align-items:center; gap:6px;
   font-family:inherit; background:none; border:none; cursor:pointer; padding:8px 0;
-  font-size:15px; font-weight:600; color:var(--text-2);
+  font-size:15px; font-weight:600; color:var(--text-2); line-height:1;
   letter-spacing:-.005em; transition:color .35s var(--ease);
 }
 .nav-drop-btn:hover{ color:var(--text) }
