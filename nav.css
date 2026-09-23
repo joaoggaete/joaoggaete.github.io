@@ -80,6 +80,17 @@ nav.solida{ background:rgba(3,6,15,.9); border-bottom-color:var(--line) }
 }
 .nav-drop-btn:hover{ color:var(--text) }
 .nav-drop.aberto .nav-drop-btn{ color:var(--text) }
+/* Nas páginas ainda não migradas pro nav.css puro, sobra uma regra antiga
+   tipo "nav, nav *{color:#fff}" presa a @media(prefers-color-scheme:dark)
+   sem checar data-tema — se o sistema do visitante estiver no escuro mas a
+   página estiver explicitamente no tema claro, ela ganha do <a> só onde já
+   existe um !important próprio, e o botão do submenu (sem essa reafirmação)
+   fica branco sobre a pílula clara, invisível. !important aqui, com
+   variável (não hex fixo), garante que o botão sempre sega o TEMA DA
+   PÁGINA, nunca a preferência do sistema. */
+.nav-drop-btn, .nav-drop-btn .nav-drop-caret{ color:var(--text-2) !important }
+.nav-drop-btn:hover, .nav-drop.aberto .nav-drop-btn,
+.nav-drop-btn:hover .nav-drop-caret, .nav-drop.aberto .nav-drop-btn .nav-drop-caret{ color:var(--text) !important }
 .nav-drop-caret{ width:10px; height:10px; flex:none; transition:transform .3s var(--ease) }
 .nav-drop.aberto .nav-drop-caret{ transform:rotate(180deg) }
 
