@@ -4622,6 +4622,7 @@ input[type=range]::-moz-range-thumb{
             </div>
             <label class="calc-label calc-lance-mes-label" for="lanceMes">Contemplação no mês <b id="lanceMesTexto">30</b> de <span id="lanceMesTotal">120</span></label>
             <input type="range" id="lanceMes" min="1" max="119" step="1" value="30" aria-label="Mês da contemplação">
+            <p class="calc-lance-mes-nota" id="lanceMesLimiteNota" hidden style="margin-top:10px;">Com esse lance, só dá pra contemplar até o mês <b id="lanceMesLimiteMes">0</b> — depois disso o lance seria maior do que o saldo que ainda falta pagar, e a conta não fecha. Ajustamos o limite do controle acima pra esse valor.</p>
           </div>
 
           <div class="res-grade calc-lance-comparacao">
@@ -4629,7 +4630,6 @@ input[type=range]::-moz-range-thumb{
             <div class="res-item"><span>Parcela depois de contemplado</span><b id="lanceParcelaDepois">R$ 3.125</b></div>
           </div>
           <p class="calc-lance-mes-nota" id="lanceMesNota">A taxa de administração é fixa e incide sobre o valor total da carta do início ao fim — ela não muda. O que muda é o saldo devedor: ao usar o lance embutido, parte do crédito já foi consumida como lance, então o saldo que resta pra você pagar cai na mesma proporção — por isso a parcela diminui a partir da contemplação.</p>
-          <p class="calc-lance-mes-nota" id="lanceEmbutidoTardeAviso" hidden style="border-top:1px solid var(--line);margin-top:16px;padding-top:16px;">Faltam só <b id="lanceTardeRestam">6</b> de <span id="lanceTardeTotal">120</span> meses pro fim do prazo. Contemplar tão perto do fim antecipa pouco tempo de espera — usar lance embutido aqui abre mão de parte do seu crédito por um ganho pequeno. Pode valer mais usar um lance embutido menor (ou só em dinheiro) neste cenário.</p>
         </div>
       </div>
     </div>
@@ -5317,13 +5317,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
     /* a taxa de administração e o fundo incidem sobre a carta cheia do
        início ao fim e não mudam com o lance (nota acima, #lanceMesNota) —
-       o que o lance embutido (e o dinheiro, se houver) amortiza é só o
-       saldo devedor (a parte de crédito da parcela), e esse valor é
-       diluído nos meses que sobram depois da contemplação. Por isso a
-       parcela depois PRECISA depender de quando a contemplação acontece:
-       contemplar cedo dilui o mesmo desconto por mais meses (parcela cai
-       pouco, mas por muito tempo); contemplar tarde dilui por poucos
-       meses (parcela cai bem mais, mas por pouco tempo). */
+       o que o lance embutido (e o dinheiro, se houver) amortiza é o
+       saldo devedor inteiro que ainda falta pagar (parcelaAntes vezes os
+       meses restantes), diluído nos meses que sobram depois da
+       contemplação. Isso trava um limite real: se o lance total for
+       maior do que tudo o que ainda falta pagar naquele mês, a conta não
+       fecha — daí o teto do slider abaixo muda com o tamanho do lance,
+       não só com o prazo do grupo. */
+    var totalLance = valorEmbutido + valorDinheiro;
+
     var barras = document.getElementById('lanceBarras');
     var avisoComparacao = document.getElementById('lanceComparacaoAviso');
     var semComparacao = r.d.comparacao === false;
@@ -5331,7 +5333,9 @@ document.addEventListener("DOMContentLoaded", function() {
     if (avisoComparacao) avisoComparacao.hidden = !semComparacao;
 
     if (mesSl) {
-      var tetoMes = Math.max(1, r.d.N - 1);
+      var tetoMesPrazo = Math.max(1, r.d.N - 1);
+      var tetoMesLance = parcelaAntes > 0 ? Math.floor(r.d.N - totalLance / parcelaAntes) : tetoMesPrazo;
+      var tetoMes = Math.max(1, Math.min(tetoMesPrazo, tetoMesLance));
       mesSl.max = tetoMes;
       if (Number(mesSl.value) > tetoMes) mesSl.value = tetoMes;
       var mes = Number(mesSl.value);
@@ -5340,22 +5344,14 @@ document.addEventListener("DOMContentLoaded", function() {
       põe('lanceMesTexto', mes);
       põe('lanceMesTotal', r.d.N);
 
-      var totalLance = valorEmbutido + valorDinheiro;
       var parcelaDepois = Math.max(0, parcelaAntes - totalLance / mesesRestantes);
       põe('lanceParcelaDepois', brl(parcelaDepois));
 
-      /* sem dado real de probabilidade de sorteio por grupo, usamos um
-         proxy simples: perto do fim do prazo, sobra pouco tempo pra
-         diluir o desconto do embutido, então a antecipação que ele compra
-         vale cada vez menos frente ao crédito que se abre mão. */
-      var avisoTarde = document.getElementById('lanceEmbutidoTardeAviso');
-      if (avisoTarde) {
-        var pertoDoFim = pctEmbutido > 0 && (mesesRestantes / r.d.N) < 0.15;
-        avisoTarde.hidden = !pertoDoFim;
-        if (pertoDoFim) {
-          põe('lanceTardeRestam', mesesRestantes);
-          põe('lanceTardeTotal', r.d.N);
-        }
+      var limiteNota = document.getElementById('lanceMesLimiteNota');
+      if (limiteNota) {
+        var limitado = tetoMesLance < tetoMesPrazo;
+        limiteNota.hidden = !limitado;
+        if (limitado) põe('lanceMesLimiteMes', tetoMes);
       }
 
       if (!semComparacao) {
