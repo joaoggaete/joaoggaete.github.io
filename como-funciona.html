@@ -4255,7 +4255,7 @@ nav{z-index:300!important}
       </div>
 
       <div class="prazo-saldo">Diferença a seu favor <strong id="pzDif">R$ 162.495</strong></div>
-      <p class="prazo-nota">Estimativa com juros de 1% ao mês no financiamento e taxa de administração de 18% diluída no consórcio. Valores reais variam conforme administradora e perfil.</p>
+      <p class="prazo-nota">Estimativa com juros de 1% ao mês no financiamento e taxa de administração de 20% diluída no consórcio. Valores reais variam conforme administradora e perfil.</p>
     </div>
   </div>
 </section>
@@ -4461,7 +4461,7 @@ document.addEventListener('DOMContentLoaded', function(){ if (window.AstroNav) {
       fin=document.getElementById('calcFin'),
       con=document.getElementById('calcCon'),
       eco=document.getElementById('calcEcon');
-  var N=120, i=0.01, TAXA_ADM=0.18;
+  var N=120, i=0.01, TAXA_ADM=0.20;
   function brl(v){ return 'R$ ' + Math.round(v).toLocaleString('pt-BR'); }
   function calcular(){
     var pv=Number(sl.value);
@@ -4528,7 +4528,7 @@ document.addEventListener('DOMContentLoaded', function(){ if (window.AstroNav) {
 (function(){
   var abas=document.querySelectorAll('.prazo-aba');
   if(!abas.length) return;
-  var PV=300000, i=0.01, ADM=0.18;
+  var PV=300000, i=0.01, ADM=0.20;
   function brl(v){ return 'R$ ' + Math.round(v).toLocaleString('pt-BR'); }
   function calc(n){
     var pmt = PV*i/(1-Math.pow(1+i,-n));
