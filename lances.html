@@ -4596,7 +4596,9 @@ input[type=range]::-moz-range-thumb{
               <div class="calc-barra-trilho"><div class="calc-barra-fill" id="lanceBarCon"></div></div>
               <p class="calc-barra-sub">custo total estimado dessa carta</p>
             </div>
+            <p class="calc-barra-sub" id="lanceCorrecaoResumo" style="margin-top:-2px;">O custo do consórcio já soma a correção monetária da carta e da parcela ao longo do prazo.</p>
           </div>
+          <p class="calc-lance-mes-nota" id="lanceLanceCaroAviso" hidden style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line);color:var(--alerta);">Esse lance está saindo <b id="lanceLanceCaroValor">R$ 0</b> mais caro do que simplesmente não dar lance nenhum nesse mês — a taxa de administração sobre a carta maior (inflada pelo embutido) supera o que o lance economiza em parcela. Considere um lance menor ou contemplar mais tarde.</p>
           <p class="calc-lance-mes-nota" id="lanceComparacaoAviso" hidden style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line);">Em maquinário, juros e condições mudam conforme a linha rural ou industrial e o perfil da empresa — por isso não mostramos aqui uma comparação genérica com financiamento.</p>
 
           <div class="res-grade" id="lanceLivreResultado">
@@ -4626,6 +4628,7 @@ input[type=range]::-moz-range-thumb{
             <div class="res-item"><span>Parcela depois de contemplado</span><b id="lanceParcelaDepois">R$ 3.125</b></div>
           </div>
           <p class="calc-lance-mes-nota" id="lanceMesNota">A taxa de administração é fixa e incide sobre o valor total da carta do início ao fim — ela não muda. O que muda é o saldo devedor: ao usar o lance embutido, parte do crédito já foi consumida como lance, então o saldo que resta pra você pagar cai na mesma proporção — por isso a parcela diminui a partir da contemplação.</p>
+          <p class="calc-lance-mes-nota" id="lanceCorrecaoDetalhe" style="margin-top:10px;">Carta e parcela também sobem a cada 12 meses pela correção monetária do grupo.</p>
         </div>
       </div>
     </div>
@@ -5100,7 +5103,7 @@ document.addEventListener("DOMContentLoaded", function() {
         nome:'Imóvel', bem:'imóvel', N:120,
         prazos:[60,80,100,120,140,180,240],
         I:0.0095, ADM:0.20, FR:0.02, SEG:0.0005, MIP:0.00035, DFI:0.00010,
-        IOF:0, TXB:25, indice:'INCC', ENT:0.20,
+        IOF:0, TXB:25, indice:'INCC', indiceAnual:0.0656, ENT:0.20,
         min:50000, max:2000000, passo:10000, padrao:300000,
         atalhos:[[50000,'50 mil'],[150000,'150 mil'],[300000,'300 mil'],[500000,'500 mil'],[800000,'800 mil'],[1000000,'1 mi']]
       },
@@ -5108,15 +5111,19 @@ document.addEventListener("DOMContentLoaded", function() {
         nome:'Automóvel', bem:'veículo', N:60,
         prazos:[60,80,100,120,140],
         I:0.0175, ADM:0.16, FR:0.02, SEG:0.0004, MIP:0.00030, DFI:0,
-        IOF:0.0338, TXB:25, indice:'IPCA', ENT:0.20,
+        IOF:0.0338, TXB:25, indice:'IPCA', indiceAnual:0.0422, ENT:0.20,
         min:50000, max:2000000, passo:10000, padrao:90000,
         atalhos:[[50000,'50 mil'],[90000,'90 mil'],[250000,'250 mil'],[600000,'600 mil'],[2000000,'2 mi']]
       },
       maquinario: {
+        /* não existe índice exclusivo pra máquina agrícola — administradoras
+           usam IPCA, INPC ou tabela do fabricante conforme o regulamento do
+           grupo. Seguimos IPCA, igual ao automóvel, na ausência de um
+           índice setorial padrão. */
         nome:'Maquinário', bem:'maquinário', comparacao:false, N:120,
         prazos:[60,80,100,120,140],
         I:0.0175, ADM:0.125, FR:0.02, SEG:0.0004, MIP:0.00030, DFI:0,
-        IOF:0.0338, TXB:25, indice:'IPCA', ENT:0.20,
+        IOF:0.0338, TXB:25, indice:'IPCA', indiceAnual:0.0422, ENT:0.20,
         min:50000, max:3000000, passo:10000, padrao:200000,
         atalhos:[[100000,'100 mil'],[300000,'300 mil'],[600000,'600 mil'],[1200000,'1,2 mi'],[3000000,'3 mi']]
       }
@@ -5270,7 +5277,8 @@ document.addEventListener("DOMContentLoaded", function() {
     var r = comModalidade(modalidade, prazoEscolhido, function(){
       return {
         d: window.AstroTaxas.def(),
-        cCarta: window.AstroTaxas.compor(carta)
+        cCarta: window.AstroTaxas.compor(carta),
+        cUtil: window.AstroTaxas.compor(creditoUtil)
       };
     });
 
@@ -5308,8 +5316,10 @@ document.addEventListener("DOMContentLoaded", function() {
     var resultLivre = document.getElementById('lanceLivreResultado');
     if (resultLivre) resultLivre.style.display = 'grid';
 
-    var parcelaAntes = r.cCarta.con.parcela;
-    põe('lanceParcelaAntes', brl(parcelaAntes));
+    /* valores em "reais de hoje" (t=0, sem correção) — servem de base pra
+       tudo abaixo, que aplica a correção conforme o mês escolhido. */
+    var parcelaAntesBase = r.cCarta.con.parcela;
+    var indiceAnual = r.d.indiceAnual || 0;
 
     /* a taxa de administração e o fundo incidem sobre a carta cheia do
        início ao fim e não mudam com o lance (nota acima, #lanceMesNota) —
@@ -5319,7 +5329,9 @@ document.addEventListener("DOMContentLoaded", function() {
        contemplação. Isso trava um limite real: se o lance total for
        maior do que tudo o que ainda falta pagar naquele mês, a conta não
        fecha — daí o teto do slider abaixo muda com o tamanho do lance,
-       não só com o prazo do grupo. */
+       não só com o prazo do grupo. O lance e a parcela sobem pelo MESMO
+       fator de correção a cada mês, então essa razão (e por isso o teto)
+       não muda com a correção — ela só reescala os dois lados igual. */
     var totalLance = valorEmbutido + valorDinheiro;
 
     var barras = document.getElementById('lanceBarras');
@@ -5330,7 +5342,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (mesSl) {
       var tetoMesPrazo = Math.max(1, r.d.N - 1);
-      var tetoMesLance = parcelaAntes > 0 ? Math.floor(r.d.N - totalLance / parcelaAntes) : tetoMesPrazo;
+      var tetoMesLance = parcelaAntesBase > 0 ? Math.floor(r.d.N - totalLance / parcelaAntesBase) : tetoMesPrazo;
       var tetoMes = Math.max(1, Math.min(tetoMesPrazo, tetoMesLance));
       mesSl.max = tetoMes;
       if (Number(mesSl.value) > tetoMes) mesSl.value = tetoMes;
@@ -5340,8 +5352,22 @@ document.addEventListener("DOMContentLoaded", function() {
       põe('lanceMesTexto', mes);
       põe('lanceMesTotal', r.d.N);
 
-      var parcelaDepois = Math.max(0, parcelaAntes - totalLance / mesesRestantes);
-      põe('lanceParcelaDepois', brl(parcelaDepois));
+      /* correção monetária: a cada aniversário do grupo (12 em 12 meses),
+         a carta e a parcela sobem pelo índice da modalidade — assim como
+         "tudo em percentual sobre o valor do bem" já vale hoje sem
+         correção, continua valendo com ela, só que o valor do bem (a
+         carta) cresce degrau a degrau em vez de ficar parado. */
+      var anoContemplacao = Math.floor((mes - 1) / 12);
+      var fatorAtual = Math.pow(1 + indiceAnual, anoContemplacao);
+      var parcelaAntesAtual = parcelaAntesBase * fatorAtual;
+      var cartaAtual = carta * fatorAtual;
+      var creditoUtilAtual = creditoUtil * fatorAtual;
+      var totalLanceAtual = totalLance * fatorAtual;
+      var valorDinheiroAtual = valorDinheiro * fatorAtual;
+      põe('lanceParcelaAntes', brl(parcelaAntesAtual));
+
+      var parcelaDepoisBase = Math.max(0, parcelaAntesAtual - totalLanceAtual / mesesRestantes);
+      põe('lanceParcelaDepois', brl(parcelaDepoisBase));
 
       var limiteNota = document.getElementById('lanceMesLimiteNota');
       if (limiteNota) {
@@ -5350,11 +5376,64 @@ document.addEventListener("DOMContentLoaded", function() {
         if (limitado) põe('lanceMesLimiteMes', tetoMes);
       }
 
+      var correcaoDetalhe = document.getElementById('lanceCorrecaoDetalhe');
+      if (correcaoDetalhe) {
+        if (indiceAnual > 0) {
+          correcaoDetalhe.hidden = false;
+          correcaoDetalhe.innerHTML = 'Carta e parcela sobem ' + (indiceAnual * 100).toFixed(2).replace('.', ',') +
+            '% a cada 12 meses, pelo ' + r.d.indice + ' — o índice usado pra esse tipo de bem. ' +
+            (mes > 12 ? 'No mês ' + mes + ', sua carta já equivaleria a ' + brl(cartaAtual) + ' e seu crédito líquido a ' + brl(creditoUtilAtual) + '.' : 'Nos primeiros 12 meses ainda não houve reajuste.');
+        } else {
+          correcaoDetalhe.hidden = true;
+        }
+      }
+
+      var resumoCorrecao = document.getElementById('lanceCorrecaoResumo');
+
+      /* soma mês a mês (reajustada a cada 12 meses pelo índice) quanto o
+         cliente efetivamente paga com o lance escolhido. */
+      var totalCon = 0;
+      for (var mIt = 1; mIt <= r.d.N; mIt++) {
+        var anoIt = Math.floor((mIt - 1) / 12);
+        if (mIt <= mes) {
+          totalCon += parcelaAntesBase * Math.pow(1 + indiceAnual, anoIt);
+        } else {
+          totalCon += parcelaDepoisBase * Math.pow(1 + indiceAnual, anoIt - anoContemplacao);
+        }
+      }
+      totalCon += valorDinheiroAtual;
+
+      /* o mesmo total, mas SEM lance nenhum (embutido infla a carta e você
+         paga ADM sobre ela do início ao fim — com correção monetária,
+         isso pode superar o que o lance economiza na parcela, sobretudo
+         se contemplado cedo, quando sobra pouco tempo pra "recuperar" via
+         parcela reduzida o que já foi pago a mais em ADM até lá). Sem
+         lance, o total não varia com o mês (nota de dias atrás), então dá
+         pra comparar direto contra o que se paga com o lance escolhido. */
+      var parcelaSemLance = r.cUtil.con.parcela;
+      var totalSemLance = 0;
+      for (var mSl2 = 1; mSl2 <= r.d.N; mSl2++) {
+        totalSemLance += parcelaSemLance * Math.pow(1 + indiceAnual, Math.floor((mSl2 - 1) / 12));
+      }
+      var lanceCaroAviso = document.getElementById('lanceLanceCaroAviso');
+      if (lanceCaroAviso) {
+        var diferenca = totalCon - totalSemLance;
+        var lanceCaro = totalLance > 0 && diferenca > 0;
+        lanceCaroAviso.hidden = !lanceCaro;
+        if (lanceCaro) põe('lanceLanceCaroValor', brl(diferenca));
+      }
+
       if (!semComparacao) {
-        var totalFin = r.cCarta.fin.total;
-        var totalCon = parcelaAntes * mes + parcelaDepois * mesesRestantes;
+        /* financiar a CARTA cheia (que só é maior por causa do embutido)
+           compararia com um bem mais caro do que o cliente realmente leva
+           pra casa — a carta líquida (creditoUtil) é o valor do bem, em
+           reais de hoje: financiamento não é indexado por INCC/IPCA aqui,
+           só o consórcio, que carrega esse reajuste real do bem ao longo
+           do prazo. */
+        var totalFin = r.cUtil.fin.total;
         põe('lanceBarFinTxt', brl(totalFin));
         põe('lanceBarConTxt', brl(totalCon));
+        if (resumoCorrecao) resumoCorrecao.hidden = false;
         var barFin = document.getElementById('lanceBarFin');
         var barCon = document.getElementById('lanceBarCon');
         if (barFin) barFin.style.width = '100%';
