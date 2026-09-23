@@ -5270,7 +5270,8 @@ document.addEventListener("DOMContentLoaded", function() {
     var r = comModalidade(modalidade, prazoEscolhido, function(){
       return {
         d: window.AstroTaxas.def(),
-        cCarta: window.AstroTaxas.compor(carta)
+        cCarta: window.AstroTaxas.compor(carta),
+        cUtil: window.AstroTaxas.compor(creditoUtil)
       };
     });
 
@@ -5351,8 +5352,15 @@ document.addEventListener("DOMContentLoaded", function() {
       }
 
       if (!semComparacao) {
-        var totalFin = r.cCarta.fin.total;
-        var totalCon = parcelaAntes * mes + parcelaDepois * mesesRestantes;
+        /* financiar a CARTA cheia (que só é maior por causa do embutido)
+           compararia com um bem mais caro do que o cliente realmente leva
+           pra casa — a carta líquida (creditoUtil) é o valor do bem. Do
+           lado do consórcio, a soma das parcelas já desconta o lance (nota
+           acima), mas o lance em dinheiro saiu do bolso à parte da
+           parcela — sem somá-lo de volta aqui, um lance 100% em dinheiro
+           faria o custo total parecer perto de zero. */
+        var totalFin = r.cUtil.fin.total;
+        var totalCon = (parcelaAntes * mes + parcelaDepois * mesesRestantes) + valorDinheiro;
         põe('lanceBarFinTxt', brl(totalFin));
         põe('lanceBarConTxt', brl(totalCon));
         var barFin = document.getElementById('lanceBarFin');
