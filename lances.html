@@ -4606,6 +4606,7 @@ input[type=range]::-moz-range-thumb{
             <div class="res-item"><span>Pago com embutido</span><b id="lanceEmbutidoPctTxt">25%</b></div>
             <div class="res-item"><span>Pago em dinheiro</span><b id="lanceDinheiroValorR">R$ 0</b></div>
           </div>
+          <p class="calc-lance-mes-nota" id="lanceDinheiroCdbNota" hidden style="margin-top:10px;">Esse dinheiro, se ficasse investido a ~1% ao mês (perto de 100% do CDI de hoje) até o fim do prazo em vez de virar lance, chegaria a <b id="lanceDinheiroCdbValor">R$ 0</b>. Compare com o quanto esse mesmo lance reduz a sua parcela lá em cima — só compensa dar o lance se a redução valer mais do que esse rendimento perdido.</p>
 
           <div class="calc-lance-modo-ativo" id="lanceModoAtivo">
             <span class="calc-lance-modo-rot">Sua simulação equivale a</span>
@@ -4629,6 +4630,20 @@ input[type=range]::-moz-range-thumb{
           </div>
           <p class="calc-lance-mes-nota" id="lanceMesNota">A taxa de administração é fixa e incide sobre o valor total da carta do início ao fim — ela não muda. O que muda é o saldo devedor: ao usar o lance embutido, parte do crédito já foi consumida como lance, então o saldo que resta pra você pagar cai na mesma proporção — por isso a parcela diminui a partir da contemplação.</p>
           <p class="calc-lance-mes-nota" id="lanceCorrecaoDetalhe" style="margin-top:10px;">Carta e parcela também sobem a cada 12 meses pela correção monetária do grupo.</p>
+
+          <div class="calc-prazo calc-lance-mes" style="margin-top:18px;">
+            <div class="calc-prazo-cab">
+              <span>Depois de contemplado, quanto tempo até usar o crédito?</span>
+              <small>Usar na hora não é obrigatório — enquanto não usa, dá pra deixar o valor investido e seguir só pagando a parcela</small>
+            </div>
+            <label class="calc-label calc-lance-mes-label" for="lanceEspera">Esperar <b id="lanceEsperaTexto">0</b> meses pra usar o crédito</label>
+            <input type="range" id="lanceEspera" min="0" max="60" step="1" value="0" aria-label="Meses de espera antes de usar o crédito">
+          </div>
+          <div class="res-grade calc-lance-comparacao">
+            <div class="res-item"><span>Crédito se você esperar e investir a ~1% a.m.</span><b id="lanceEsperaInvestido">R$ 0</b></div>
+            <div class="res-item"><span>Crédito se em vez disso contemplasse mais tarde</span><b id="lanceEsperaContemplarDepois">R$ 0</b></div>
+          </div>
+          <p class="calc-lance-mes-nota" id="lanceEsperaNota">Contemplar assim que puder e, se não precisar do bem na hora, deixar o valor investido costuma valer mais do que esperar contemplar mais tarde — o dinheiro em mãos rende mais rápido (~1% ao mês) do que a carta se corrige dentro do grupo. Só não conte com isso: usar o crédito é o ponto do consórcio, e vender ou represar uma carta contemplada tem regras e custos próprios que variam por administradora.</p>
         </div>
       </div>
     </div>
@@ -5176,6 +5191,8 @@ document.addEventListener("DOMContentLoaded", function() {
   var mesSl = document.getElementById('lanceMes');
   var totalSl = document.getElementById('lanceTotalSlider');
   var embutidoSl = document.getElementById('lanceEmbutidoSlider');
+  var esperaSl = document.getElementById('lanceEspera');
+  var TAXA_CDB_MENSAL = 0.01;
 
   function comModalidade(modo, prazo, fn){
     var salvoModalidade = window.AstroTaxas.modalidade;
@@ -5366,6 +5383,16 @@ document.addEventListener("DOMContentLoaded", function() {
       var valorDinheiroAtual = valorDinheiro * fatorAtual;
       põe('lanceParcelaAntes', brl(parcelaAntesAtual));
 
+      var dinheiroCdbNota = document.getElementById('lanceDinheiroCdbNota');
+      if (dinheiroCdbNota) {
+        var temDinheiro = valorDinheiroAtual > 0;
+        dinheiroCdbNota.hidden = !temDinheiro;
+        if (temDinheiro) {
+          var dinheiroInvestido = valorDinheiroAtual * Math.pow(1 + TAXA_CDB_MENSAL, mesesRestantes);
+          põe('lanceDinheiroCdbValor', brl(dinheiroInvestido));
+        }
+      }
+
       var parcelaDepoisBase = Math.max(0, parcelaAntesAtual - totalLanceAtual / mesesRestantes);
       põe('lanceParcelaDepois', brl(parcelaDepoisBase));
 
@@ -5439,6 +5466,27 @@ document.addEventListener("DOMContentLoaded", function() {
         if (barFin) barFin.style.width = '100%';
         if (barCon) barCon.style.width = Math.max(4, Math.min(100, (totalCon / totalFin) * 100)).toFixed(1) + '%';
       }
+
+      /* usar o crédito não é obrigatório assim que contempla — enquanto não
+         usa, dá pra deixar o valor investido (~1% a.m., por conta própria,
+         fora do consórcio) e seguir só pagando a parcela reduzida. Compara
+         com a alternativa de ter contemplado mais tarde em vez de esperar:
+         nesse caso o crédito cresceria pela correção do GRUPO (o índice da
+         modalidade), que é mais lenta que 1% a.m. — por isso, em geral,
+         contemplar assim que possível e represar o uso costuma valer mais
+         do que esperar contemplar mais tarde. */
+      if (esperaSl) {
+        var espera = Number(esperaSl.value);
+        põe('lanceEsperaTexto', espera);
+
+        var creditoEsperandoInvestido = creditoUtilAtual * Math.pow(1 + TAXA_CDB_MENSAL, espera);
+        põe('lanceEsperaInvestido', brl(creditoEsperandoInvestido));
+
+        var mesAlternativo = Math.min(tetoMesPrazo, mes + espera);
+        var anoAlternativo = Math.floor((mesAlternativo - 1) / 12);
+        var creditoContemplarDepois = creditoUtil * Math.pow(1 + indiceAnual, anoAlternativo);
+        põe('lanceEsperaContemplarDepois', brl(creditoContemplarDepois));
+      }
     }
 
     var pct = ((sl.value - sl.min) / (sl.max - sl.min)) * 100;
@@ -5473,6 +5521,7 @@ document.addEventListener("DOMContentLoaded", function() {
   });
   if (totalSl) totalSl.addEventListener('input', atualizar);
   if (embutidoSl) embutidoSl.addEventListener('input', atualizar);
+  if (esperaSl) esperaSl.addEventListener('input', atualizar);
   ligarGrupo('.calc-atalhos button', function(b){ sl.value = b.dataset.v; if (dica) dica.classList.add('oculta'); });
 
   montarPrazosLance();
