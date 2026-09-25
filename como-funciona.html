@@ -2616,40 +2616,19 @@ section:last-of-type, .cta-solo:last-of-type{ padding-bottom:134px !important }
     0 44px 88px rgba(10,21,36,.08) !important;
 }
 
-:root[data-tema="claro"] nav{ background:rgba(255,255,255,.62) !important; border-bottom-color:transparent }
-
-:root[data-tema="claro"] nav.solida{ background:rgba(255,255,255,.86) !important; border-bottom-color:var(--line) }
-
-/* A regra acima é sobra de quando a pílula do tema claro ainda era
-   branca — hoje ela é marinha (ver index.html/lances.html), mas essa
-   página nunca recebeu a correção. Com fundo claro, a palavra "Astro"
-   (arquivo branco, sem variante colorida) e o cracha prata ficam
-   praticamente invisíveis. Reafirma marinho aqui, depois da regra
-   antiga, pra sempre vencer. */
-:root[data-tema="claro"] nav{
-  background:rgba(8,20,44,.92) !important;
-  backdrop-filter:blur(26px) saturate(1.25) !important;
-  -webkit-backdrop-filter:blur(26px) saturate(1.25) !important;
-  box-shadow:0 10px 34px rgba(11,33,73,.24), 0 0 0 1px rgba(255,255,255,.10) !important;
-}
-:root[data-tema="claro"] nav.solida{
-  background:rgba(8,20,44,.95) !important;
-  box-shadow:0 12px 40px rgba(11,33,73,.3), 0 0 0 1px rgba(255,255,255,.14) !important;
-}
+/* O nav agora inverte de verdade (ver nav.css compartilhado — clara no
+   escuro, marinha no claro), igual index.html/lances.html sempre
+   fizeram. As regras que existiam aqui fixavam a pílula sempre escura
+   e o texto do menu sempre na cor do tema claro (#35465C, escuro),
+   presas na suposição antiga de que a pílula ficava clara no claro —
+   o oposto do que o nav.css compartilhado faz agora. Removidas: o
+   nav.css cobre isso pra todas as páginas de uma vez. */
 
 /* substituída pela regra escopada "nav .nav-palavra" (ver perto de
    .nav-cracha) — filtrar o .nav-logo inteiro filtraria também o crachá
    novo, que já tem sua própria troca de imagem por tema. */
 
 :root[data-tema="claro"] footer .nav-logo{ filter:none }
-
-/* cores cravadas fora dos tokens: quem escreveu #93A9C9 em vez de
-   var(--text-2) fixou "claro sobre escuro" no codigo. */
-/* as internas cravam a cor do menu com !important na folha antiga */
-:root[data-tema="claro"] .nav-links a,
-:root[data-tema="claro"] .nav-links li a{ color:#35465C !important }
-
-:root[data-tema="claro"] .nav-links a:hover{ color:var(--text) !important }
 
 :root[data-tema="claro"] .hero-sub{ color:#35465C }
 
@@ -3323,33 +3302,7 @@ section:last-of-type, .cta-solo:last-of-type{ padding-bottom:134px !important }
     0 44px 88px rgba(10,21,36,.08) !important;
 }
 
-:root:not([data-tema="escuro"]) nav{ background:rgba(255,255,255,.62) !important; border-bottom-color:transparent }
-
-:root:not([data-tema="escuro"]) nav.solida{ background:rgba(255,255,255,.86) !important; border-bottom-color:var(--line) }
-
-/* mesma correção da regra explícita acima (data-tema="claro") — essa
-   variante cobre quem nunca tocou no botão de tema e só segue o sistema. */
-:root:not([data-tema="escuro"]) nav{
-  background:rgba(8,20,44,.92) !important;
-  backdrop-filter:blur(26px) saturate(1.25) !important;
-  -webkit-backdrop-filter:blur(26px) saturate(1.25) !important;
-  box-shadow:0 10px 34px rgba(11,33,73,.24), 0 0 0 1px rgba(255,255,255,.10) !important;
-}
-:root:not([data-tema="escuro"]) nav.solida{
-  background:rgba(8,20,44,.95) !important;
-  box-shadow:0 12px 40px rgba(11,33,73,.3), 0 0 0 1px rgba(255,255,255,.14) !important;
-}
-
-
 :root:not([data-tema="escuro"]) footer .nav-logo{ filter:none }
-
-/* cores cravadas fora dos tokens: quem escreveu #93A9C9 em vez de
-   var(--text-2) fixou "claro sobre escuro" no codigo. */
-/* as internas cravam a cor do menu com !important na folha antiga */
-:root:not([data-tema="escuro"]) .nav-links a,
-:root:not([data-tema="escuro"]) .nav-links li a{ color:#35465C !important }
-
-:root:not([data-tema="escuro"]) .nav-links a:hover{ color:var(--text) !important }
 
 :root:not([data-tema="escuro"]) .hero-sub{ color:#35465C }
 

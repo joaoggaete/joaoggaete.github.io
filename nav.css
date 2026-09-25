@@ -12,17 +12,37 @@
 @media (min-width:1920px){ :root{ --larg:1560px; --nav-h:94px } }
 @media (min-width:2200px){ :root{ --larg:1780px; --nav-h:98px } }
 
+/* A pílula do nav INVERTE em relação ao tema da página — clara por
+   padrão (tema escuro), marinha no tema claro — exatamente como
+   index.html/lances.html sempre fizeram. As 7 páginas que só usam este
+   arquivo nunca tiveram essa inversão (ficavam sempre com o fundo
+   escuro abaixo), o que deixava o símbolo/palavra do logo com contraste
+   errado em pelo menos um dos dois temas. Ver .nav-palavra e .nav-gira
+   mais abaixo — o filtro/troca de imagem deles já pressupunha essa
+   inversão, só a cor da pílula não seguia. */
 nav{
   position:sticky; top:0; z-index:300;
   height:var(--nav-h);
   display:flex; align-items:center;
-  background:rgba(3,6,15,.62);
+  background:rgba(255,255,255,.62);
   backdrop-filter:blur(16px) saturate(1.4);
   -webkit-backdrop-filter:blur(16px) saturate(1.4);
   border-bottom:1px solid transparent;
   transition:background .5s var(--ease), border-color .5s var(--ease);
 }
-nav.solida{ background:rgba(3,6,15,.9); border-bottom-color:var(--line) }
+nav.solida{ background:rgba(255,255,255,.86); border-bottom-color:var(--line) }
+:root[data-tema="claro"] nav{
+  background:rgba(8,20,44,.92) !important;
+  border-bottom-color:transparent;
+}
+:root[data-tema="claro"] nav.solida{ background:rgba(8,20,44,.95) !important; border-bottom-color:var(--line) }
+@media (prefers-color-scheme: light){
+  :root:not([data-tema="escuro"]) nav{
+    background:rgba(8,20,44,.92) !important;
+    border-bottom-color:transparent;
+  }
+  :root:not([data-tema="escuro"]) nav.solida{ background:rgba(8,20,44,.95) !important; border-bottom-color:var(--line) }
+}
 
 .nav-inner{
   width:min(var(--larg), calc(100% - 44px)); margin-inline:auto;
@@ -45,7 +65,20 @@ nav.solida{ background:rgba(3,6,15,.9); border-bottom-color:var(--line) }
   :root:not([data-tema="escuro"]) .nav-marca{ color:#F2F6FC }
   :root:not([data-tema="escuro"]) .nav-logo{ filter:none }
 }
-.nav-palavra{ height:66%; width:auto; display:block; flex:none }
+/* o arquivo da palavra "Astro" é sempre branco — o filtro é o que a
+   repinta de marinho quando a pílula está clara (tema escuro, padrão).
+   No tema claro a pílula fica escura e a palavra volta a ser o branco
+   original (filter:none). Sem isto, "Astro" ficava branco sobre pílula
+   clara — quase invisível — em qualquer página que não redefinisse isto
+   por conta própria (só index.html/lances.html faziam). */
+.nav-palavra{
+  height:66%; width:auto; display:block; flex:none;
+  filter:brightness(0) saturate(100%) invert(6%) sepia(30%) saturate(1800%) hue-rotate(186deg);
+}
+:root[data-tema="claro"] .nav-palavra{ filter:none !important }
+@media (prefers-color-scheme: light){
+  :root:not([data-tema="escuro"]) .nav-palavra{ filter:none !important }
+}
 
 .nav-links{ list-style:none; display:flex; flex-wrap:wrap; gap:8px 32px; justify-self:center; margin:0; padding:0 }
 /* <button> (item com submenu) e <a> (item simples) têm métricas de
@@ -54,7 +87,7 @@ nav.solida{ background:rgba(3,6,15,.9); border-bottom-color:var(--line) }
    parece desalinhado mesmo com a mesma fonte/tamanho nos dois. */
 .nav-links > li{ display:flex; align-items:center }
 .nav-links a{
-  font-size:15px; font-weight:600; color:#93A9C9; line-height:1;
+  font-size:15px; font-weight:600; color:#17305C; line-height:1;
   letter-spacing:-.005em; position:relative; padding:8px 0;
   transition:color .35s var(--ease); text-decoration:none;
 }
@@ -64,16 +97,22 @@ nav.solida{ background:rgba(3,6,15,.9); border-bottom-color:var(--line) }
   transition:transform .45s var(--ease);
 }
 /* Cor fixa, não var(--text): essa variável segue o tema do CORPO da
-   página (claro = letra escura pro fundo branco do body), mas a pílula
-   do nav é escura sempre nas páginas que só usam este arquivo (só
-   index.html/lances.html invertem a pílula, e têm suas próprias regras
-   coloridas mais específicas que sempre ganham desta aqui) — usar
-   var(--text) aqui apagava o texto no tema claro (letra escura sobre
-   pílula escura) nessas páginas. */
-.nav-links a:hover{ color:#F2F6FC }
+   página, e nem sempre bate com o tema da PÍLULA do nav (que inverte
+   sozinha, ver bloco "nav{background...}" no topo do arquivo). Escrever
+   a cor certa pra cada lado da pílula aqui, sem depender de var(--text),
+   evita esse descompasso. */
+.nav-links a:hover{ color:#0B2149 }
 .nav-links a:hover::after{ transform:scaleX(1) }
-.nav-links a[aria-current="page"]{ color:#F2F6FC }
+.nav-links a[aria-current="page"]{ color:#0B2149 }
 .nav-links a[aria-current="page"]::after{ transform:scaleX(1) }
+:root[data-tema="claro"] .nav-links a{ color:#C7D6EC !important }
+:root[data-tema="claro"] .nav-links a:hover,
+:root[data-tema="claro"] .nav-links a[aria-current="page"]{ color:#FFFFFF !important }
+@media (prefers-color-scheme: light){
+  :root:not([data-tema="escuro"]) .nav-links a{ color:#C7D6EC !important }
+  :root:not([data-tema="escuro"]) .nav-links a:hover,
+  :root:not([data-tema="escuro"]) .nav-links a[aria-current="page"]{ color:#FFFFFF !important }
+}
 
 /* ---------- "Nosso Produto" / "Atendimento": tópicos com submenu que
    abre ao clicar — no desktop, um painel flutuante; no mobile, o mesmo
@@ -82,22 +121,28 @@ nav.solida{ background:rgba(3,6,15,.9); border-bottom-color:var(--line) }
 .nav-drop-btn{
   display:inline-flex; align-items:center; gap:6px;
   font-family:inherit; background:none; border:none; cursor:pointer; padding:8px 0;
-  font-size:15px; font-weight:600; color:#93A9C9; line-height:1;
+  font-size:15px; font-weight:600; color:#17305C; line-height:1;
   letter-spacing:-.005em; transition:color .35s var(--ease);
 }
-.nav-drop-btn:hover{ color:#F2F6FC }
-.nav-drop.aberto .nav-drop-btn{ color:#F2F6FC }
+.nav-drop-btn:hover{ color:#0B2149 }
+.nav-drop.aberto .nav-drop-btn{ color:#0B2149 }
 /* Nas páginas ainda não migradas pro nav.css puro, sobra uma regra antiga
    tipo "nav, nav *{color:#fff}" presa a @media(prefers-color-scheme:dark)
-   sem checar data-tema, que ganhava do <a> só onde já existia um
-   !important próprio, deixando o botão do submenu branco sobre a pílula
-   clara. !important aqui reafirma a cor fixa (mesma lógica das regras
-   acima — pílula sempre escura nessas páginas, ver comentário lá em
-   cima) pra nunca perder nem pro CSS antigo nem pra preferência do
-   sistema nem pro tema da própria página. */
-.nav-drop-btn, .nav-drop-btn .nav-drop-caret{ color:#93A9C9 !important }
+   sem checar data-tema, e às vezes uma regra global "a{color:...}" da
+   própria página — ambas mais específicas ou mais tardias que o botão
+   sozinho. !important + repetir a cor certa por tema garante que o
+   botão sempre siga a pílula, nunca essas regras soltas. */
+.nav-drop-btn, .nav-drop-btn .nav-drop-caret{ color:#17305C !important }
 .nav-drop-btn:hover, .nav-drop.aberto .nav-drop-btn,
-.nav-drop-btn:hover .nav-drop-caret, .nav-drop.aberto .nav-drop-btn .nav-drop-caret{ color:#F2F6FC !important }
+.nav-drop-btn:hover .nav-drop-caret, .nav-drop.aberto .nav-drop-btn .nav-drop-caret{ color:#0B2149 !important }
+:root[data-tema="claro"] .nav-drop-btn, :root[data-tema="claro"] .nav-drop-btn .nav-drop-caret{ color:#C7D6EC !important }
+:root[data-tema="claro"] .nav-drop-btn:hover, :root[data-tema="claro"] .nav-drop.aberto .nav-drop-btn,
+:root[data-tema="claro"] .nav-drop-btn:hover .nav-drop-caret, :root[data-tema="claro"] .nav-drop.aberto .nav-drop-btn .nav-drop-caret{ color:#FFFFFF !important }
+@media (prefers-color-scheme: light){
+  :root:not([data-tema="escuro"]) .nav-drop-btn, :root:not([data-tema="escuro"]) .nav-drop-btn .nav-drop-caret{ color:#C7D6EC !important }
+  :root:not([data-tema="escuro"]) .nav-drop-btn:hover, :root:not([data-tema="escuro"]) .nav-drop.aberto .nav-drop-btn,
+  :root:not([data-tema="escuro"]) .nav-drop-btn:hover .nav-drop-caret, :root:not([data-tema="escuro"]) .nav-drop.aberto .nav-drop-btn .nav-drop-caret{ color:#FFFFFF !important }
+}
 .nav-drop-caret{ width:10px; height:10px; flex:none; transition:transform .3s var(--ease) }
 .nav-drop.aberto .nav-drop-caret{ transform:rotate(180deg) }
 
@@ -177,12 +222,12 @@ nav.solida{ background:rgba(3,6,15,.9); border-bottom-color:var(--line) }
 .nav-inicio{
   display:inline-flex; align-items:center; justify-content:center;
   min-height:44px; padding:0 18px;
-  border:1px solid rgba(147,169,201,.28); border-radius:999px;
-  color:#93A9C9 !important; text-decoration:none;
+  border:1px solid rgba(23,48,92,.28); border-radius:999px;
+  color:#17305C !important; text-decoration:none;
   font-family:var(--f-text); font-weight:700; font-size:14px; white-space:nowrap;
   transition:border-color .3s var(--ease), color .3s var(--ease);
 }
-.nav-inicio:hover, .nav-inicio:focus-visible{ border-color:rgba(59,143,224,.7); color:#F2F6FC !important }
+.nav-inicio:hover, .nav-inicio:focus-visible{ border-color:rgba(59,143,224,.7); color:#0B2149 !important }
 /* 404.html tem uma regra própria ":root[data-tema=claro] a{color:...
    !important}" (especificidade 0,2,1: :root + atributo, mais o elemento
    a) que ganhava de ".nav-inicio" sozinha (0,1,0) e pintava o botão de
@@ -191,8 +236,14 @@ nav.solida{ background:rgba(3,6,15,.9); border-bottom-color:var(--line) }
    perde por causa do "a" extra da regra antiga. Uma terceira classe
    (0,3,0) bate qualquer combinação daquela regra sem precisar saber
    onde ela fica na cascata. */
-.nav-acao .nav-inicio.nav-inicio{ color:#93A9C9 !important }
-.nav-acao .nav-inicio.nav-inicio:hover, .nav-acao .nav-inicio.nav-inicio:focus-visible{ color:#F2F6FC !important }
+.nav-acao .nav-inicio.nav-inicio{ color:#17305C !important; border-color:rgba(23,48,92,.28) }
+.nav-acao .nav-inicio.nav-inicio:hover, .nav-acao .nav-inicio.nav-inicio:focus-visible{ color:#0B2149 !important; border-color:rgba(59,143,224,.7) }
+:root[data-tema="claro"] .nav-acao .nav-inicio.nav-inicio{ color:#C7D6EC !important; border-color:rgba(199,214,236,.28) }
+:root[data-tema="claro"] .nav-acao .nav-inicio.nav-inicio:hover{ color:#FFFFFF !important }
+@media (prefers-color-scheme: light){
+  :root:not([data-tema="escuro"]) .nav-acao .nav-inicio.nav-inicio{ color:#C7D6EC !important; border-color:rgba(199,214,236,.28) }
+  :root:not([data-tema="escuro"]) .nav-acao .nav-inicio.nav-inicio:hover{ color:#FFFFFF !important }
+}
 
 .nav-cta{
   position:relative; overflow:hidden;
