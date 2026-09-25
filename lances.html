@@ -4606,7 +4606,7 @@ input[type=range]::-moz-range-thumb{
             <div class="res-item"><span>Pago com embutido</span><b id="lanceEmbutidoPctTxt">25%</b></div>
             <div class="res-item"><span>Pago em dinheiro</span><b id="lanceDinheiroValorR">R$ 0</b></div>
           </div>
-          <p class="calc-lance-mes-nota" id="lanceDinheiroCdbNota" hidden style="margin-top:10px;">Esse dinheiro, se ficasse investido a ~1% ao mês (perto de 100% do CDI de hoje) até o fim do prazo em vez de virar lance, chegaria a <b id="lanceDinheiroCdbValor">R$ 0</b>. Compare com o quanto esse mesmo lance reduz a sua parcela lá em cima — só compensa dar o lance se a redução valer mais do que esse rendimento perdido.</p>
+          <p class="calc-lance-mes-nota" id="lanceDinheiroCdbNota" hidden style="margin-top:10px;">Esse dinheiro, rendendo 100% do CDI de hoje até o fim do prazo em vez de virar lance, chegaria a <b id="lanceDinheiroCdbValor">R$ 0</b>. Compare com o quanto esse mesmo lance reduz a sua parcela lá em cima — só compensa dar o lance se a redução valer mais do que esse rendimento perdido.</p>
 
           <div class="calc-lance-modo-ativo" id="lanceModoAtivo">
             <span class="calc-lance-modo-rot">Sua simulação equivale a</span>
@@ -4640,10 +4640,10 @@ input[type=range]::-moz-range-thumb{
             <input type="range" id="lanceEspera" min="0" max="60" step="1" value="0" aria-label="Meses de espera antes de usar o crédito">
           </div>
           <div class="res-grade calc-lance-comparacao">
-            <div class="res-item"><span>Crédito se você esperar e investir a ~1% a.m.</span><b id="lanceEsperaInvestido">R$ 0</b></div>
+            <div class="res-item"><span>Crédito se você esperar rendendo 100% do CDI</span><b id="lanceEsperaInvestido">R$ 0</b></div>
             <div class="res-item"><span>Crédito se em vez disso contemplasse mais tarde</span><b id="lanceEsperaContemplarDepois">R$ 0</b></div>
           </div>
-          <p class="calc-lance-mes-nota" id="lanceEsperaNota">Contemplar assim que puder e, se não precisar do bem na hora, deixar o valor investido costuma valer mais do que esperar contemplar mais tarde — o dinheiro em mãos rende mais rápido (~1% ao mês) do que a carta se corrige dentro do grupo. Só não conte com isso: usar o crédito é o ponto do consórcio, e vender ou represar uma carta contemplada tem regras e custos próprios que variam por administradora.</p>
+          <p class="calc-lance-mes-nota" id="lanceEsperaNota">Contemplar assim que puder e, se não precisar do bem na hora, deixar o valor rendendo 100% do CDI costuma valer mais do que esperar contemplar mais tarde — o dinheiro em mãos rende mais rápido do que a carta se corrige dentro do grupo. Vender uma carta contemplada é possível e legal, mas a venda não é garantida — depende do valor pedido e precisa ser avaliada caso a caso com a administradora.</p>
         </div>
       </div>
     </div>
@@ -5192,7 +5192,10 @@ document.addEventListener("DOMContentLoaded", function() {
   var totalSl = document.getElementById('lanceTotalSlider');
   var embutidoSl = document.getElementById('lanceEmbutidoSlider');
   var esperaSl = document.getElementById('lanceEspera');
-  var TAXA_CDB_MENSAL = 0.01;
+  /* 100% do CDI de hoje (13,90% a.a., mesma taxa usada no index.html),
+     convertido pra equivalente mensal — não um "~1% ao mês" solto. */
+  var TAXA_CDI_ANUAL = 0.139;
+  var TAXA_CDB_MENSAL = Math.pow(1 + TAXA_CDI_ANUAL, 1 / 12) - 1;
 
   function comModalidade(modo, prazo, fn){
     var salvoModalidade = window.AstroTaxas.modalidade;
@@ -5468,7 +5471,7 @@ document.addEventListener("DOMContentLoaded", function() {
       }
 
       /* usar o crédito não é obrigatório assim que contempla — enquanto não
-         usa, dá pra deixar o valor investido (~1% a.m., por conta própria,
+         usa, dá pra deixar o valor rendendo 100% do CDI (por conta própria,
          fora do consórcio) e seguir só pagando a parcela reduzida. Compara
          com a alternativa de ter contemplado mais tarde em vez de esperar:
          nesse caso o crédito cresceria pela correção do GRUPO (o índice da
