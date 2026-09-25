@@ -162,6 +162,27 @@ nav.solida{ background:rgba(3,6,15,.9); border-bottom-color:var(--line) }
 
 .nav-acao{ display:flex; align-items:center; gap:12px; justify-self:end; flex-shrink:0 }
 
+/* Botão de voltar pra home — as páginas internas não têm outro jeito
+   explícito de voltar além de clicar na logo, e isso não é óbvio pra
+   quem chega. Mesmo componente que lances.html já usava (originado em
+   busca-global.css, que essas páginas não carregam), trazido pra cá
+   porque é nav, não busca. */
+.nav-inicio{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height:44px; padding:0 18px;
+  border:1px solid rgba(147,169,201,.28); border-radius:999px;
+  color:var(--text-2); text-decoration:none;
+  font-family:var(--f-text); font-weight:700; font-size:14px; white-space:nowrap;
+  transition:border-color .3s var(--ease), color .3s var(--ease);
+}
+.nav-inicio:hover, .nav-inicio:focus-visible{ border-color:rgba(59,143,224,.7); color:var(--text) }
+:root[data-tema="claro"] .nav-inicio{ color:#0A1524; border-color:rgba(10,21,36,.22) }
+:root[data-tema="claro"] .nav-inicio:hover{ border-color:rgba(59,143,224,.7) }
+@media (prefers-color-scheme: light){
+  :root:not([data-tema="escuro"]) .nav-inicio{ color:#0A1524; border-color:rgba(10,21,36,.22) }
+  :root:not([data-tema="escuro"]) .nav-inicio:hover{ border-color:rgba(59,143,224,.7) }
+}
+
 .nav-cta{
   position:relative; overflow:hidden;
   font-size:15px; font-weight:700; letter-spacing:-.012em;
@@ -349,7 +370,7 @@ body.menu-aberto::after{
   nav .nav-acao{ gap:8px }
 }
 @media (max-width:1024px){
-  .nav-links,.nav-cta{ display:none }
+  .nav-links,.nav-cta,.nav-inicio{ display:none }
   .nav-burger{ display:block }
   .busca-painel{ right:auto; left:50%; transform:translateX(-50%); width:min(360px, 90vw) }
 }
