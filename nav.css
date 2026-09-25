@@ -245,22 +245,41 @@ nav.solida{ background:rgba(255,255,255,.86); border-bottom-color:var(--line) }
   :root:not([data-tema="escuro"]) .nav-acao .nav-inicio.nav-inicio:hover{ color:#FFFFFF !important }
 }
 
+/* Chapa sólida, não vidro transparente: esse degradê quase-transparente
+   só contrasta bem em cima da pílula ESCURA que esta folha usava antes
+   (ver nav{background} lá em cima) — com a pílula clara por padrão
+   agora, o botão ficava lavado (letra branca sobre vidro claro-sobre-
+   claro). index.html resolve isso com uma chapa sólida própria, que
+   sempre contrasta contra QUALQUER cor de pílula por trás — replicado
+   aqui, com a mesma inversão de cor entre os dois temas. */
 .nav-cta{
   position:relative; overflow:hidden;
   font-size:15px; font-weight:700; letter-spacing:-.012em;
-  padding:12px 24px; border-radius:100px; color:#FFFFFF; text-decoration:none;
-  background:linear-gradient(150deg, rgba(127,212,255,.13), rgba(255,255,255,.04));
-  backdrop-filter:blur(22px) saturate(190%); -webkit-backdrop-filter:blur(22px) saturate(190%);
+  padding:12px 24px; border-radius:100px; text-decoration:none;
+  background:rgba(11,33,73,.88) !important; color:#FFFFFF !important;
+  backdrop-filter:blur(20px) saturate(1.7); -webkit-backdrop-filter:blur(20px) saturate(1.7);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.24), 0 6px 22px rgba(2,5,12,.35);
   transition:transform .4s var(--ease), box-shadow .4s var(--ease), background .4s var(--ease);
   white-space:nowrap;
 }
 .nav-cta:hover{
   transform:translateY(-1px);
-  background:linear-gradient(150deg, rgba(127,212,255,.24), rgba(255,255,255,.07));
+  background:rgba(11,33,73,.96) !important;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.34), 0 12px 30px rgba(59,143,224,.28);
 }
 .nav-cta:active{ transform:translateY(0) scale(.985) }
+:root[data-tema="claro"] .nav-cta{
+  background:rgba(255,255,255,.86) !important; color:#0B2149 !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9), 0 2px 10px rgba(2,5,12,.22) !important;
+}
+:root[data-tema="claro"] .nav-cta:hover{ background:rgba(255,255,255,.96) !important }
+@media (prefers-color-scheme: light){
+  :root:not([data-tema="escuro"]) .nav-cta{
+    background:rgba(255,255,255,.86) !important; color:#0B2149 !important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.9), 0 2px 10px rgba(2,5,12,.22) !important;
+  }
+  :root:not([data-tema="escuro"]) .nav-cta:hover{ background:rgba(255,255,255,.96) !important }
+}
 
 .nav-burger{
   display:none;

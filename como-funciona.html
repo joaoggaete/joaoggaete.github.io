@@ -2163,12 +2163,21 @@ footer{
 }
 
 /* o botão da barra continuava caramelo: o seletor antigo era mais específico */
+/* chapa sólida, igual ao nav.css compartilhado agora (ver comentário lá) —
+   essa regra tinha especificidade maior e mantinha o vidro transparente
+   antigo, que ficava lavado sobre a pílula clara do tema padrão. */
 nav .nav-inner .nav-cta, nav .nav-inner a.nav-cta{
-  background:linear-gradient(150deg, rgba(127,212,255,.13), rgba(255,255,255,.04)) !important;
+  background:rgba(11,33,73,.88) !important;
   color:#fff !important; border:none !important;
 }
 nav .nav-inner .nav-cta:hover{
-  background:linear-gradient(150deg, rgba(127,212,255,.24), rgba(255,255,255,.07)) !important;
+  background:rgba(11,33,73,.96) !important;
+}
+:root[data-tema="claro"] nav .nav-inner .nav-cta{ background:rgba(255,255,255,.86) !important; color:#0B2149 !important }
+:root[data-tema="claro"] nav .nav-inner .nav-cta:hover{ background:rgba(255,255,255,.96) !important }
+@media (prefers-color-scheme: light){
+  :root:not([data-tema="escuro"]) nav .nav-inner .nav-cta{ background:rgba(255,255,255,.86) !important; color:#0B2149 !important }
+  :root:not([data-tema="escuro"]) nav .nav-inner .nav-cta:hover{ background:rgba(255,255,255,.96) !important }
 }
 
 /* eyebrow com text-align:center embutido no HTML: como agora ela é inline-flex,
