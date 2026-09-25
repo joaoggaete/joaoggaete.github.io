@@ -277,6 +277,23 @@ body.menu-aberto .ao-topo{ opacity:0; pointer-events:none }
 
 :root[data-tema="claro"] nav.solida{ background:rgba(255,255,255,.86) !important; border-bottom-color:var(--line) }
 
+/* A regra acima é sobra de quando a pílula do tema claro ainda era
+   branca — hoje ela é marinha (ver index.html/lances.html), mas essa
+   página nunca recebeu a correção. Com fundo claro, a palavra "Astro"
+   (arquivo branco, sem variante colorida) e o cracha prata ficam
+   praticamente invisíveis. Reafirma marinho aqui, depois da regra
+   antiga, pra sempre vencer. */
+:root[data-tema="claro"] nav{
+  background:rgba(8,20,44,.92) !important;
+  backdrop-filter:blur(26px) saturate(1.25) !important;
+  -webkit-backdrop-filter:blur(26px) saturate(1.25) !important;
+  box-shadow:0 10px 34px rgba(11,33,73,.24), 0 0 0 1px rgba(255,255,255,.10) !important;
+}
+:root[data-tema="claro"] nav.solida{
+  background:rgba(8,20,44,.95) !important;
+  box-shadow:0 12px 40px rgba(11,33,73,.3), 0 0 0 1px rgba(255,255,255,.14) !important;
+}
+
 :root[data-tema="claro"] .nav-logo{ filter:brightness(0) saturate(100%) invert(6%) sepia(30%) saturate(1800%) hue-rotate(186deg) }
 
 :root[data-tema="claro"] footer .nav-logo{ filter:none }
@@ -968,6 +985,19 @@ body.menu-aberto .ao-topo{ opacity:0; pointer-events:none }
 :root:not([data-tema="escuro"]) nav{ background:rgba(255,255,255,.62) !important; border-bottom-color:transparent }
 
 :root:not([data-tema="escuro"]) nav.solida{ background:rgba(255,255,255,.86) !important; border-bottom-color:var(--line) }
+
+/* mesma correção da regra explícita acima (data-tema="claro") — essa
+   variante cobre quem nunca tocou no botão de tema e só segue o sistema. */
+:root:not([data-tema="escuro"]) nav{
+  background:rgba(8,20,44,.92) !important;
+  backdrop-filter:blur(26px) saturate(1.25) !important;
+  -webkit-backdrop-filter:blur(26px) saturate(1.25) !important;
+  box-shadow:0 10px 34px rgba(11,33,73,.24), 0 0 0 1px rgba(255,255,255,.10) !important;
+}
+:root:not([data-tema="escuro"]) nav.solida{
+  background:rgba(8,20,44,.95) !important;
+  box-shadow:0 12px 40px rgba(11,33,73,.3), 0 0 0 1px rgba(255,255,255,.14) !important;
+}
 
 :root:not([data-tema="escuro"]) .nav-logo{ filter:brightness(0) saturate(100%) invert(6%) sepia(30%) saturate(1800%) hue-rotate(186deg) }
 

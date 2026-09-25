@@ -63,9 +63,16 @@ nav.solida{ background:rgba(3,6,15,.9); border-bottom-color:var(--line) }
   background:var(--accent-hi); transform:scaleX(0); transform-origin:left;
   transition:transform .45s var(--ease);
 }
-.nav-links a:hover{ color:var(--text) }
+/* Cor fixa, não var(--text): essa variável segue o tema do CORPO da
+   página (claro = letra escura pro fundo branco do body), mas a pílula
+   do nav é escura sempre nas páginas que só usam este arquivo (só
+   index.html/lances.html invertem a pílula, e têm suas próprias regras
+   coloridas mais específicas que sempre ganham desta aqui) — usar
+   var(--text) aqui apagava o texto no tema claro (letra escura sobre
+   pílula escura) nessas páginas. */
+.nav-links a:hover{ color:#F2F6FC }
 .nav-links a:hover::after{ transform:scaleX(1) }
-.nav-links a[aria-current="page"]{ color:var(--text) }
+.nav-links a[aria-current="page"]{ color:#F2F6FC }
 .nav-links a[aria-current="page"]::after{ transform:scaleX(1) }
 
 /* ---------- "Nosso Produto" / "Atendimento": tópicos com submenu que
@@ -75,22 +82,22 @@ nav.solida{ background:rgba(3,6,15,.9); border-bottom-color:var(--line) }
 .nav-drop-btn{
   display:inline-flex; align-items:center; gap:6px;
   font-family:inherit; background:none; border:none; cursor:pointer; padding:8px 0;
-  font-size:15px; font-weight:600; color:var(--text-2); line-height:1;
+  font-size:15px; font-weight:600; color:#93A9C9; line-height:1;
   letter-spacing:-.005em; transition:color .35s var(--ease);
 }
-.nav-drop-btn:hover{ color:var(--text) }
-.nav-drop.aberto .nav-drop-btn{ color:var(--text) }
+.nav-drop-btn:hover{ color:#F2F6FC }
+.nav-drop.aberto .nav-drop-btn{ color:#F2F6FC }
 /* Nas páginas ainda não migradas pro nav.css puro, sobra uma regra antiga
    tipo "nav, nav *{color:#fff}" presa a @media(prefers-color-scheme:dark)
-   sem checar data-tema — se o sistema do visitante estiver no escuro mas a
-   página estiver explicitamente no tema claro, ela ganha do <a> só onde já
-   existe um !important próprio, e o botão do submenu (sem essa reafirmação)
-   fica branco sobre a pílula clara, invisível. !important aqui, com
-   variável (não hex fixo), garante que o botão sempre sega o TEMA DA
-   PÁGINA, nunca a preferência do sistema. */
-.nav-drop-btn, .nav-drop-btn .nav-drop-caret{ color:var(--text-2) !important }
+   sem checar data-tema, que ganhava do <a> só onde já existia um
+   !important próprio, deixando o botão do submenu branco sobre a pílula
+   clara. !important aqui reafirma a cor fixa (mesma lógica das regras
+   acima — pílula sempre escura nessas páginas, ver comentário lá em
+   cima) pra nunca perder nem pro CSS antigo nem pra preferência do
+   sistema nem pro tema da própria página. */
+.nav-drop-btn, .nav-drop-btn .nav-drop-caret{ color:#93A9C9 !important }
 .nav-drop-btn:hover, .nav-drop.aberto .nav-drop-btn,
-.nav-drop-btn:hover .nav-drop-caret, .nav-drop.aberto .nav-drop-btn .nav-drop-caret{ color:var(--text) !important }
+.nav-drop-btn:hover .nav-drop-caret, .nav-drop.aberto .nav-drop-btn .nav-drop-caret{ color:#F2F6FC !important }
 .nav-drop-caret{ width:10px; height:10px; flex:none; transition:transform .3s var(--ease) }
 .nav-drop.aberto .nav-drop-caret{ transform:rotate(180deg) }
 
@@ -171,17 +178,21 @@ nav.solida{ background:rgba(3,6,15,.9); border-bottom-color:var(--line) }
   display:inline-flex; align-items:center; justify-content:center;
   min-height:44px; padding:0 18px;
   border:1px solid rgba(147,169,201,.28); border-radius:999px;
-  color:var(--text-2); text-decoration:none;
+  color:#93A9C9 !important; text-decoration:none;
   font-family:var(--f-text); font-weight:700; font-size:14px; white-space:nowrap;
   transition:border-color .3s var(--ease), color .3s var(--ease);
 }
-.nav-inicio:hover, .nav-inicio:focus-visible{ border-color:rgba(59,143,224,.7); color:var(--text) }
-:root[data-tema="claro"] .nav-inicio{ color:#0A1524; border-color:rgba(10,21,36,.22) }
-:root[data-tema="claro"] .nav-inicio:hover{ border-color:rgba(59,143,224,.7) }
-@media (prefers-color-scheme: light){
-  :root:not([data-tema="escuro"]) .nav-inicio{ color:#0A1524; border-color:rgba(10,21,36,.22) }
-  :root:not([data-tema="escuro"]) .nav-inicio:hover{ border-color:rgba(59,143,224,.7) }
-}
+.nav-inicio:hover, .nav-inicio:focus-visible{ border-color:rgba(59,143,224,.7); color:#F2F6FC !important }
+/* 404.html tem uma regra própria ":root[data-tema=claro] a{color:...
+   !important}" (especificidade 0,2,1: :root + atributo, mais o elemento
+   a) que ganhava de ".nav-inicio" sozinha (0,1,0) e pintava o botão de
+   azul-link em vez do azul discreto do resto do nav. .nav-inicio.nav-inicio
+   repete a classe de propósito — é válido em CSS e soma 0,2,0, que ainda
+   perde por causa do "a" extra da regra antiga. Uma terceira classe
+   (0,3,0) bate qualquer combinação daquela regra sem precisar saber
+   onde ela fica na cascata. */
+.nav-acao .nav-inicio.nav-inicio{ color:#93A9C9 !important }
+.nav-acao .nav-inicio.nav-inicio:hover, .nav-acao .nav-inicio.nav-inicio:focus-visible{ color:#F2F6FC !important }
 
 .nav-cta{
   position:relative; overflow:hidden;
