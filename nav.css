@@ -24,13 +24,18 @@ nav{
   position:sticky; top:0; z-index:300;
   height:var(--nav-h);
   display:flex; align-items:center;
-  background:rgba(255,255,255,.62);
+  background:rgba(255,255,255,.62) !important;
   backdrop-filter:blur(16px) saturate(1.4);
   -webkit-backdrop-filter:blur(16px) saturate(1.4);
   border-bottom:1px solid transparent;
   transition:background .5s var(--ease), border-color .5s var(--ease);
 }
-nav.solida{ background:rgba(255,255,255,.86); border-bottom-color:var(--line) }
+/* !important no default (não só no tema claro): páginas que ainda carregam
+   CSS herdado de antes do nav.css (como-funciona.html/exterior.html tinham
+   um "nav{background:...!important}" solto, sem tema nenhum) venciam esta
+   regra porque só o lado claro tinha !important — a pílula ficava sempre
+   escura, mesmo no tema escuro/padrão que devia ser claro. */
+nav.solida{ background:rgba(255,255,255,.86) !important; border-bottom-color:var(--line) }
 :root[data-tema="claro"] nav{
   background:rgba(8,20,44,.92) !important;
   border-bottom-color:transparent;
@@ -87,7 +92,7 @@ nav.solida{ background:rgba(255,255,255,.86); border-bottom-color:var(--line) }
    parece desalinhado mesmo com a mesma fonte/tamanho nos dois. */
 .nav-links > li{ display:flex; align-items:center }
 .nav-links a{
-  font-size:15px; font-weight:600; color:#17305C; line-height:1;
+  font-size:15px; font-weight:600; color:#17305C !important; line-height:1;
   letter-spacing:-.005em; position:relative; padding:8px 0;
   transition:color .35s var(--ease); text-decoration:none;
 }
@@ -101,9 +106,9 @@ nav.solida{ background:rgba(255,255,255,.86); border-bottom-color:var(--line) }
    sozinha, ver bloco "nav{background...}" no topo do arquivo). Escrever
    a cor certa pra cada lado da pílula aqui, sem depender de var(--text),
    evita esse descompasso. */
-.nav-links a:hover{ color:#0B2149 }
+.nav-links a:hover{ color:#0B2149 !important }
 .nav-links a:hover::after{ transform:scaleX(1) }
-.nav-links a[aria-current="page"]{ color:#0B2149 }
+.nav-links a[aria-current="page"]{ color:#0B2149 !important }
 .nav-links a[aria-current="page"]::after{ transform:scaleX(1) }
 :root[data-tema="claro"] .nav-links a{ color:#C7D6EC !important }
 :root[data-tema="claro"] .nav-links a:hover,
@@ -290,7 +295,7 @@ nav.solida{ background:rgba(255,255,255,.86); border-bottom-color:var(--line) }
 }
 .nav-burger span{
   position:absolute; left:13px; width:18px; height:1.6px; border-radius:2px;
-  background:var(--text); transition:transform .45s var(--ease), opacity .3s var(--ease);
+  background:#0B2149 !important; transition:transform .45s var(--ease), opacity .3s var(--ease);
 }
 .nav-burger span:nth-child(1){ top:16px }
 .nav-burger span:nth-child(2){ top:21px }
@@ -298,7 +303,10 @@ nav.solida{ background:rgba(255,255,255,.86); border-bottom-color:var(--line) }
 .nav-burger.aberto span:nth-child(1){ transform:translateY(5px) rotate(45deg) }
 .nav-burger.aberto span:nth-child(2){ opacity:0 }
 .nav-burger.aberto span:nth-child(3){ transform:translateY(-5px) rotate(-45deg) }
-:root[data-tema="claro"] .nav-burger span{ background:var(--text) }
+:root[data-tema="claro"] .nav-burger span{ background:#FFFFFF !important }
+@media (prefers-color-scheme: light){
+  :root:not([data-tema="escuro"]) .nav-burger span{ background:#FFFFFF !important }
+}
 
 .nav-painel{
   position:fixed; z-index:299;
@@ -306,7 +314,7 @@ nav.solida{ background:rgba(255,255,255,.86); border-bottom-color:var(--line) }
   width:min(var(--larg), calc(100% - 28px));
   margin-top:0; max-height:calc(100dvh - 140px);
   border-radius:0 0 26px 26px;
-  background:rgba(255,255,255,.76);
+  background:rgba(255,255,255,.76) !important;
   box-shadow:0 26px 70px rgba(2,5,12,.55), 0 0 0 1px rgba(11,33,73,.10);
   backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px);
   padding:16px 18px 20px;
@@ -344,6 +352,11 @@ body.menu-aberto::after{
 .nav-painel-wa{ background:linear-gradient(150deg,#2EDB70,#1AA84F); color:#04140A; border:none }
 .tema-linha{ display:flex; align-items:center; justify-content:space-between; margin-top:14px; padding-top:14px; border-top:1px solid var(--line) }
 .tema-linha .rotulo{ font-size:14.5px; color:#0B2149; font-weight:600 }
+/* .tema-btn sozinho usa var(--text-2) (ver mais abaixo), que segue o tema
+   do CORPO da página — dentro do painel mobile isso ficava lavado (o
+   painel inverte com a pílula, igual .tema-linha .rotulo já corrigia,
+   mas o ícone nunca ganhou o mesmo tratamento). */
+.tema-linha .tema-btn{ color:#0B2149 !important }
 
 :root[data-tema="claro"] .nav-painel{
   background:rgba(11,33,73,.76) !important;
@@ -356,6 +369,7 @@ body.menu-aberto::after{
 :root[data-tema="claro"] .nav-painel .nav-drop-btn{ border-bottom-color:rgba(255,255,255,.16) !important }
 :root[data-tema="claro"] .tema-linha{ border-top-color:rgba(255,255,255,.16) }
 :root[data-tema="claro"] .tema-linha .rotulo{ color:#FFFFFF }
+:root[data-tema="claro"] .tema-linha .tema-btn{ color:#FFFFFF !important }
 @media (prefers-color-scheme: light){
   :root:not([data-tema="escuro"]) .nav-painel{
     background:rgba(11,33,73,.76) !important;
@@ -368,6 +382,7 @@ body.menu-aberto::after{
   :root:not([data-tema="escuro"]) .nav-painel .nav-drop-btn{ border-bottom-color:rgba(255,255,255,.16) !important }
   :root:not([data-tema="escuro"]) .tema-linha{ border-top-color:rgba(255,255,255,.16) }
   :root:not([data-tema="escuro"]) .tema-linha .rotulo{ color:#FFFFFF }
+  :root:not([data-tema="escuro"]) .tema-linha .tema-btn{ color:#FFFFFF !important }
 }
 
 .tema-btn,.busca-btn{
@@ -390,46 +405,132 @@ body.menu-aberto::after{
 .tema-btn .sol{ opacity:1; transform:none }
 :root[data-tema="claro"] .tema-btn .lua{ opacity:1; transform:none }
 :root[data-tema="claro"] .tema-btn .sol{ opacity:0; transform:rotate(40deg) scale(.7) }
+
+/* var(--text-2) segue o tema do CORPO, não da pílula (mesmo problema já
+   corrigido em .nav-links/.nav-drop-btn/.nav-cta) — sol/lua e a lupa
+   ficavam quase invisíveis. Réplica exata do que index.html já usa:
+   sol/lua no mesmo azul-marinho/branco do resto do nav; a lupa ganha um
+   dourado próprio (mais destaque, não só contraste — achado explícito
+   no index.html: sem uma regra dedicada ela herdava a cor genérica e
+   ficava "bem menos legível que o sol/lua ao lado"). */
+.nav-acao .tema-btn{
+  color:#0B2149 !important;
+  background:rgba(11,33,73,.05) !important;
+  box-shadow:0 0 0 1px rgba(11,33,73,.12), 0 0 18px 2px rgba(18,100,196,.22) !important;
+}
+.nav-acao .busca-btn{
+  color:#8A5A22 !important;
+  background:rgba(217,169,78,.10) !important;
+  box-shadow:0 0 0 1px rgba(138,90,34,.22), 0 0 18px 2px rgba(217,169,78,.28) !important;
+}
+.nav-acao .busca-btn:hover, .nav-acao .busca-btn.aberto{
+  color:#6B4419 !important;
+  box-shadow:0 0 0 1px rgba(138,90,34,.4), inset 0 1px 0 rgba(255,255,255,.3), 0 0 26px 3px rgba(217,169,78,.4) !important;
+}
+:root[data-tema="claro"] .nav-acao .tema-btn{
+  color:#FFFFFF !important;
+  background:rgba(255,255,255,.10) !important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.20), 0 0 18px 2px rgba(127,212,255,.28) !important;
+}
+:root[data-tema="claro"] .nav-acao .busca-btn{
+  color:#F5DFA0 !important;
+  background:rgba(217,169,78,.14) !important;
+  box-shadow:0 0 0 1px rgba(245,223,160,.30), 0 0 18px 2px rgba(217,169,78,.32) !important;
+}
+:root[data-tema="claro"] .nav-acao .busca-btn:hover,
+:root[data-tema="claro"] .nav-acao .busca-btn.aberto{
+  color:#FBEFCB !important;
+  box-shadow:0 0 0 1px rgba(245,223,160,.5), inset 0 1px 0 rgba(255,255,255,.3), 0 0 26px 3px rgba(217,169,78,.45) !important;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-tema="escuro"]) .nav-acao .tema-btn{
+    color:#FFFFFF !important;
+    background:rgba(255,255,255,.10) !important;
+    box-shadow:0 0 0 1px rgba(255,255,255,.20), 0 0 18px 2px rgba(127,212,255,.28) !important;
+  }
+  :root:not([data-tema="escuro"]) .nav-acao .busca-btn{
+    color:#F5DFA0 !important;
+    background:rgba(217,169,78,.14) !important;
+    box-shadow:0 0 0 1px rgba(245,223,160,.30), 0 0 18px 2px rgba(217,169,78,.32) !important;
+  }
+  :root:not([data-tema="escuro"]) .nav-acao .busca-btn:hover,
+  :root:not([data-tema="escuro"]) .nav-acao .busca-btn.aberto{
+    color:#FBEFCB !important;
+    box-shadow:0 0 0 1px rgba(245,223,160,.5), inset 0 1px 0 rgba(255,255,255,.3), 0 0 26px 3px rgba(217,169,78,.45) !important;
+  }
+}
 @media (prefers-color-scheme: light){
   :root:not([data-tema="escuro"]) .tema-btn .lua{ opacity:1; transform:none }
   :root:not([data-tema="escuro"]) .tema-btn .sol{ opacity:0; transform:rotate(40deg) scale(.7) }
 }
 
 .busca-caixa{ position:relative }
+/* Mesmo cartão flutuante de .nav-drop-menu, mesma lógica: inverte em
+   relação à PÁGINA (junto com a pílula), não segue var(--text)/var(--text-2)
+   (tema do corpo) — o painel tinha fundo sempre escuro sem variante pro
+   tema claro, então texto escuro (correto pra pílula clara) acabava caindo
+   sobre fundo também escuro. Cores cravadas por tema, como no drop-menu. */
 .busca-painel{
   position:absolute; top:calc(100% + 12px); right:0; z-index:120;
   width:min(400px, 88vw);
-  background:rgba(8,14,28,.92);
-  border:1px solid rgba(255,255,255,.1); border-radius:var(--r-l);
+  background:rgba(255,255,255,.96) !important;
+  border:1px solid rgba(11,33,73,.12) !important; border-radius:var(--r-l);
   backdrop-filter:blur(24px) saturate(180%); -webkit-backdrop-filter:blur(24px) saturate(180%);
-  box-shadow:0 24px 60px rgba(2,5,12,.5), inset 0 1px 0 rgba(255,255,255,.08);
+  box-shadow:0 24px 60px rgba(11,33,73,.18), inset 0 1px 0 rgba(255,255,255,.6) !important;
   padding:14px;
 }
 .busca-campo{
   display:flex; align-items:center; gap:10px;
   padding:10px 14px; border-radius:100px;
-  background:rgba(147,169,201,.08); border:1px solid var(--line-2);
-  color:var(--text-2);
+  background:rgba(11,33,73,.05); border:1px solid rgba(11,33,73,.14);
+  color:#35465C !important;
 }
 .busca-campo svg{ width:18px; height:18px; flex:none }
 .busca-campo input{
   flex:1; min-width:0; background:none; border:none; outline:none;
-  font-family:var(--f-text); font-size:15px; color:var(--text);
+  font-family:var(--f-text); font-size:15px; color:#0A1524 !important;
 }
-.busca-campo input::placeholder{ color:var(--text-3) }
+.busca-campo input::placeholder{ color:#46586F !important }
 .busca-resultados{
   list-style:none; margin:10px 0 0; padding:0;
   max-height:340px; overflow-y:auto;
   display:flex; flex-direction:column; gap:4px;
 }
 .busca-item a{ display:block; padding:10px 12px; border-radius:10px; text-decoration:none; transition:background-color .2s var(--ease) }
-.busca-item a:hover, .busca-item a:focus-visible{ background:rgba(127,212,255,.1) }
-.busca-item-tit{ display:block; font-size:14.5px; font-weight:700; color:var(--text) }
+.busca-item a:hover, .busca-item a:focus-visible{ background:rgba(18,100,196,.08) }
+.busca-item-tit{ display:block; font-size:14.5px; font-weight:700; color:#0A1524 !important }
 .busca-item-cat{
   display:block; font-family:var(--f-mono); font-size:10.5px; letter-spacing:.1em;
-  text-transform:uppercase; color:var(--text-3); margin-top:2px;
+  text-transform:uppercase; color:#46586F !important; margin-top:2px;
 }
-.busca-vazio{ margin:14px 4px 4px; font-size:14px; color:var(--text-3); text-align:center }
+.busca-vazio{ margin:14px 4px 4px; font-size:14px; color:#46586F !important; text-align:center }
+
+:root[data-tema="claro"] .busca-painel{
+  background:rgba(8,14,28,.94) !important;
+  border-color:rgba(255,255,255,.1) !important;
+  box-shadow:0 24px 60px rgba(2,5,12,.5), inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+:root[data-tema="claro"] .busca-campo{ background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.16); color:#C7D6EC !important }
+:root[data-tema="claro"] .busca-campo input{ color:#F2F6FC !important }
+:root[data-tema="claro"] .busca-campo input::placeholder{ color:#93A9C9 !important }
+:root[data-tema="claro"] .busca-item a:hover, :root[data-tema="claro"] .busca-item a:focus-visible{ background:rgba(127,212,255,.1) }
+:root[data-tema="claro"] .busca-item-tit{ color:#F2F6FC !important }
+:root[data-tema="claro"] .busca-item-cat,
+:root[data-tema="claro"] .busca-vazio{ color:#93A9C9 !important }
+@media (prefers-color-scheme: light){
+  :root:not([data-tema="escuro"]) .busca-painel{
+    background:rgba(8,14,28,.94) !important;
+    border-color:rgba(255,255,255,.1) !important;
+    box-shadow:0 24px 60px rgba(2,5,12,.5), inset 0 1px 0 rgba(255,255,255,.08) !important;
+  }
+  :root:not([data-tema="escuro"]) .busca-campo{ background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.16); color:#C7D6EC !important }
+  :root:not([data-tema="escuro"]) .busca-campo input{ color:#F2F6FC !important }
+  :root:not([data-tema="escuro"]) .busca-campo input::placeholder{ color:#93A9C9 !important }
+  :root:not([data-tema="escuro"]) .busca-item a:hover, :root:not([data-tema="escuro"]) .busca-item a:focus-visible{ background:rgba(127,212,255,.1) }
+  :root:not([data-tema="escuro"]) .busca-item-tit{ color:#F2F6FC !important }
+  :root:not([data-tema="escuro"]) .busca-item-cat,
+  :root:not([data-tema="escuro"]) .busca-vazio{ color:#93A9C9 !important }
+}
 
 /* Entre o corte pro menu mobile (1024px) e a largura confortável (1600px),
    o conjunto "4 tópicos + busca + tema + CTA" fica justo — sem essa faixa,

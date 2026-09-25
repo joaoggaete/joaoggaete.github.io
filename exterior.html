@@ -484,29 +484,17 @@ section { background: transparent !important; }
 }
 
 /* ============ IMPEDE INVERSÃO PELO MODO ESCURO ============ */
+/* O @media(prefers-color-scheme:dark) que existia aqui era de uma versão
+   anterior da página (paleta marinho/branco/caramelo, com classes como
+   .stats-bar/.card/.pillar que nem existem mais no HTML atual) e nunca foi
+   removido quando o nav de vidro (nav.css) substituiu esse design. Como
+   usava seletores genéricos (nav, nav a, footer, html, body, h1-h4, .card,
+   .mini-table) com !important, continuava vencendo a cor certa de nav.css
+   (var(--text), sem !important) para QUALQUER visitante com o SISTEMA em
+   modo escuro — inclusive .busca-item-tit, que ficava branco sobre painel
+   de busca escuro no tema claro. */
 :root { color-scheme: light only; }
 html { color-scheme: light only; }
-
-@media (prefers-color-scheme: dark) {
-  html, body { background: #08122A !important; color: #FFFFFF !important; }
-  section { background: transparent !important; }
-  .card, .pillar, .insta-card, .faq-item, .form-card,
-  .modalidade-card, .table-wrapper, .mini-table {
-    background: #FFFFFF !important; color: #13254E !important;
-  }
-  .mini-table th { background: #13254E !important; color: #FFFFFF !important; }
-  nav, footer, .stats-bar { background: #13254E !important; }
-  nav a, footer a, .stats-bar, .stats-bar * { color: #FFFFFF !important; }
-  h1, h2, h3, h4, .section-title, .hero-title { color: #13254E !important; }
-  p, li, td, .hero-sub, .section-sub { color: #2C4470 !important; }
-  .eyebrow { color: #BF7B2E !important; }
-  input, select, textarea {
-    background: #FFFFFF !important; color: #13254E !important;
-    border-color: rgba(19,37,78,.24) !important;
-  }
-  .btn-gold, .nav-cta { background: #13254E !important; color: #FFFFFF !important; }
-  nav .nav-cta { background: #FFFFFF !important; color: #13254E !important; }
-}
 
 /* ============ ELEMENTOS QUE CHAMAM ATENÇÃO ============ */
 
@@ -599,14 +587,14 @@ html { color-scheme: light only; }
 .cta-band.caramelo .btn-wa,
 .cta-band.caramelo .btn-wa * { color: #13254E !important; }
 
-@media (prefers-color-scheme: dark) {
-  .cta-band h3, .cta-band p, .cta-band div, .cta-band span { color: #FFFFFF !important; }
-  .cta-band p { color: rgba(255,255,255,.88) !important; }
-  .cta-band .btn-wa, .cta-band .btn-wa * { color: #0B1A33 !important; }
-  .cta-band.caramelo .btn-wa, .cta-band.caramelo .btn-wa * { color: #13254E !important; }
-  .stats-bar, .stats-bar *, nav, nav *, footer, footer * { color: #FFFFFF !important; }
-  .mini-table th, .mini-table th * { color: #FFFFFF !important; }
-}
+/* bloco @media(prefers-color-scheme:dark) que existia aqui repetia as
+   regras de .cta-band acima (sem depender de tema) e ainda tinha um
+   "nav, nav *{color:#fff!important}" da paleta antiga — mesmo problema já
+   documentado perto de "IMPEDE INVERSÃO PELO MODO ESCURO" nesta página:
+   pra qualquer visitante com o SISTEMA em modo escuro, isso vencia a cor
+   certa de nav.css (var(--text), sem !important) em elementos como
+   .busca-item-tit, deixando o resultado da busca branco sobre painel
+   escuro no tema claro. Removido. */
 
 /* ============ HOTSPOTS PISCANTES NA TABELA ============ */
 .dot {
@@ -869,21 +857,15 @@ html { color-scheme: light only; }
 .nav-painel.aberto { display: block; }
 .nav-painel ul { list-style: none; margin: 0 0 18px; padding: 0; }
 .nav-painel li { border-bottom: 1px solid rgba(255,255,255,.12); }
-.nav-painel a {
-  display: block; font-family: Arial, sans-serif; font-size:17px;
-  font-weight: 700; color: #DCEAFB !important; text-decoration: none;
-  padding: 16px 2px;
-}
-.nav-painel a:active { color: #3B8FE0 !important; }
-.nav-painel-cta, .nav-painel-wa {
-  display: block; text-align: center; border-radius:var(--r);
-  padding: 16px !important; margin-top: 12px;
-  text-transform: uppercase; letter-spacing: .4px;
-  font-size: 14px !important; font-weight: 900 !important;
-}
-.nav-painel-cta { background: #FFFFFF; color: #13254E !important; }
-.nav-painel .nav-painel-cta { color: #13254E !important; }
-.nav-painel-wa  { background: #3B8FE0; color: #0B1A33 !important; }
+/* ".nav-painel a/.nav-painel-cta/.nav-painel-wa" desta paleta antiga saíram
+   daqui: mesmo problema do bloco "barra fixa, nav e rodapé" lá em cima, só
+   que no painel mobile — o "color:#DCEAFB!important" sem tema nenhum
+   sobrava sobre a cor de nav.css, e o par "background:#FFFFFF" (aqui) +
+   ":root[data-tema=claro] .nav-painel-cta{color:#FFFFFF!important}" (mais
+   abaixo no arquivo) deixava o botão "Ver quanto vou economizar" branco
+   sobre branco no tema claro. nav.css já estiliza os três por conta própria
+   (gradiente/verde com texto escuro, igual nos dois temas — não precisa
+   inverter, só o painel ao redor inverte). */
 @media (max-width: 1024px) {
   .nav-burger { display: block !important; width: 44px !important; height: 44px !important; background: transparent !important; -webkit-appearance: none; appearance: none; }
   .nav-inner { justify-content: space-between; gap: 10px; }
@@ -1313,19 +1295,18 @@ strong, .marca { color: var(--txt) !important; }
 .hero-title span { color: var(--caramelo) !important; }
 
 /* barra fixa, nav e rodapé */
-nav { background: rgba(8,18,42,.94) !important; backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--linha) !important; }
-nav a { color: #D7E4F5 !important; }
-nav .nav-cta { background: var(--caramelo) !important; color: #0A1428 !important; }
-nav .nav-cta:hover { background: #D9993F !important; }
+/* nav/.nav-cta desta paleta antiga saíram daqui: hoje quem manda no nav é
+   nav.css (pílula que INVERTE com o tema, ver comentário lá no topo do
+   arquivo). Esta regra sobrevivia com !important e sem estar presa a
+   nenhum tema, então continuava vencendo a pílula clara do tema escuro/
+   padrão (nav.css só põe !important na variante do tema claro) — o menu
+   ficava sempre escuro e o texto/logo perdiam contraste no tema padrão. */
 footer { background: #050D1F !important; border-top: 1px solid var(--linha) !important; }
 .stats-bar { background: #0C1B36 !important; border-top: 1px solid var(--linha-sut);
              border-bottom: 1px solid var(--linha-sut); }
 .mobile-cta { background: var(--caramelo) !important; color: #0A1428 !important; }
-.nav-painel { background: #0A1428 !important; border-top: 1px solid var(--linha) !important; }
-.nav-painel a { color: #D7E4F5 !important; }
-.nav-painel-cta { background: #FFFFFF !important; color: #13254E !important; }
-.nav-painel-wa { background: var(--neon) !important; color: #06182B !important; }
+/* .nav-painel/.nav-painel-cta/.nav-painel-wa desta paleta antiga saíram
+   daqui pelo mesmo motivo explicado perto de ".nav-painel a" mais acima. */
 .aviso-construcao { background: var(--caramelo) !important; color: #0A1428 !important; }
 
 /* formulário */
@@ -1486,8 +1467,9 @@ html, body, main { background-color: #050D1E !important; }
 .insta-image-container { background: #0B1A38 !important; }
 .stats-bar { background: #0B1A38 !important; }
 footer { background: #030814 !important; }
-nav { background: rgba(5,13,30,.95) !important; }
-.nav-painel { background: #050D1E !important; }
+/* nav/.nav-painel desta paleta saíram daqui pelo mesmo motivo do bloco
+   "barra fixa, nav e rodapé" lá em cima — mesma pílula/painel-mobile que
+   nav.css já cobre com a inversão de tema. */
 input, select, textarea { background: #0B1A38 !important; }
 .calc-atalhos button { background: #0B1A38 !important; }
 .form-card {
@@ -1527,8 +1509,6 @@ html, body, main { background-color: #050A14 !important; }
 .insta-image-container, input, select, textarea, .calc-atalhos button {
   background-color: #131B26 !important;
 }
-nav { background: rgba(5,10,20,.96) !important; }
-.nav-painel { background: #050A14 !important; }
 footer { background: #020509 !important; }
 .form-card {
   /* o fundo institucional saiu daqui: esta regra nunca casou com elemento
@@ -3168,8 +3148,6 @@ section:last-of-type, .cta-solo:last-of-type{ padding-bottom:134px !important }
   border-color:transparent !important;
 }
 
-:root[data-tema="claro"] .nav-painel-cta{ color:#FFFFFF !important }
-
 :root[data-tema="claro"] .form-ok-marca{ color:#FFFFFF !important }
 
 :root[data-tema="claro"] .mobile-cta{ color:#FFFFFF !important }
@@ -3851,8 +3829,6 @@ section:last-of-type, .cta-solo:last-of-type{ padding-bottom:134px !important }
   color:#FFFFFF !important;
   border-color:transparent !important;
 }
-
-:root:not([data-tema="escuro"]) .nav-painel-cta{ color:#FFFFFF !important }
 
 :root:not([data-tema="escuro"]) .form-ok-marca{ color:#FFFFFF !important }
 

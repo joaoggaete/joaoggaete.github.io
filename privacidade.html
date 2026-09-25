@@ -847,8 +847,6 @@ body.menu-aberto .ao-topo{ opacity:0; pointer-events:none }
   border-color:transparent !important;
 }
 
-:root[data-tema="claro"] .nav-painel-cta{ color:#FFFFFF !important }
-
 :root[data-tema="claro"] .form-ok-marca{ color:#FFFFFF !important }
 
 :root[data-tema="claro"] .mobile-cta{ color:#FFFFFF !important }
@@ -1525,8 +1523,6 @@ body.menu-aberto .ao-topo{ opacity:0; pointer-events:none }
   border-color:transparent !important;
 }
 
-:root:not([data-tema="escuro"]) .nav-painel-cta{ color:#FFFFFF !important }
-
 :root:not([data-tema="escuro"]) .form-ok-marca{ color:#FFFFFF !important }
 
 :root:not([data-tema="escuro"]) .mobile-cta{ color:#FFFFFF !important }
@@ -1803,7 +1799,7 @@ body.menu-aberto .ao-topo{ opacity:0; pointer-events:none }
 })();
 </script>
 
-<style>.tema-btn{ position:fixed; right:22px; top:22px; z-index:109 }
+<style>
 /* ==========================================================================
    PAGINAS SIMPLES NO CLARO
    Estas duas nasceram claras e foram escurecidas depois, com um bloco que
@@ -1966,62 +1962,14 @@ html.consent-aberto .mobile-cta:not(.recolhido){
   :root:not([data-tema="escuro"]) .btns a.back{ color:#13254E !important }
 }
 </style>
-<button class="tema-btn" type="button" aria-label="Mudar para o modo claro" aria-pressed="false"><svg class="sol" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.9"/><path d="M12 2.6v2.2M12 19.2v2.2M21.4 12h-2.2M4.8 12H2.6M18.6 5.4l-1.6 1.6M7 17l-1.6 1.6M18.6 18.6L17 17M7 7 5.4 5.4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><svg class="lua" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.5 14.2A8.6 8.6 0 0 1 9.8 3.5a8.6 8.6 0 1 0 10.7 10.7Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg></button>
-<script>
-(function(){
-"use strict";
-  /* ======================================================================
-     TEMA CLARO E ESCURO
-     Tres estados: 'claro', 'escuro' e ausencia de escolha, que segue o
-     sistema. O CSS ja resolve os tres; aqui so gravamos a decisao, avisamos
-     quem desenha em canvas, e trocamos a cor da barra do navegador.
-     ====================================================================== */
-  var Tema = (function(){
-    var raiz = document.documentElement;
-    var mqClaro = window.matchMedia('(prefers-color-scheme: light)');
-    var meta = document.querySelector('meta[name="theme-color"]');
-
-    function escolhido(){
-      var t = raiz.getAttribute('data-tema');
-      return (t === 'claro' || t === 'escuro') ? t : null;
-    }
-    function claroAgora(){
-      var e = escolhido();
-      if (e) return e === 'claro';
-      return mqClaro.matches;
-    }
-    function aplicar(){
-      var claro = claroAgora();
-      raiz.classList.toggle('t-claro', claro);
-      raiz.style.colorScheme = claro ? 'light' : 'dark';
-      if (meta) meta.setAttribute('content', claro ? '#FFFFFF' : '#03060F');
-            document.querySelectorAll('.tema-btn').forEach(function(b){
-        b.setAttribute('aria-label', claro ? 'Mudar para o modo escuro' : 'Mudar para o modo claro');
-        b.setAttribute('aria-pressed', claro ? 'true' : 'false');
-      });
-      var rot = document.querySelector('.tema-linha .rotulo');
-      if (rot) rot.textContent = claro ? 'Modo claro' : 'Modo escuro';
-    }
-    function alternar(){
-      /* a pessoa clicou: a partir daqui a escolha dela manda, nao o sistema */
-      var claro = claroAgora();
-      try { localStorage.setItem('astro-tema', claro ? 'escuro' : 'claro'); } catch(e){}
-      raiz.setAttribute('data-tema', claro ? 'escuro' : 'claro');
-      aplicar();
-    }
-    /* enquanto nao houver escolha, o site acompanha o sistema ao vivo */
-    mqClaro.addEventListener('change', function(){ if (!escolhido()) aplicar(); });
-    document.addEventListener('click', function(e){
-      var b = e.target && e.target.closest ? e.target.closest('.tema-btn') : null;
-      if (b) { e.preventDefault(); alternar(); }
-    });
-    aplicar();
-    return { aplicar: aplicar, alternar: alternar, claro: claroAgora };
-  })();
-
-
-})();
-</script>
+<!-- O botão de tema flutuante e o script "Tema" que existiam aqui eram uma
+     cópia inteira e independente do que /nav.js já faz pra QUALQUER
+     .tema-btn da página (inclusive o de dentro do nav, .nav-acao .tema-btn).
+     As duas cópias ficavam com um listener de clique no document cada uma;
+     clicar no botão do nav disparava as duas, uma cancelando a outra
+     (astro-tema virava claro e escuro no mesmo clique), então o tema nunca
+     mudava de fato. A cópia também só gravava a chave antiga "astro-tema",
+     sem o "-v2" que o resto do site usa. Removida — nav.js já cobre isto. -->
 
 <div class="consent" id="consent" role="region" aria-label="Aviso de cookies" hidden>
   <p class="consent-txt">Usamos cookies para medir como o site é usado e, quando houver,

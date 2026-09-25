@@ -478,29 +478,20 @@ section { background: transparent !important; }
 }
 
 /* ============ IMPEDE INVERSÃO PELO MODO ESCURO ============ */
+/* O bloco @media(prefers-color-scheme:dark) que existia aqui era de uma
+   versão anterior da página (paleta marinho/branco/caramelo, com classes
+   como .stats-bar/.card/.pillar que nem existem mais no HTML atual). Ele
+   nunca foi removido quando o nav de vidro (mais abaixo, perto de "barra")
+   substituiu esse design, e como usava seletores genéricos (nav, nav *,
+   html, body, section, h1-h4, footer) com !important, continuava vazando
+   pro nav ATUAL: para qualquer visitante com o SISTEMA em modo escuro, ele
+   forçava "color:#fff!important" em tudo dentro de <nav> — inclusive no
+   ícone de sol/lua do botão de tema, que usa "color:var(--text-2)" sem
+   !important e por isso sempre perdia. Era esse o ícone "sem visibilidade"
+   no tema claro: acontecia sempre que o SO do visitante preferia escuro,
+   não importa o tema que a própria página estivesse mostrando. */
 :root { color-scheme: light only; }
 html { color-scheme: light only; }
-
-@media (prefers-color-scheme: dark) {
-  html, body { background: #08122A !important; color: #FFFFFF !important; }
-  section { background: transparent !important; }
-  .card, .pillar, .insta-card, .faq-item, .form-card,
-  .modalidade-card, .table-wrapper, .mini-table {
-    background: #FFFFFF !important; color: #13254E !important;
-  }
-  .mini-table th { background: #13254E !important; color: #FFFFFF !important; }
-  nav, footer, .stats-bar { background: #13254E !important; }
-  nav a, footer a, .stats-bar, .stats-bar * { color: #FFFFFF !important; }
-  h1, h2, h3, h4, .section-title, .hero-title { color: #13254E !important; }
-  p, li, td, .hero-sub, .section-sub { color: #2C4470 !important; }
-  .eyebrow { color: #BF7B2E !important; }
-  input, select, textarea {
-    background: #FFFFFF !important; color: #13254E !important;
-    border-color: rgba(19,37,78,.24) !important;
-  }
-  .btn-gold, .nav-cta { background: #13254E !important; color: #FFFFFF !important; }
-  nav .nav-cta { background: #FFFFFF !important; color: #13254E !important; }
-}
 
 /* ============ ELEMENTOS QUE CHAMAM ATENÇÃO ============ */
 
@@ -593,14 +584,10 @@ html { color-scheme: light only; }
 .cta-band.caramelo .btn-wa,
 .cta-band.caramelo .btn-wa * { color: #13254E !important; }
 
-@media (prefers-color-scheme: dark) {
-  .cta-band h3, .cta-band p, .cta-band div, .cta-band span { color: #FFFFFF !important; }
-  .cta-band p { color: rgba(255,255,255,.88) !important; }
-  .cta-band .btn-wa, .cta-band .btn-wa * { color: #0B1A33 !important; }
-  .cta-band.caramelo .btn-wa, .cta-band.caramelo .btn-wa * { color: #13254E !important; }
-  .stats-bar, .stats-bar *, nav, nav *, footer, footer * { color: #FFFFFF !important; }
-  .mini-table th, .mini-table th * { color: #FFFFFF !important; }
-}
+/* bloco @media(prefers-color-scheme:dark) que existia aqui era só uma
+   repetição das regras de .cta-band logo acima (sem depender de tema) mais
+   um "nav, nav *{color:#fff!important}" da paleta antiga — o mesmo problema
+   explicado no comentário perto de "IMPEDE INVERSÃO PELO MODO ESCURO". Removido. */
 
 /* ============ HOTSPOTS PISCANTES NA TABELA ============ */
 .dot {
@@ -1975,13 +1962,19 @@ body::before{
    menu fora de alcance depois da primeira tela. */
 body > *:not(nav){ position:relative; z-index:1 }
 
-/* ---------- barra ---------- */
+/* ---------- barra ----------
+   A pílula INVERTE em relação ao tema da página — clara por padrão (tema
+   escuro), marinha no tema claro — igual index.html/nav.css em todo o
+   resto do site. Antes desta correção esta página fazia o oposto (pílula
+   sempre na MESMA cor do fundo da página, nunca invertida), por isso a
+   logo/ícones ficavam com contraste errado em pelo menos um dos temas. */
 nav{
-  background:rgba(3,6,15,.9) !important;
+  background:rgba(255,255,255,.62) !important;
   backdrop-filter:blur(16px) saturate(1.4); -webkit-backdrop-filter:blur(16px) saturate(1.4);
-  border-bottom:1px solid var(--line) !important;
+  border-bottom:1px solid transparent !important;
   height:74px; display:flex; align-items:center;
 }
+nav.solida{ background:rgba(255,255,255,.86) !important; border-bottom-color:var(--line) !important }
 nav .nav-inner{
   display:grid !important; grid-template-columns:auto minmax(0,1fr) auto;
   align-items:center; gap:24px; padding-inline:0 !important;
@@ -1996,57 +1989,107 @@ nav .nav-acao{ justify-self:end; flex-shrink:0 }
 .nav-marca{ position:absolute; inset:0; width:100%; height:100%; display:block; color:#0B2149; visibility:hidden; }
 .nav-gira{
   position:absolute; inset:0;
-  /* prata por padrão: o nav DESTA página é escuro por padrão (diferente
-     do index.html, que inverte e é sempre branco) — prata é o que aparece
-     contra fundo quase preto. */
+  /* prata: cor certa pro RODAPÉ, que é sempre escuro nos dois temas (ver
+     regras de footer mais abaixo). O <nav> sobrescreve pra navy logo
+     abaixo, já que a pílula dele agora inverte e fica clara por padrão. */
   background-image:url('img/marca-estatica-prata.webp');
   background-repeat:no-repeat; background-size:contain; background-position:center;
 }
 .nav-palavra{ height:66%; width:auto; display:block; flex:none }
-/* Diferente do index.html: aqui só o NAV troca de cor com o tema (branco
-   no claro, preto no escuro) — o RODAPÉ fica escuro nos dois temas (ver
-   as regras de footer mais abaixo no arquivo). Por isso a troca de peça e
-   o filtro da palavra são escopados a "nav .nav-gira"/"nav .nav-palavra",
-   não à classe pura — senão o rodapé também seria afetado e a palavra
-   sumiria (marinho sobre fundo escuro). */
-:root[data-tema="claro"] nav .nav-gira{ background-image:url('img/marca-estatica-navy.webp') }
-:root[data-tema="claro"] nav .nav-palavra{ filter:brightness(0) saturate(100%) invert(6%) sepia(30%) saturate(1800%) hue-rotate(186deg) }
+/* A troca de peça/filtro é escopada a "nav .nav-gira"/"nav .nav-palavra",
+   não à classe pura — senão o rodapé (sempre escuro) também seria afetado
+   e a palavra sumiria (marinho sobre fundo escuro). Pílula do nav inverte
+   com o tema (igual index.html/nav.css): clara por padrão → navy/marinho;
+   marinha no tema claro → prata/branco. */
+nav .nav-gira{ background-image:url('img/marca-estatica-navy.webp') }
+nav .nav-palavra{ filter:brightness(0) saturate(100%) invert(6%) sepia(30%) saturate(1800%) hue-rotate(186deg) }
+:root[data-tema="claro"] nav .nav-gira{ background-image:url('img/marca-estatica-prata.webp') }
+:root[data-tema="claro"] nav .nav-palavra{ filter:none !important }
 @media (prefers-color-scheme: light){
-  :root:not([data-tema="escuro"]) nav .nav-gira{ background-image:url('img/marca-estatica-navy.webp') }
-  :root:not([data-tema="escuro"]) nav .nav-palavra{ filter:brightness(0) saturate(100%) invert(6%) sepia(30%) saturate(1800%) hue-rotate(186deg) }
+  :root:not([data-tema="escuro"]) nav .nav-gira{ background-image:url('img/marca-estatica-prata.webp') }
+  :root:not([data-tema="escuro"]) nav .nav-palavra{ filter:none !important }
 }
 .nav-links{ justify-self:center; display:flex; gap:32px; list-style:none; margin:0 !important }
+/* Cor fixa, não var(--text)/var(--text-2): essas variáveis seguem o tema do
+   CORPO da página, não o da PÍLULA do nav (que inverte sozinha). Mesmo
+   raciocínio em .nav-cta/.nav-burger span/.nav-painel/.tema-btn/
+   .busca-global-btn/.nav-inicio logo abaixo. */
 .nav-links a{
   font-family:var(--f-text) !important; font-size:14.5px !important; font-weight:600 !important;
-  color:#93A9C9 !important; text-transform:none !important; letter-spacing:-.005em !important;
+  color:#17305C !important; text-transform:none !important; letter-spacing:-.005em !important;
   padding:8px 0; position:relative;
 }
-.nav-links a:hover,.nav-links a.ativo{ color:#fff !important }
+.nav-links a:hover,.nav-links a.ativo{ color:#0B2149 !important }
+/* Chapa sólida, não vidro transparente: sobre a pílula clara (padrão) um
+   degradê quase-transparente com letra branca lava o botão. Mesmo ajuste
+   já usado em index.html/nav.css. */
 .nav-cta{
   grid-column:3; justify-self:end; position:relative; overflow:hidden;
   font-family:var(--f-text) !important; font-size:14px !important; font-weight:700 !important;
   text-transform:none !important; letter-spacing:-.012em !important;
   padding:12px 24px !important; border-radius:100px !important;
-  color:#fff !important; border:none !important;
-  background:linear-gradient(150deg, rgba(127,212,255,.13), rgba(255,255,255,.04)) !important;
-  backdrop-filter:blur(22px) saturate(190%); -webkit-backdrop-filter:blur(22px) saturate(190%);
+  color:#FFFFFF !important; border:none !important;
+  background:rgba(11,33,73,.88) !important;
+  backdrop-filter:blur(20px) saturate(170%); -webkit-backdrop-filter:blur(20px) saturate(170%);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.24), 0 6px 22px rgba(2,5,12,.35) !important;
 }
-.nav-cta::before{
-  content:""; position:absolute; inset:0; border-radius:inherit; padding:1.2px; pointer-events:none;
-  background:linear-gradient(180deg, rgba(255,255,255,.5) 0%, rgba(255,255,255,.14) 22%,
-    rgba(255,255,255,0) 46%, rgba(255,255,255,0) 58%, rgba(127,212,255,.2) 80%, rgba(127,212,255,.48) 100%);
-  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite:xor; mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite:exclude;
-}
-.nav-cta:hover{ transform:translateY(-1px); background:linear-gradient(150deg, rgba(127,212,255,.24), rgba(255,255,255,.07)) !important }
+.nav-cta:hover{ transform:translateY(-1px); background:rgba(11,33,73,.96) !important }
 .nav-burger{ grid-column:3; justify-self:end; background:rgba(255,255,255,.05) !important; border:1px solid rgba(255,255,255,.13) !important; border-radius:var(--r)!important }
-.nav-burger span{ background:var(--text) !important }
-.nav-painel{ background:rgba(3,6,15,.97) !important }
-.nav-painel ul a{ font-family:var(--f-display) !important; color:var(--text) !important; border-bottom:1px solid var(--line) !important }
+.nav-burger span{ background:#0B2149 !important }
+.nav-painel{ background:rgba(255,255,255,.76) !important }
+.nav-painel ul a{ font-family:var(--f-display) !important; color:#0B2149 !important; border-bottom:1px solid rgba(11,33,73,.12) !important }
 .nav-painel-cta{ background:linear-gradient(135deg,var(--accent-hi),var(--accent)) !important; color:#04101F !important; border:none !important }
 .nav-painel-wa{ background:linear-gradient(150deg,#2470DE,#0A3A96) !important; color:#fff !important; border:none !important }
+/* Botões de tema/busca (ver .tema-btn/.busca-global-btn mais abaixo no
+   arquivo) e "Página inicial" (busca-global.css) também precisam da cor
+   certa pra pílula, não pra página — réplica do padrão de index.html/
+   nav.css, incluindo o dourado próprio da lupa (mais destaque, achado lá). */
+nav .nav-acao .tema-btn{
+  color:#0B2149 !important;
+  background:rgba(11,33,73,.05) !important;
+  box-shadow:0 0 0 1px rgba(11,33,73,.12), 0 0 18px 2px rgba(18,100,196,.22) !important;
+}
+nav .nav-acao .busca-global-btn{
+  color:#8A5A22 !important;
+  background:rgba(217,169,78,.10) !important;
+  border-color:rgba(138,90,34,.22) !important;
+}
+nav .nav-acao .busca-global-btn:hover,
+nav .nav-acao .busca-global-btn:focus-visible{
+  color:#6B4419 !important;
+  border-color:rgba(138,90,34,.4) !important;
+  background:rgba(217,169,78,.16) !important;
+}
+nav .nav-acao .nav-inicio{ color:#17305C !important; border-color:rgba(23,48,92,.28) !important }
+nav .nav-acao .nav-inicio:hover{ color:#0B2149 !important; border-color:rgba(59,143,224,.7) !important }
+
+/* painel de busca (busca-global.css): esse arquivo foi feito pra um
+   cabeçalho que NÃO inverte (.doc-nav-global, sem uso hoje), então seu
+   painel escuro por padrão/claro quando claro é o oposto do que a pílula
+   desta página precisa. Mesma lógica de .nav-drop-menu/.busca-painel do
+   nav.css: o painel inverte junto com a pílula, cor cravada por tema. */
+nav .busca-global-painel{
+  background:rgba(255,255,255,.96) !important; color:#0A1524 !important;
+  border-color:rgba(11,33,73,.12) !important;
+  box-shadow:0 24px 60px rgba(11,33,73,.18) !important;
+}
+nav .busca-global-campo{ background:rgba(11,33,73,.05) !important; border-color:rgba(11,33,73,.14) !important }
+nav .busca-global-campo input{ color:#0A1524 !important }
+nav .busca-global-campo input::placeholder{ color:#46586F !important }
+nav .busca-global-resultados a{ color:#0A1524 !important }
+nav .busca-global-resultados small,
+nav .busca-global-vazio{ color:#46586F !important }
+:root[data-tema="claro"] nav .busca-global-painel{
+  background:rgba(8,14,28,.94) !important; color:#F2F6FC !important;
+  border-color:rgba(255,255,255,.1) !important;
+  box-shadow:0 24px 60px rgba(2,5,12,.5) !important;
+}
+:root[data-tema="claro"] nav .busca-global-campo{ background:rgba(255,255,255,.08) !important; border-color:rgba(255,255,255,.16) !important }
+:root[data-tema="claro"] nav .busca-global-campo input{ color:#F2F6FC !important }
+:root[data-tema="claro"] nav .busca-global-campo input::placeholder{ color:#93A9C9 !important }
+:root[data-tema="claro"] nav .busca-global-resultados a{ color:#F2F6FC !important }
+:root[data-tema="claro"] nav .busca-global-resultados small,
+:root[data-tema="claro"] nav .busca-global-vazio{ color:#93A9C9 !important }
 
 /* ---------- tipografia de seção ---------- */
 .eyebrow{
@@ -2685,9 +2728,9 @@ section:last-of-type, .cta-solo:last-of-type{ padding-bottom:134px !important }
     0 44px 88px rgba(10,21,36,.08) !important;
 }
 
-:root[data-tema="claro"] nav{ background:rgba(255,255,255,.62) !important; border-bottom-color:transparent }
+:root[data-tema="claro"] nav{ background:rgba(8,20,44,.92) !important; border-bottom-color:transparent }
 
-:root[data-tema="claro"] nav.solida{ background:rgba(255,255,255,.86) !important; border-bottom-color:var(--line) }
+:root[data-tema="claro"] nav.solida{ background:rgba(8,20,44,.95) !important; border-bottom-color:var(--line) }
 
 /* substituída pela regra escopada "nav .nav-palavra" (ver perto de
    .nav-cracha) — filtrar o .nav-logo inteiro filtraria também o crachá
@@ -2699,9 +2742,10 @@ section:last-of-type, .cta-solo:last-of-type{ padding-bottom:134px !important }
    var(--text-2) fixou "claro sobre escuro" no codigo. */
 /* as internas cravam a cor do menu com !important na folha antiga */
 :root[data-tema="claro"] .nav-links a,
-:root[data-tema="claro"] .nav-links li a{ color:#35465C !important }
+:root[data-tema="claro"] .nav-links li a{ color:#C7D6EC !important }
 
-:root[data-tema="claro"] .nav-links a:hover{ color:var(--text) !important }
+:root[data-tema="claro"] .nav-links a:hover,
+:root[data-tema="claro"] .nav-links a.ativo{ color:#FFFFFF !important }
 
 :root[data-tema="claro"] .hero-sub{ color:#35465C }
 
@@ -2733,7 +2777,6 @@ section:last-of-type, .cta-solo:last-of-type{ padding-bottom:134px !important }
 }
 
 :root[data-tema="claro"] .btn-fantasma,
-:root[data-tema="claro"] .nav-cta,
 :root[data-tema="claro"] .nav-burger,
 :root[data-tema="claro"] .btn-wa-vidro,
 :root[data-tema="claro"] .ao-topo{
@@ -2745,13 +2788,43 @@ section:last-of-type, .cta-solo:last-of-type{ padding-bottom:134px !important }
 }
 
 :root[data-tema="claro"] .btn-fantasma::before,
-:root[data-tema="claro"] .nav-cta::before,
 :root[data-tema="claro"] .nav-burger::before,
 :root[data-tema="claro"] .btn-wa-vidro::before{
   background:linear-gradient(150deg, rgba(255,255,255,1), rgba(10,21,36,.09) 58%, rgba(18,100,196,.18)) !important;
 }
 
-:root[data-tema="claro"] .nav-burger span{ background:var(--text) }
+/* .nav-cta sai do grupo acima: ele é chapa sólida que INVERTE com a
+   pílula (marinho→pílula clara padrão, branco→pílula escura no claro),
+   não vidro claro-sobre-claro como os botões de página. */
+:root[data-tema="claro"] .nav-cta{
+  background:rgba(255,255,255,.86) !important; color:#0B2149 !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9), 0 2px 10px rgba(2,5,12,.22) !important;
+}
+:root[data-tema="claro"] .nav-cta:hover{ background:rgba(255,255,255,.96) !important }
+
+:root[data-tema="claro"] .nav-burger span{ background:#FFFFFF !important }
+
+:root[data-tema="claro"] .nav-acao .tema-btn{
+  color:#FFFFFF !important;
+  background:rgba(255,255,255,.10) !important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.20), 0 0 18px 2px rgba(127,212,255,.28) !important;
+}
+:root[data-tema="claro"] .nav-acao .busca-global-btn{
+  color:#F5DFA0 !important;
+  background:rgba(217,169,78,.14) !important;
+  border-color:rgba(245,223,160,.30) !important;
+}
+:root[data-tema="claro"] .nav-acao .busca-global-btn:hover,
+:root[data-tema="claro"] .nav-acao .busca-global-btn:focus-visible{
+  color:#FBEFCB !important;
+  border-color:rgba(245,223,160,.5) !important;
+  background:rgba(217,169,78,.20) !important;
+}
+:root[data-tema="claro"] .nav-acao .nav-inicio{ color:#C7D6EC !important; border-color:rgba(199,214,236,.28) !important }
+:root[data-tema="claro"] .nav-acao .nav-inicio:hover{ color:#FFFFFF !important }
+
+:root[data-tema="claro"] .nav-painel{ background:rgba(11,33,73,.76) !important }
+:root[data-tema="claro"] .nav-painel ul a{ color:#FFFFFF !important; border-bottom-color:rgba(255,255,255,.16) !important }
 
 :root[data-tema="claro"] footer{ background:#0A1524; color:#E8EEF7 }
 
@@ -3265,8 +3338,6 @@ section:last-of-type, .cta-solo:last-of-type{ padding-bottom:134px !important }
   border-color:transparent !important;
 }
 
-:root[data-tema="claro"] .nav-painel-cta{ color:#FFFFFF !important }
-
 :root[data-tema="claro"] .form-ok-marca{ color:#FFFFFF !important }
 
 :root[data-tema="claro"] .mobile-cta{ color:#FFFFFF !important }
@@ -3375,9 +3446,9 @@ section:last-of-type, .cta-solo:last-of-type{ padding-bottom:134px !important }
     0 44px 88px rgba(10,21,36,.08) !important;
 }
 
-:root:not([data-tema="escuro"]) nav{ background:rgba(255,255,255,.62) !important; border-bottom-color:transparent }
+:root:not([data-tema="escuro"]) nav{ background:rgba(8,20,44,.92) !important; border-bottom-color:transparent }
 
-:root:not([data-tema="escuro"]) nav.solida{ background:rgba(255,255,255,.86) !important; border-bottom-color:var(--line) }
+:root:not([data-tema="escuro"]) nav.solida{ background:rgba(8,20,44,.95) !important; border-bottom-color:var(--line) }
 
 
 :root:not([data-tema="escuro"]) footer .nav-logo{ filter:none }
@@ -3386,9 +3457,10 @@ section:last-of-type, .cta-solo:last-of-type{ padding-bottom:134px !important }
    var(--text-2) fixou "claro sobre escuro" no codigo. */
 /* as internas cravam a cor do menu com !important na folha antiga */
 :root:not([data-tema="escuro"]) .nav-links a,
-:root:not([data-tema="escuro"]) .nav-links li a{ color:#35465C !important }
+:root:not([data-tema="escuro"]) .nav-links li a{ color:#C7D6EC !important }
 
-:root:not([data-tema="escuro"]) .nav-links a:hover{ color:var(--text) !important }
+:root:not([data-tema="escuro"]) .nav-links a:hover,
+:root:not([data-tema="escuro"]) .nav-links a.ativo{ color:#FFFFFF !important }
 
 :root:not([data-tema="escuro"]) .hero-sub{ color:#35465C }
 
@@ -3420,7 +3492,6 @@ section:last-of-type, .cta-solo:last-of-type{ padding-bottom:134px !important }
 }
 
 :root:not([data-tema="escuro"]) .btn-fantasma,
-:root:not([data-tema="escuro"]) .nav-cta,
 :root:not([data-tema="escuro"]) .nav-burger,
 :root:not([data-tema="escuro"]) .btn-wa-vidro,
 :root:not([data-tema="escuro"]) .ao-topo{
@@ -3432,13 +3503,44 @@ section:last-of-type, .cta-solo:last-of-type{ padding-bottom:134px !important }
 }
 
 :root:not([data-tema="escuro"]) .btn-fantasma::before,
-:root:not([data-tema="escuro"]) .nav-cta::before,
 :root:not([data-tema="escuro"]) .nav-burger::before,
 :root:not([data-tema="escuro"]) .btn-wa-vidro::before{
   background:linear-gradient(150deg, rgba(255,255,255,1), rgba(10,21,36,.09) 58%, rgba(18,100,196,.18)) !important;
 }
 
-:root:not([data-tema="escuro"]) .nav-burger span{ background:var(--text) }
+:root:not([data-tema="escuro"]) .nav-cta{
+  background:rgba(255,255,255,.86) !important; color:#0B2149 !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9), 0 2px 10px rgba(2,5,12,.22) !important;
+}
+:root:not([data-tema="escuro"]) .nav-cta:hover{ background:rgba(255,255,255,.96) !important }
+
+:root:not([data-tema="escuro"]) .nav-burger span{ background:#FFFFFF !important }
+
+:root:not([data-tema="escuro"]) .nav-acao .tema-btn{
+  color:#FFFFFF !important;
+  background:rgba(255,255,255,.10) !important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.20), 0 0 18px 2px rgba(127,212,255,.28) !important;
+}
+:root:not([data-tema="escuro"]) .nav-acao .busca-global-btn{
+  color:#F5DFA0 !important;
+  background:rgba(217,169,78,.14) !important;
+  border-color:rgba(245,223,160,.30) !important;
+}
+:root:not([data-tema="escuro"]) .nav-acao .nav-inicio{ color:#C7D6EC !important; border-color:rgba(199,214,236,.28) !important }
+:root:not([data-tema="escuro"]) .nav-acao .nav-inicio:hover{ color:#FFFFFF !important }
+:root:not([data-tema="escuro"]) .nav-painel{ background:rgba(11,33,73,.76) !important }
+:root:not([data-tema="escuro"]) .nav-painel ul a{ color:#FFFFFF !important; border-bottom-color:rgba(255,255,255,.16) !important }
+:root:not([data-tema="escuro"]) nav .busca-global-painel{
+  background:rgba(8,14,28,.94) !important; color:#F2F6FC !important;
+  border-color:rgba(255,255,255,.1) !important;
+  box-shadow:0 24px 60px rgba(2,5,12,.5) !important;
+}
+:root:not([data-tema="escuro"]) nav .busca-global-campo{ background:rgba(255,255,255,.08) !important; border-color:rgba(255,255,255,.16) !important }
+:root:not([data-tema="escuro"]) nav .busca-global-campo input{ color:#F2F6FC !important }
+:root:not([data-tema="escuro"]) nav .busca-global-campo input::placeholder{ color:#93A9C9 !important }
+:root:not([data-tema="escuro"]) nav .busca-global-resultados a{ color:#F2F6FC !important }
+:root:not([data-tema="escuro"]) nav .busca-global-resultados small,
+:root:not([data-tema="escuro"]) nav .busca-global-vazio{ color:#93A9C9 !important }
 
 :root:not([data-tema="escuro"]) footer{ background:#0A1524; color:#E8EEF7 }
 
@@ -3952,8 +4054,6 @@ section:last-of-type, .cta-solo:last-of-type{ padding-bottom:134px !important }
   border-color:transparent !important;
 }
 
-:root:not([data-tema="escuro"]) .nav-painel-cta{ color:#FFFFFF !important }
-
 :root:not([data-tema="escuro"]) .form-ok-marca{ color:#FFFFFF !important }
 
 :root:not([data-tema="escuro"]) .mobile-cta{ color:#FFFFFF !important }
@@ -3995,13 +4095,21 @@ section:last-of-type, .cta-solo:last-of-type{ padding-bottom:134px !important }
 
 /* no painel do celular ele vira uma linha com rotulo, porque ali ha espaco
    e um icone solto no meio de uma lista de links nao se explica */
+/* cor fixa, não var(--text-2): o painel mobile inverte com a pílula (ver
+   .nav-painel mais acima), a variável segue o tema do CORPO da página. */
 .tema-linha{
   display:flex; align-items:center; justify-content:space-between;
   gap:14px; margin-top:18px; padding:14px 4px 0;
   border-top:1px solid var(--line);
-  font-family:var(--f-text); font-size:15px; color:var(--text-2);
+  font-family:var(--f-text); font-size:15px; color:#0B2149;
 }
-.tema-linha .tema-btn{ width:44px; height:44px }
+.tema-linha .tema-btn{ width:44px; height:44px; color:#0B2149 !important }
+:root[data-tema="claro"] .tema-linha{ color:#FFFFFF }
+:root[data-tema="claro"] .tema-linha .tema-btn{ color:#FFFFFF !important }
+@media (prefers-color-scheme: light){
+  :root:not([data-tema="escuro"]) .tema-linha{ color:#FFFFFF }
+  :root:not([data-tema="escuro"]) .tema-linha .tema-btn{ color:#FFFFFF !important }
+}
 
 /* tokens que a folha de tema referencia e que estas paginas nao definiam:
    a linha do seletor de tema caia na fonte padrao do navegador. */
