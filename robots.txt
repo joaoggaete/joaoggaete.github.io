@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /treinamento/
 
 Sitemap: https://astroconsorcios.netlify.app/sitemap.xml
