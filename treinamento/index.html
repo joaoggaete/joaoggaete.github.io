@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23070D1A'/%3E%3Cpath d='M16 5.5 19.2 13 27 16l-7.8 3L16 26.5 12.8 19 5 16l7.8-3z' fill='%233B8FE0'/%3E%3C/svg%3E" type="image/svg+xml">
+<title>Treino de vendas — Astro Consórcios</title>
+<meta name="robots" content="noindex, nofollow">
+<script>
+(function(){try{
+  var t=localStorage.getItem("astro-tema");
+  if(t==="claro"||t==="escuro") document.documentElement.setAttribute("data-tema",t);
+  var claro = t==="claro" || (t!=="escuro" && window.matchMedia("(prefers-color-scheme: light)").matches);
+  document.documentElement.classList.toggle("t-claro", claro);
+  document.documentElement.style.colorScheme = claro ? "light" : "dark";
+}catch(e){}})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Manrope:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --canvas:#03060F; --panel:#0B1526; --panel-2:#101D34;
+  --accent:#3B8FE0; --accent-hi:#7FD4FF; --accent-soft:rgba(59,143,224,.16);
+  --verde:#2EDB70; --amarelo:#E0B23B; --vermelho:#E8825C;
+  --text:#F2F6FC; --text-2:#93A9C9; --text-3:#7C90B4;
+  --line:rgba(147,169,201,.16); --line-2:rgba(147,169,201,.6);
+  --bolha-cliente:#101D34; --bolha-vendedor:linear-gradient(135deg,var(--accent-hi),var(--accent));
+  --f-display:'Sora',ui-sans-serif,system-ui,sans-serif;
+  --f-text:'Manrope',ui-sans-serif,system-ui,sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,monospace;
+  --r:14px; --r-l:20px;
+}
+:root[data-tema="claro"], :root:not([data-tema="escuro"]).t-claro{
+  --canvas:#F4F7FC; --panel:#FFFFFF; --panel-2:#F0F4FB;
+  --accent:#0E56AE; --accent-hi:#0E4F9E; --accent-soft:rgba(18,100,196,.08);
+  --vermelho:#B3492A; --amarelo:#9A7414;
+  --text:#0A1524; --text-2:#35465C; --text-3:#46586F;
+  --line:rgba(10,21,36,.09); --line-2:rgba(10,21,36,.45);
+  --bolha-cliente:#EEF2F9;
+}
+*{ box-sizing:border-box }
+body{ margin:0; background:var(--canvas); color:var(--text);
+      font-family:var(--f-text); font-size:15px; line-height:1.55 }
+a{ color:inherit }
+header.topo{ display:flex; align-items:center; justify-content:space-between; gap:14px;
+  padding:16px 22px; border-bottom:1px solid var(--line); flex-wrap:wrap }
+.marca{ display:flex; align-items:center; gap:10px; font-family:var(--f-display); font-weight:700; font-size:17px }
+.marca .icone{ width:30px; height:30px; border-radius:8px; background:linear-gradient(135deg,var(--accent-hi),var(--accent));
+  display:flex; align-items:center; justify-content:center; font-size:15px; flex:none }
+.marca small{ display:block; font-family:var(--f-text); font-weight:400; font-size:12px; color:var(--text-3) }
+.topo-acoes{ display:flex; align-items:center; gap:10px }
+.btn-icone{ background:none; border:1px solid var(--line-2); color:var(--text-2); border-radius:10px;
+  width:36px; height:36px; cursor:pointer; font-size:15px; display:flex; align-items:center; justify-content:center }
+.btn-icone:hover{ color:var(--text); border-color:var(--accent) }
+.link-suave{ font-size:12.5px; color:var(--text-3); text-decoration:none }
+.link-suave:hover{ color:var(--accent-hi) }
+
+.app{ max-width:1360px; margin:0 auto; padding:20px 22px 60px }
+.grade{ display:grid; grid-template-columns:300px 1fr 300px; gap:16px; align-items:start }
+@media (max-width:1080px){ .grade{ grid-template-columns:1fr } }
+
+.caixa{ background:var(--panel); border:1px solid var(--line); border-radius:var(--r-l) }
+h2.rotulo{ font-family:var(--f-mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--text-3); margin:0 0 10px }
+
+/* ---- coluna de cenários ---- */
+.col-cenarios{ padding:16px }
+.abas-produto{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px }
+.aba{ background:var(--panel-2); border:1px solid var(--line); color:var(--text-2); border-radius:100px;
+  padding:6px 12px; font-size:12.5px; cursor:pointer; font-family:var(--f-text) }
+.aba.ativa{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent-hi); font-weight:700 }
+.lista-cenarios{ display:flex; flex-direction:column; gap:8px; max-height:70vh; overflow-y:auto }
+.cartao-cenario{ text-align:left; width:100%; background:var(--panel-2); border:1px solid var(--line);
+  border-radius:var(--r); padding:12px 13px; cursor:pointer; font-family:var(--f-text); color:var(--text) }
+.cartao-cenario:hover{ border-color:var(--accent) }
+.cartao-cenario.selecionado{ border-color:var(--accent); box-shadow:0 0 0 2px var(--accent-soft) }
+.cartao-topo{ display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:5px }
+.cartao-titulo{ font-weight:700; font-size:13.5px }
+.selos{ display:flex; gap:5px; flex-wrap:wrap; margin-bottom:6px }
+.selo{ font-family:var(--f-mono); font-size:10px; letter-spacing:.04em; text-transform:uppercase;
+  padding:2px 7px; border-radius:100px; border:1px solid var(--line-2); color:var(--text-3) }
+.selo.dif-facil{ color:var(--verde); border-color:currentColor }
+.selo.dif-medio{ color:var(--amarelo); border-color:currentColor }
+.selo.dif-dificil{ color:var(--vermelho); border-color:currentColor }
+.cartao-resumo{ color:var(--text-2); font-size:12.5px; line-height:1.45 }
+.progresso-mini{ margin-top:7px; font-size:11px; color:var(--accent-hi); font-family:var(--f-mono) }
+
+/* ---- coluna de conversa ---- */
+.col-chat{ display:flex; flex-direction:column; height:76vh; min-height:460px; overflow:hidden }
+.chat-cabecalho{ padding:14px 16px; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap }
+.chat-cabecalho .quem{ font-weight:700 }
+.chat-cabecalho .onde{ font-size:12px; color:var(--text-3) }
+.vazio-chat{ margin:auto; text-align:center; color:var(--text-3); padding:40px 20px }
+.mensagens{ flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:9px }
+.bolha{ max-width:72%; padding:9px 13px; border-radius:16px; font-size:14px; line-height:1.4; white-space:pre-wrap }
+.bolha.cliente{ align-self:flex-start; background:var(--bolha-cliente); border:1px solid var(--line); border-bottom-left-radius:4px }
+.bolha.vendedor{ align-self:flex-end; background:var(--bolha-vendedor); color:#04101F; border-bottom-right-radius:4px }
+:root[data-tema="claro"] .bolha.vendedor, :root:not([data-tema="escuro"]).t-claro .bolha.vendedor{ color:#fff }
+.bolha.digitando{ font-style:italic; color:var(--text-3); background:var(--bolha-cliente) }
+.dica-flutuante{ margin:0 16px 8px; padding:9px 12px; background:var(--accent-soft); border:1px dashed var(--accent);
+  border-radius:10px; font-size:12.5px; color:var(--accent-hi) }
+.chat-rodape{ border-top:1px solid var(--line); padding:12px 14px; display:flex; gap:8px; align-items:flex-end }
+textarea#campoMensagem{ flex:1; resize:none; min-height:42px; max-height:120px; padding:10px 13px; border-radius:12px;
+  background:var(--panel-2); border:1px solid var(--line-2); color:var(--text); font-family:var(--f-text); font-size:14.5px }
+textarea#campoMensagem:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft) }
+.acoes-chat{ display:flex; gap:8px; padding:0 14px 12px; flex-wrap:wrap }
+.btn{ padding:9px 15px; border:none; border-radius:100px; cursor:pointer; font-weight:700; font-size:13px;
+  font-family:var(--f-text); color:#04101F; background:linear-gradient(135deg,var(--accent-hi),var(--accent)) }
+:root[data-tema="claro"] .btn:not(.fantasma), :root:not([data-tema="escuro"]).t-claro .btn:not(.fantasma){ color:#fff }
+.btn:hover{ filter:brightness(1.07) }
+.btn:disabled{ opacity:.5; cursor:not-allowed }
+.btn.fantasma{ background:none; color:var(--text-2); border:1px solid var(--line-2) }
+.btn.fantasma:hover{ color:var(--text) }
+.btn.pequeno{ padding:7px 12px; font-size:12px }
+
+/* ---- coluna de coach / ficha ---- */
+.col-ficha{ padding:16px; display:flex; flex-direction:column; gap:14px }
+.ficha-objetivo{ font-size:13px; color:var(--text-2); line-height:1.5 }
+.avaliacao .nota{ font-family:var(--f-display); font-size:34px; font-weight:700; color:var(--accent-hi) }
+.avaliacao .nota span{ font-size:16px; color:var(--text-3); font-family:var(--f-text); font-weight:600 }
+.avaliacao ul{ margin:6px 0 12px; padding-left:18px; font-size:13px; color:var(--text-2) }
+.avaliacao ul li{ margin-bottom:4px }
+.avaliacao .frase-sugerida{ background:var(--panel-2); border-left:3px solid var(--accent); border-radius:8px;
+  padding:9px 11px; font-size:13px; font-style:italic; color:var(--text) }
+.avaliacao .resumo{ font-size:13px; color:var(--text-2); margin-top:10px }
+.vazio-ficha{ color:var(--text-3); font-size:13px }
+
+/* ---- portal de acesso ---- */
+#portalAcesso{ position:fixed; inset:0; background:rgba(3,6,15,.86); display:flex; align-items:center;
+  justify-content:center; z-index:50; padding:20px }
+.cartao-acesso{ background:var(--panel); border:1px solid var(--line); border-radius:var(--r-l); padding:26px;
+  max-width:360px; width:100%; text-align:center }
+.cartao-acesso h1{ font-family:var(--f-display); font-size:19px; margin:0 0 6px }
+.cartao-acesso p{ color:var(--text-2); font-size:13.5px; margin:0 0 16px }
+.cartao-acesso input{ width:100%; padding:11px 13px; border-radius:10px; background:var(--panel-2);
+  border:1px solid var(--line-2); color:var(--text); font-family:var(--f-mono); font-size:15px; text-align:center;
+  margin-bottom:12px }
+.erro-acesso{ color:var(--vermelho); font-size:12.5px; min-height:16px; margin-bottom:4px }
+[hidden]{ display:none !important }
+</style>
+</head>
+<body>
+
+<div id="portalAcesso">
+  <div class="cartao-acesso">
+    <h1>Treino de vendas</h1>
+    <p>Ferramenta interna da equipe Astro. Digite o código de acesso combinado com o gestor.</p>
+    <div class="erro-acesso" id="erroAcesso"></div>
+    <input id="campoCodigo" type="text" inputmode="text" autocomplete="off" placeholder="código de acesso" autofocus>
+    <button class="btn" id="btnEntrar" style="width:100%">Entrar</button>
+  </div>
+</div>
+
+<header class="topo">
+  <div class="marca">
+    <span class="icone">🎯</span>
+    <span>Treino de vendas — Astro<small>Simulador de conversa para praticar objeções, por produto e etapa do funil</small></span>
+  </div>
+  <div class="topo-acoes">
+    <a class="link-suave" href="/" target="_blank" rel="noopener">← site da Astro</a>
+    <button class="btn-icone" id="btnTema" title="Trocar tema claro/escuro">🌓</button>
+    <button class="btn-icone" id="btnTrocarCodigo" title="Trocar código de acesso">🔑</button>
+  </div>
+</header>
+
+<div class="app">
+  <div class="grade">
+
+    <!-- coluna 1: cenários -->
+    <div class="caixa col-cenarios">
+      <h2 class="rotulo">Cenários de prática</h2>
+      <div class="abas-produto" id="abasProduto"></div>
+      <div class="lista-cenarios" id="listaCenarios"></div>
+    </div>
+
+    <!-- coluna 2: chat -->
+    <div class="caixa col-chat">
+      <div class="chat-cabecalho" id="chatCabecalho">
+        <div>
+          <div class="quem">Escolha um cenário ao lado</div>
+          <div class="onde">A conversa aparece aqui</div>
+        </div>
+      </div>
+      <div class="mensagens" id="mensagens">
+        <div class="vazio-chat">Selecione um cenário na coluna à esquerda para começar a praticar.</div>
+      </div>
+      <div class="dica-flutuante" id="dicaFlutuante" hidden></div>
+      <div class="acoes-chat">
+        <button class="btn fantasma pequeno" id="btnDica" disabled>💡 Pedir dica</button>
+        <button class="btn fantasma pequeno" id="btnReiniciar" disabled>↺ Reiniciar cenário</button>
+        <button class="btn pequeno" id="btnEncerrar" disabled>Encerrar e avaliar</button>
+      </div>
+      <div class="chat-rodape">
+        <textarea id="campoMensagem" placeholder="Escreva como se fosse falar com o cliente…" disabled></textarea>
+        <button class="btn" id="btnEnviar" disabled>Enviar</button>
+      </div>
+    </div>
+
+    <!-- coluna 3: ficha do lead / coach -->
+    <div class="caixa col-ficha">
+      <div id="fichaObjetivo">
+        <h2 class="rotulo">Ficha do cenário</h2>
+        <div class="vazio-ficha">Nenhum cenário selecionado ainda.</div>
+      </div>
+      <div id="painelAvaliacao"></div>
+    </div>
+
+  </div>
+</div>
+
+<script src="/treinamento/dados.js"></script>
+<script src="/treinamento/app.js"></script>
+</body>
+</html>
