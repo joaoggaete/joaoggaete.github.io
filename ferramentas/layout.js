@@ -73,7 +73,9 @@ function montar(nome, pagina, cfg, params) {
     .split('{{CTA}}').join(cfg.cta || '/simular.html')
     .split('{{WHATSAPP}}').join(WHATSAPP)
     .split('{{INICIO}}').join(cfg.inicio === false ? '' : '<a class="nav-inicio" href="/" aria-label="Página inicial"><svg class="nav-inicio-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5M6.5 9.8V20h11V9.8" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="nav-inicio-txt">Página inicial</span></a>');
-  Object.keys(params || {}).forEach(k => { html = html.split('{{' + k.toUpperCase() + '}}').join(params[k]); });
+  const padrao = { modalidade: '', canal: 'formulario' };
+  const todos = Object.assign({}, padrao, params || {});
+  Object.keys(todos).forEach(k => { html = html.split('{{' + k.toUpperCase() + '}}').join(todos[k]); });
   html = html.replace(/\n\s*\n(\s*<button class="tema-btn")/, '\n$1'); /* linha vazia que o {{INICIO}} deixa na home */
   if (nome !== 'formulario') html = marcarAtual(html, url);
   return html;

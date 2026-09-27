@@ -1,0 +1,67 @@
+<div class="lead-caixa">
+  <form class="lead-form" data-modalidade="{{MODALIDADE}}" data-canal="{{CANAL}}" novalidate>
+    <fieldset class="lf-grupo">
+      <legend>O que você quer conquistar?</legend>
+      <div class="lf-chips">
+        <label class="lf-chip"><input type="radio" name="modalidade" value="imovel"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9.5h12V10"/></svg>Imóvel</span></label>
+        <label class="lf-chip"><input type="radio" name="modalidade" value="carro"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13l2-5a2 2 0 0 1 2-1.3h10A2 2 0 0 1 19 8l2 5"/><rect x="2" y="13" width="20" height="6" rx="2"/></svg>Veículo</span></label>
+        <label class="lf-chip"><input type="radio" name="modalidade" value="maquinario"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="17" r="2.6"/><circle cx="17" cy="17" r="2.6"/><path d="M9.4 17H14l1.5-5H12l-1-3H7"/></svg>Maquinário</span></label>
+      </div>
+    </fieldset>
+    <div class="lf-linha">
+      <label class="lf-campo">Crédito aproximado
+        <select name="valor" required>
+          <option value="">Escolha a faixa</option>
+          <option value="50-100">R$ 50 mil a R$ 100 mil</option>
+          <option value="100-200">R$ 100 mil a R$ 200 mil</option>
+          <option value="200-300">R$ 200 mil a R$ 300 mil</option>
+          <option value="300-600">R$ 300 mil a R$ 600 mil</option>
+          <option value="600-1m">R$ 600 mil a R$ 1 milhão</option>
+          <option value="1m-2m">R$ 1 a R$ 2 milhões</option>
+          <option value="2m+">Acima de R$ 2 milhões</option>
+        </select>
+      </label>
+      <label class="lf-campo">Prazo que você imagina
+        <select name="prazo">
+          <option value="">Ainda não sei</option>
+          <option value="60 Meses">60 meses</option>
+          <option value="80 Meses">80 meses</option>
+          <option value="100 Meses">100 meses</option>
+          <option value="120 Meses">120 meses</option>
+          <option value="140 Meses">140 meses</option>
+          <option value="180 Meses" data-so-imovel>180 meses</option>
+          <option value="240 Meses" data-so-imovel>240 meses</option>
+        </select>
+      </label>
+    </div>
+    <label class="lf-campo">Tem algum valor guardado para dar de lance?
+      <select name="lance">
+        <option value="">Prefiro conversar sobre isso</option>
+        <option value="sim">Sim, tenho recurso próprio</option>
+        <option value="nao">Não, quero contemplar por sorteio</option>
+        <option value="indefinido">Não sei / quero entender o lance embutido</option>
+      </select>
+    </label>
+    <div class="lf-linha">
+      <label class="lf-campo">Seu nome
+        <input type="text" name="nome" autocomplete="name" maxlength="80" required></label>
+      <label class="lf-campo">WhatsApp com DDD
+        <input type="tel" name="whatsapp" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="(45) 99999-9999" required></label>
+    </div>
+    <label class="lf-check"><input type="checkbox" name="exterior"> Moro fora do Brasil</label>
+    <div class="lf-isca" aria-hidden="true"><label>Não preencha<input type="text" name="empresa_site" tabindex="-1" autocomplete="off"></label></div>
+    <p class="lf-erro" role="alert" hidden></p>
+    <button class="btn btn-primario btn-largo" type="submit">Receber minha simulação</button>
+    <p class="lf-nota">Gratuito e sem compromisso · sem consulta ao SPC/Serasa · resposta de uma pessoa, não de robô.<br>Ao enviar, você concorda com a <a href="/privacidade.html">Política de Privacidade</a>.</p>
+  </form>
+  <div class="lead-ok" hidden>
+    <div class="lead-ok-marca" aria-hidden="true">✓</div>
+    <h3>Pedido recebido</h3>
+    <p>Abrimos o WhatsApp com a sua simulação pronta — é só tocar em <strong>enviar</strong>. Um especialista responde o mais breve possível, em horário comercial.</p>
+    <div class="acoes">
+      <a class="btn btn-wa lead-ok-wa" href="https://wa.me/{{WHATSAPP}}" target="_blank" rel="noopener noreferrer">Abrir o WhatsApp de novo</a>
+      <a class="btn btn-fantasma" href="/agendar.html">Prefiro reunião por vídeo</a>
+    </div>
+  </div>
+  <noscript><p class="lf-nota" style="margin-top:14px">Sem JavaScript o formulário não envia. <a href="https://wa.me/{{WHATSAPP}}">Fale com a gente pelo WhatsApp</a>.</p></noscript>
+</div>

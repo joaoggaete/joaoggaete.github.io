@@ -544,7 +544,7 @@ body.menu-aberto::after{
    soltos (sem media query) — sem isso, aquele CSS antigo ganha da cascata
    e o botão de contato volta ao tamanho grande, empurrando os links por
    cima do menu de ações. */
-@media (max-width:1400px){
+@media (max-width:1599px){
   nav .nav-inner{ gap:12px }
   nav .nav-links{ gap:8px 16px }
   nav .nav-links a, nav .nav-drop-btn{ font-size:13.5px !important }
