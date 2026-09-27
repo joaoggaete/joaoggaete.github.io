@@ -9,35 +9,82 @@
   'use strict';
 
   /* ------------------------------------------------------------------
+     DE ONDE A PESSOA VEIO — campanha (UTM), clique de anúncio (gclid/
+     fbclid), site de origem e a primeira página vista. Fica no navegador
+     e só sai daqui junto com um pedido de simulação que a própria pessoa
+     envia: é isto que mostra no painel qual anúncio vende e qual só gasta.
+     Sem consentimento de cookies, dura só a visita (sessionStorage); com
+     consentimento, lembra do primeiro contato por 90 dias.
+     ------------------------------------------------------------------ */
+  (function capturaOrigem(){
+    try {
+      var q = new URLSearchParams(location.search), o = {};
+      ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','gclid','fbclid'].forEach(function(k){
+        var v = q.get(k); if (v) o[k] = v.slice(0, 120);
+      });
+      var ref = document.referrer && document.referrer.indexOf(location.origin) !== 0 ? document.referrer.slice(0, 200) : '';
+      var guardada = null;
+      try { guardada = JSON.parse(sessionStorage.getItem('astro-origem') || 'null'); } catch(e){}
+      if (!guardada) {
+        try {
+          var longa = JSON.parse(localStorage.getItem('astro-origem') || 'null');
+          if (longa && longa.quando > Date.now() - 90*864e5) guardada = longa;
+        } catch(e){}
+      }
+      /* campanha nova sempre vence; visita sem campanha não apaga a anterior */
+      if (!guardada || Object.keys(o).length) {
+        if (ref) o.referrer = ref;
+        o.entrada = location.pathname;
+        o.quando = Date.now();
+        guardada = o;
+      }
+      sessionStorage.setItem('astro-origem', JSON.stringify(guardada));
+      if (localStorage.getItem('astro-consentimento') === 'sim') localStorage.setItem('astro-origem', JSON.stringify(guardada));
+    } catch(e){}
+  })();
+  window.AstroOrigem = function(){
+    try { var o = JSON.parse(sessionStorage.getItem('astro-origem') || '{}'); delete o.quando; return o; }
+    catch(e){ return {}; }
+  };
+
+  /* ------------------------------------------------------------------
      BUSCA — mesmo índice do site inteiro, com caminho absoluto em cada
      item pra funcionar não importa de qual página a busca foi aberta.
      ------------------------------------------------------------------ */
   var INDICE = [
     { tit:'Página inicial', cat:'Página', url:'/' },
-    { tit:'Como funciona o consórcio', cat:'Página', url:'/como-funciona.html' },
-    { tit:'Brasileiros no exterior', cat:'Página', url:'/exterior.html' },
-    { tit:'Segurança e privacidade', cat:'Página', url:'/seguranca.html' },
+    { tit:'Simular meu crédito', cat:'Página', url:'/simular.html' },
+    { tit:'Consórcio de imóveis', cat:'Solução', url:'/imoveis.html' },
+    { tit:'Consórcio de veículos, motos e frotas', cat:'Solução', url:'/veiculos.html' },
+    { tit:'Consórcio de maquinário agrícola e industrial', cat:'Solução', url:'/maquinario.html' },
+    { tit:'Brasileiros no exterior', cat:'Solução', url:'/exterior.html' },
+    { tit:'Vídeos explicativos', cat:'Vídeos', url:'/videos.html' },
+    { tit:'O que é consórcio (vídeo)', cat:'Vídeos', url:'/videos.html#v-o-que-e' },
+    { tit:'Grupo e lance (vídeo)', cat:'Vídeos', url:'/videos.html#v-grupo-lance' },
+    { tit:'Trocar o financiamento pelo consórcio (vídeo)', cat:'Vídeos', url:'/videos.html#v-financiamento' },
+    { tit:'Deixar o dinheiro aplicado em vez de pagar à vista (vídeo)', cat:'Vídeos', url:'/videos.html#v-a-vista' },
+    { tit:'Trocar de carro com consórcio (vídeo)', cat:'Vídeos', url:'/videos.html#v-carro' },
+    { tit:'Imóvel contemplado para gerar renda (vídeo)', cat:'Vídeos', url:'/videos.html#v-imovel-renda' },
+    { tit:'Vender a cota com ágio (vídeo)', cat:'Vídeos', url:'/videos.html#v-cota-agio' },
+    { tit:'Capital de giro com consórcio (vídeo)', cat:'Vídeos', url:'/videos.html#v-capital-giro' },
+    { tit:'Como funciona o consórcio', cat:'Aprenda', url:'/como-funciona.html' },
+    { tit:'Sorteio, lance fixo e lance livre', cat:'Aprenda', url:'/lances.html' },
+    { tit:'Perguntas frequentes', cat:'Aprenda', url:'/duvidas.html' },
+    { tit:'Segurança e regulação (Banco Central)', cat:'Aprenda', url:'/seguranca.html' },
+    { tit:'Simulador de custo total', cat:'Simulador', url:'/#calculadora' },
+    { tit:'Simulador de lance', cat:'Simulador', url:'/lances.html#simulador-lance' },
+    { tit:'Simulador de prazo', cat:'Simulador', url:'/como-funciona.html#prazos' },
+    { tit:'Por que a Astro', cat:'A Astro', url:'/sobre.html' },
+    { tit:'Fale com a gente: WhatsApp, vídeo ou presencial', cat:'A Astro', url:'/contato.html' },
+    { tit:'Agendar reunião por vídeo', cat:'A Astro', url:'/agendar.html' },
     { tit:'Política de privacidade', cat:'Página', url:'/privacidade.html' },
-    { tit:'Simulador de parcela mês a mês', cat:'Seção', url:'/#calculadora' },
-    { tit:'Como o consórcio realmente funciona', cat:'Seção', url:'/#verdade' },
-    { tit:'Modalidades: imóveis, veículos e maquinário', cat:'Seção', url:'/#estruturas' },
-    { tit:'O que muda quando a Astro acompanha', cat:'Seção', url:'/#diferencial-astro' },
-    { tit:'Atendimento: WhatsApp, vídeo ou presencial', cat:'Seção', url:'/#onde-estamos' },
-    { tit:'Três leituras que valem o seu tempo', cat:'Seção', url:'/#saiba-mais' },
-    { tit:'Simule seu crédito', cat:'Seção', url:'/#form-simulador' },
-    { tit:'Um vídeo pra cada forma de usar', cat:'Seção', url:'/#lequeCarrossel' },
-    { tit:'Perguntas frequentes', cat:'Seção', url:'/#duvidas' },
-    { tit:'Como a Astro trabalha o seu caso', cat:'Seção', url:'/como-funciona.html#planejamento' },
-    { tit:'Simulador de prazo', cat:'Seção', url:'/como-funciona.html#prazos' },
-    { tit:'Como funciona para fechar o contrato', cat:'Seção', url:'/como-funciona.html#como-fechar' },
-    { tit:'O que é o lance embutido?', cat:'Dúvida', url:'/#faq-r0' },
-    { tit:'Como a Astro otimiza a contemplação?', cat:'Dúvida', url:'/#faq-r1' },
-    { tit:'Vou ficar preso pagando sem saber quando serei contemplado?', cat:'Dúvida', url:'/#faq-r2' },
-    { tit:'Posso usar o meu FGTS no processo?', cat:'Dúvida', url:'/#faq-r3' },
-    { tit:'Como funciona o reajuste das parcelas?', cat:'Dúvida', url:'/#faq-r4' },
-    { tit:'A Astro cobra alguma taxa extra pelo serviço?', cat:'Dúvida', url:'/#faq-r5' },
-    { tit:'Preciso dar entrada?', cat:'Dúvida', url:'/#faq-r6' },
-    { tit:'Posso desistir do consórcio? O dinheiro volta?', cat:'Dúvida', url:'/#faq-r7' }
+    { tit:'O que é o lance embutido?', cat:'Dúvida', url:'/duvidas.html#lance-embutido' },
+    { tit:'Posso usar o meu FGTS?', cat:'Dúvida', url:'/duvidas.html#fgts' },
+    { tit:'Como funciona o reajuste das parcelas?', cat:'Dúvida', url:'/duvidas.html#reajuste' },
+    { tit:'Preciso dar entrada?', cat:'Dúvida', url:'/duvidas.html#entrada' },
+    { tit:'A Astro cobra taxa extra?', cat:'Dúvida', url:'/duvidas.html#taxa-astro' },
+    { tit:'Posso desistir? O dinheiro volta?', cat:'Dúvida', url:'/duvidas.html#desistencia' },
+    { tit:'Quando serei contemplado?', cat:'Dúvida', url:'/duvidas.html#contemplacao' }
   ];
 
   function normaliza(s){
