@@ -2,34 +2,27 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "site-estatico",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["-y", "serve", "-l", "5500", "."],
+      "name": "site-com-php",
+      "runtimeExecutable": "php",
+      "runtimeArgs": [
+        "-S",
+        "localhost:5500",
+        "-t",
+        "."
+      ],
       "port": 5500
     },
     {
-      "name": "scratch-video",
+      "name": "site-estatico-sem-php",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["-y", "serve", "-l", "5501", "C:/Users/Usuario/AppData/Local/Temp/claude/C--Users-Usuario-Desktop-ASTRO-Cons-rcios-Marketing-Site/58b39438-69d7-4f27-8b8a-c67a2c020dbb/scratchpad/video"],
+      "runtimeArgs": [
+        "-y",
+        "serve",
+        "-l",
+        "5501",
+        "."
+      ],
       "port": 5501
-    },
-    {
-      "name": "scratch-video7",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["-y", "serve", "-l", "5502", "C:/Users/Usuario/AppData/Local/Temp/claude/C--Users-Usuario-Desktop-ASTRO-Cons-rcios-Marketing-Site/58b39438-69d7-4f27-8b8a-c67a2c020dbb/scratchpad/video7"],
-      "port": 5502
-    },
-    {
-      "name": "scratch-video8",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["-y", "serve", "-l", "5503", "C:/Users/Usuario/AppData/Local/Temp/claude/C--Users-Usuario-Desktop-ASTRO-Cons-rcios-Marketing-Site/58b39438-69d7-4f27-8b8a-c67a2c020dbb/scratchpad/video8"],
-      "port": 5503
-    },
-    {
-      "name": "scratch-video9",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["-y", "serve", "-l", "5504", "C:/Users/Usuario/AppData/Local/Temp/claude/C--Users-Usuario-Desktop-ASTRO-Cons-rcios-Marketing-Site/58b39438-69d7-4f27-8b8a-c67a2c020dbb/scratchpad/video9"],
-      "port": 5504
     }
   ]
 }

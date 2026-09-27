@@ -6,6 +6,11 @@
 declare(strict_types=1);
 require dirname(__DIR__) . '/app/bootstrap.php';
 
+/* GET ?saude=1: o site pergunta se o Apollo está ligado antes de mostrar o
+   balão. Sem chave configurada, o balão nem aparece. */
+if (Http::metodo() === 'GET' && isset($_GET['saude'])) {
+  Http::json(200, ['ligado' => (string) astro_config('gemini_chave', '') !== '' && function_exists('curl_init')]);
+}
 if (Http::metodo() !== 'POST') Http::json(405, ['erro' => 'metodo nao permitido']);
 Http::exigirMesmaOrigem();
 Http::exigirJson();

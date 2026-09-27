@@ -480,7 +480,7 @@ html.consent-aberto .mobile-cta:not(.recolhido){
 (function(){
   "use strict";
   var WA = '5545999999999';
-  var API = '/.netlify/functions/agenda';
+  var API = '/api/agenda.php';
   var estado = { dia:null, hora:null, dias:[], offset:'-03:00', duracao:45 };
 
   var el = function(id){ return document.getElementById(id); };
@@ -599,7 +599,10 @@ html.consent-aberto .mobile-cta:not(.recolhido){
         method:'POST', headers:{ 'Content-Type':'application/json' },
         body: JSON.stringify({ acao:'marcar', dia:estado.dia, hora:estado.hora,
           nome: el('nome').value.trim(), whatsapp: el('zap').value,
-          assunto: el('assunto').value.trim() })
+          assunto: el('assunto').value.trim(),
+          /* de onde a pessoa veio (campanha/anúncio): a reunião entra no
+             painel de contatos com a mesma origem que um formulário */
+          origem: (typeof window.AstroOrigem === 'function') ? window.AstroOrigem() : {} })
       });
       var b = await r.json();
       if (!b.ok){

@@ -6701,6 +6701,14 @@ nav{z-index:300!important}
   #diferencial-astro{padding:52px 0}
   .diferencial-grid,.confianca-faixa{grid-template-columns:1fr}
 }
+
+/* link de cada modalidade para a página própria (imoveis/veiculos/maquinario) */
+.modal-card .modal-link{
+  position:relative; z-index:3; display:inline-flex; align-items:center; gap:7px; margin-top:18px;
+  font-weight:700; font-size:15px; text-decoration:none; color:var(--accent-hi, #7FD4FF);
+}
+.modal-card .modal-link:hover{ text-decoration:underline; text-underline-offset:4px }
+:root[data-tema="claro"] .modal-card .modal-link{ color:#0E4F9E }
 </style>
 <link rel="stylesheet" href="/mobile-compat.css">
 <script src="/nav.js" defer></script>
@@ -7147,12 +7155,8 @@ nav{z-index:300!important}
                     <svg viewBox="0 0 24 24"><path d="M8 5.2v13.6L19 12z" fill="currentColor"/></svg>
                   </span>
                 </button>
-                <!-- Sem página própria pra "diferencial" ainda (só o vídeo) —
-                     até termos esse conteúdo escrito, o botão manda pro
-                     WhatsApp com contexto, mesmo caminho já escolhido pro
-                     leque. -->
                 <span class="item-legenda">Por que vale a pena fechar com a Astro</span>
-                <a class="item-cta" href="https://wa.me/554599999999?text=Ol%C3%A1!%20Quero%20entender%20o%20diferencial%20da%20Astro%20na%20hora%20de%20fechar%20meu%20cons%C3%B3rcio." target="_blank" rel="noopener noreferrer">Diferencial <svg class="seta" width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+                <a class="item-cta" href="/sobre.html">Diferencial <svg class="seta" width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
               </div>
               <div class="video-card vidro carrossel-item" id="videoCardAtendimento">
                 <button type="button" class="video-capa" id="videoPlayAtendimento" aria-label="Assistir: como falar com a gente, do seu jeito">
@@ -7675,7 +7679,7 @@ nav{z-index:300!important}
           <svg viewBox="0 0 24 24"><path d="M8 5.2v13.6L19 12z" fill="currentColor"/></svg>
         </span>
       </button>
-      <p class="video-alt">Explicação de 33 segundos, com legendas.</p>
+      <p class="video-alt">Explicação de 36 segundos, com legendas. <a href="/videos.html">Ver todos os vídeos</a></p>
     </div>
 
     <div class="verdade-grid stag">
@@ -7746,6 +7750,7 @@ nav{z-index:300!important}
           <li>Áreas comerciais e galpões</li>
           <li>Quitação de financiamento bancário</li>
         </ul>
+          <a class="modal-link" href="/imoveis.html">Ver consórcio de imóveis <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         <div class="modal-marca" aria-hidden="true">
           <svg class="modal-marca-simbolo" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.4L18.29 14.99L14.21 15.57L12 10.8L9.48 16.25L4.74 16.92ZM3.88 18.65L8.69 17.96L7 21.6L2.4 21.6ZM14.9 17.07L19.04 16.48L21.6 21.6L17 21.6Z"/></svg>
           <span class="modal-marca-casa">Astro</span>
@@ -7765,6 +7770,7 @@ nav{z-index:300!important}
           <li>Motos, náuticos e frotas corporativas</li>
           <li>Uso do valor da troca como parte do lance</li>
         </ul>
+          <a class="modal-link" href="/veiculos.html">Ver consórcio de veículos <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         <div class="modal-marca" aria-hidden="true">
           <svg class="modal-marca-simbolo" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.4L18.29 14.99L14.21 15.57L12 10.8L9.48 16.25L4.74 16.92ZM3.88 18.65L8.69 17.96L7 21.6L2.4 21.6ZM14.9 17.07L19.04 16.48L21.6 21.6L17 21.6Z"/></svg>
           <span class="modal-marca-casa">Astro</span>
@@ -7783,6 +7789,7 @@ nav{z-index:300!important}
           <li>Equipamentos e injetoras industriais</li>
           <li>Expansão tecnológica e atualização de ativos</li>
         </ul>
+          <a class="modal-link" href="/maquinario.html">Ver maquinário e agro <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         <div class="modal-marca" aria-hidden="true">
           <svg class="modal-marca-simbolo" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.4L18.29 14.99L14.21 15.57L12 10.8L9.48 16.25L4.74 16.92ZM3.88 18.65L8.69 17.96L7 21.6L2.4 21.6ZM14.9 17.07L19.04 16.48L21.6 21.6L17 21.6Z"/></svg>
           <span class="modal-marca-casa">Astro</span>
@@ -8458,6 +8465,15 @@ function enviarWhats() {
     (lance ? '\nReserva para lance: ' + lance : '');
 
   rastrear('Lead', { valor_credito: valorEnvio, modalidade: modal, prazo: prazo });
+  /* grava o pedido no servidor ANTES do WhatsApp abrir, sem esperar a
+     resposta (keepalive): quem desiste dentro do WhatsApp não some mais.
+     Sem servidor PHP, o fetch falha calado e o WhatsApp segue igual. */
+  try {
+    fetch('/api/leads.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
+      body: JSON.stringify({ nome: nome, whatsapp: fone, modalidade: modal, valor: valor, prazo: prazo, lance: lance,
+        mensagem: valorExato ? 'Valor do simulador: ' + valorExato : '', canal: 'formulario', pagina: '/',
+        origem: (typeof window.AstroOrigem === 'function') ? window.AstroOrigem() : {} }) }).catch(function(){});
+  } catch (e) {}
   window.open('https://wa.me/554599999999?text=' + encodeURIComponent(texto), '_blank');
   changeStep(3, 4);
 }
@@ -8571,11 +8587,11 @@ document.addEventListener('DOMContentLoaded', function () {
     aria: 'O que é consórcio, explicado por Apollo, narrado', midia: 'video-hero'
   });
   ligarVideoLocal('videoPlayDiferencial', {
-    src: 'video/astro-v9-diferenciais-v4.mp4', poster: 'img/video9-capa-v3.jpg',
+    src: 'video/astro-v9-diferenciais-v3.mp4', poster: 'img/video9-capa-v2.jpg',
     aria: 'Por que vale a pena fechar com a Astro, explicado por Apollo', midia: 'video-diferencial'
   });
   ligarVideoLocal('videoPlayAtendimento', {
-    src: 'video/astro-v10-v3.mp4', poster: 'img/video10-capa-v2.jpg',
+    src: 'video/astro-v10-v2.mp4', poster: 'img/video10-capa.jpg',
     aria: 'Como falar com a gente, do seu jeito, explicado por Apollo', midia: 'video-atendimento'
   });
   ligarVideoLocal('videoPlayVista', {
@@ -9704,6 +9720,16 @@ document.addEventListener('DOMContentLoaded', function () {
      daqui, então nunca fica desatualizado com o conteúdo real. */
   (function(){
     var INDICE = [
+      { tit:'Simular meu crédito (simulação personalizada)', cat:'Página', url:'/simular.html' },
+      { tit:'Consórcio de imóveis', cat:'Solução', url:'/imoveis.html' },
+      { tit:'Consórcio de veículos, motos e frotas', cat:'Solução', url:'/veiculos.html' },
+      { tit:'Consórcio de maquinário agrícola e industrial', cat:'Solução', url:'/maquinario.html' },
+      { tit:'Vídeos explicativos', cat:'Vídeos', url:'/videos.html' },
+      { tit:'Perguntas frequentes (todas)', cat:'Aprenda', url:'/duvidas.html' },
+      { tit:'Por que a Astro', cat:'A Astro', url:'/sobre.html' },
+      { tit:'Fale com a gente: WhatsApp, vídeo ou presencial', cat:'A Astro', url:'/contato.html' },
+      { tit:'Agendar reunião por vídeo', cat:'A Astro', url:'/agendar.html' },
+      { tit:'Sorteio, lance fixo e lance livre', cat:'Aprenda', url:'/lances.html' },
       { tit:'Como funciona o consórcio', cat:'Página', url:'/como-funciona.html' },
       { tit:'Brasileiros no exterior', cat:'Página', url:'/exterior.html' },
       { tit:'Segurança e privacidade', cat:'Página', url:'/seguranca.html' },
@@ -10747,7 +10773,7 @@ document.addEventListener('DOMContentLoaded', function () {
       try {
         var ctrl = new AbortController();
         var relogio = setTimeout(function(){ ctrl.abort(); }, 12000);
-        var r = await fetch('/.netlify/functions/duvidas', {
+        var r = await fetch('/api/apollo.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ pergunta: texto, historico: historico.slice(-6) }),
@@ -10783,9 +10809,11 @@ document.addEventListener('DOMContentLoaded', function () {
       if (b) perguntar(b.textContent.trim());
     });
 
-    /* função não publicada: some tudo, sem erro na tela */
-    fetch('/.netlify/functions/duvidas', { method: 'OPTIONS' })
-      .then(function(r){ if (r.status !== 204 && r.status !== 200){ balao.remove(); painel.remove(); } })
+    /* servidor sem PHP, ou Apollo sem chave configurada: some tudo, sem
+       erro na tela (resposta que não é JSON também cai no catch) */
+    fetch('/api/apollo.php?saude=1', { credentials: 'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if (!d || !d.ligado){ balao.remove(); painel.remove(); } })
       .catch(function(){ balao.remove(); painel.remove(); });
   })();
 

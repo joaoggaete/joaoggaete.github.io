@@ -143,10 +143,35 @@ if (!VERIFICAR) {
   fs.writeFileSync(path.join(RAIZ, 'robots.txt'), robots);
 }
 
+/* Links e arquivos quebrados: todo href/src interno (e todo 'video/…',
+   'img/…' citado em script) tem que existir. Foi assim que dois vídeos do
+   topo da página inicial ficaram apontando para arquivos que nunca subiram. */
+function linksQuebrados() {
+  const faltando = [];
+  const htmls = fs.readdirSync(RAIZ).filter(f => f.endsWith('.html'));
+  for (const f of htmls) {
+    const t = ler(f).replace(/<!--[\s\S]*?-->/g, '');
+    const alvos = new Set();
+    t.replace(/(?:href|src|poster|srcset|data-src|data-poster)="([^"#?][^"]*)"/g, (m, u) => { alvos.add(u.split(/[?#\s]/)[0]); });
+    t.replace(/['"]((?:\/)?(?:video|img)\/[\w.-]+\.(?:mp4|webm|jpe?g|png|webp|svg))['"]/g, (m, u) => { alvos.add(u); });
+    for (const u of alvos) {
+      if (!u || /^(https?:|mailto:|tel:|data:|javascript:|\/\/)/.test(u) || u.includes('{{')) continue;
+      if (/^\/(api|painel)\//.test(u) || u === '/api/' ) continue;
+      const rel = u.replace(/^\//, '');
+      const caminho = path.join(RAIZ, rel);
+      const existe = fs.existsSync(caminho) || fs.existsSync(caminho + '.html') || (rel === '' ) || (fs.existsSync(caminho) && fs.statSync(caminho).isDirectory());
+      if (!existe) faltando.push(f + ' → ' + u);
+    }
+  }
+  return faltando;
+}
+
 if (semMarcador.length) console.log('Sem marcadores de layout: ' + semMarcador.join(', '));
+const quebrados = linksQuebrados();
+if (quebrados.length) console.error('Links/arquivos que não existem:\n  ' + quebrados.join('\n  '));
 if (VERIFICAR) {
-  if (desatualizadas.length || mapaMudou) {
-    console.error('Desatualizado: ' + desatualizadas.concat(mapaMudou ? ['sitemap.xml'] : []).join(', ') + '\nRode: node ferramentas/layout.js');
+  if (desatualizadas.length || mapaMudou || quebrados.length) {
+    if (desatualizadas.length || mapaMudou) console.error('Desatualizado: ' + desatualizadas.concat(mapaMudou ? ['sitemap.xml'] : []).join(', ') + '\nRode: node ferramentas/layout.js');
     process.exit(1);
   }
   console.log('Tudo em dia.');
