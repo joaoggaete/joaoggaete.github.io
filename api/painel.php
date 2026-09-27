@@ -91,10 +91,12 @@ try {
       ok(['contato' => Leads::atualizar(Http::texto($e['id'] ?? '', 24), $m, $u)]);
 
     case 'contato_excluir':
+      if (!$admin) recusa('Só o administrador exclui dados de contato.', 403);
       Leads::excluir(Http::texto($e['id'] ?? '', 24), $u, Http::texto($e['motivo'] ?? 'pedido do titular', 60));
       ok();
 
     case 'contato_exportar':
+      if (!$admin) recusa('Só o administrador exporta dados de contato.', 403);
       ok(['contato' => Leads::exportar(Http::texto($_GET['id'] ?? '', 24), $u)]);
 
     case 'contatos_csv':

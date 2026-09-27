@@ -286,8 +286,8 @@
         salvaContato(c, m, function (novo) { c = novo; recado(msg, 'Salvo.', true); });
       } }, 'Salvar'),
       botaoZap(c),
-      h('button', { classe: 'btn fantasma pequeno', type: 'button', onclick: function () { exportaContato(c); } }, 'Exportar dados (LGPD)'),
-      h('button', { classe: 'btn risco pequeno', type: 'button', onclick: function () {
+      admin && h('button', { classe: 'btn fantasma pequeno', type: 'button', onclick: function () { exportaContato(c); } }, 'Exportar dados (LGPD)'),
+      admin && h('button', { classe: 'btn risco pequeno', type: 'button', onclick: function () {
         if (!confirm('Excluir os dados pessoais de ' + (c.nome || 'este contato') + '? Isso não pode ser desfeito.\n\nUse quando a própria pessoa pedir a exclusão.')) return;
         pedir('contato_excluir', { id: c.id }).then(function (r) {
           if (!r.b.ok) return recado(msg, r.b.mensagem || 'Não consegui excluir.', false);
