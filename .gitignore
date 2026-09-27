@@ -1,3 +1,10 @@
 # Arquivo de lock de sessão do Claude Code — muda a cada sessão (PID,
 # session id, timestamp), não é conteúdo do projeto.
 .claude/scheduled_tasks.lock
+
+# Servidor PHP: configuração com senha do banco e tudo que o servidor gera
+# (chaves de criptografia, banco SQLite de teste, sessões, logs). Nada disso
+# pode ir para o Git — o repositório é público.
+app/config.php
+app/dados/
+astro-config.php

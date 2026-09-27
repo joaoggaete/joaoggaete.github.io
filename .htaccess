@@ -1,0 +1,90 @@
+# ============================================================================
+#  ASTRO CONSÓRCIOS — configuração do servidor (Apache / LiteSpeed)
+#  Vale para Hostinger, Locaweb, HostGator, KingHost e qualquer hospedagem
+#  compartilhada com .htaccess. Fica na raiz do site (public_html).
+# ============================================================================
+
+Options -Indexes -MultiViews
+DirectoryIndex index.html index.php
+ErrorDocument 404 /404.html
+AddDefaultCharset utf-8
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # ---- 1. Sempre HTTPS (senha e dado pessoal nunca viajam abertos) ----
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:\d+)?$ [NC]
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # ---- 2. Endereço único com www (descomente UMA das duas opções) ----
+  # Com www:
+  # RewriteCond %{HTTP_HOST} ^seudominio\.com\.br$ [NC]
+  # RewriteRule ^ https://www.seudominio.com.br%{REQUEST_URI} [L,R=301]
+  # Sem www:
+  # RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  # RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+
+  # ---- 3. O que nunca pode ser baixado pela web ----
+  # código e dados do servidor, ferramentas de desenvolvimento, arquivos ocultos
+  # (.well-known fica liberado: é por ali que o certificado SSL se renova)
+  RewriteRule ^\.well-known/ - [L]
+  RewriteRule ^(app|ferramentas|parciais|docs|netlify|node_modules)(/|$) - [R=404,L]
+  RewriteRule (^|/)\. - [R=404,L]
+  RewriteRule \.(md|sql|sqlite|log|lock|bak|sh|ini|env|json\.dist|toml|yml|yaml)$ - [R=404,L,NC]
+  RewriteRule ^(composer\.(json|lock)|package(-lock)?\.json|LEIAME.*)$ - [R=404,L,NC]
+
+  # ---- 4. Endereços antigos → novos ----
+  RewriteRule ^agenda-admin\.html$ /painel/ [R=301,L]
+  RewriteRule ^\.netlify/functions/duvidas$ /api/apollo.php [L]
+  RewriteRule ^\.netlify/functions/agenda$ /api/agenda.php [QSA,L]
+
+  # ---- 5. Endereço sem ".html" (/imoveis abre imoveis.html) ----
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+  RewriteRule ^([a-z0-9-]+)/?$ /$1.html [L]
+</IfModule>
+
+# ---- Cabeçalhos de segurança ----
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+  Header always set Strict-Transport-Security "max-age=31536000"
+  # Política de conteúdo do site público. As páginas têm script e estilo
+  # embutidos (por isso 'unsafe-inline'), mas nada de fora roda se não
+  # estiver nesta lista. Ligou Pixel da Meta ou Google Analytics? Os
+  # domínios já estão aqui. Outra ferramenta nova → acrescente o domínio.
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://www.google-analytics.com https://www.facebook.com https://*.googleusercontent.com https://maps.gstatic.com https://maps.googleapis.com; media-src 'self'; frame-src https://www.google.com https://maps.google.com; connect-src 'self' https://www.google-analytics.com https://*.analytics.google.com https://www.facebook.com; object-src 'none'; base-uri 'self'; form-action 'self' https://wa.me; frame-ancestors 'self'; upgrade-insecure-requests"
+  Header unset X-Powered-By
+</IfModule>
+ServerSignature Off
+
+# ---- Cache: vídeo e imagem por 1 ano (troca de conteúdo = troca de nome) ----
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType video/mp4 "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType text/css "access plus 1 hour"
+  ExpiresByType application/javascript "access plus 1 hour"
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.(mp4|webp|jpe?g|png)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+# ---- Compressão (o index.html tem ~570 KB antes de comprimir) ----
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml text/plain text/xml application/xml
+</IfModule>

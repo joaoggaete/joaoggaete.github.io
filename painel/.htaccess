@@ -1,0 +1,9 @@
+# Painel da equipe: nada de indexar, nada de cache, e só roda o script do
+# próprio site. Um script injetado (por um nome de contato malicioso, por
+# exemplo) não executa aqui.
+<IfModule mod_headers.c>
+  Header always set X-Robots-Tag "noindex, nofollow"
+  Header always set Cache-Control "no-store"
+  Header always set X-Frame-Options "DENY"
+  Header always set Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'"
+</IfModule>

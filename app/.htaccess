@@ -1,0 +1,10 @@
+# Nada aqui dentro é para o navegador: código PHP, configuração, chaves de
+# criptografia e (em dados/) o banco SQLite, sessões e logs. As páginas e a
+# API chegam a este código por include no servidor, nunca por URL.
+# Apache 2.4 / LiteSpeed (Hostinger):
+Require all denied
+# Apache 2.2 (hospedagens antigas):
+<IfModule !mod_authz_core.c>
+  Order allow,deny
+  Deny from all
+</IfModule>

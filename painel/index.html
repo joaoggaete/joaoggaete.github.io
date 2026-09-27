@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="same-origin">
+<title>Painel — Astro Consórcios</title>
+<link rel="icon" href="/img/astro-simbolo.png">
+<link rel="stylesheet" href="/painel/painel.css">
+<script src="/painel/painel.js" defer></script>
+</head>
+<body>
+<!-- Ferramenta interna da equipe. Sem script inline de propósito: o
+     .htaccess desta pasta liga uma política de segurança (CSP) que só deixa
+     rodar /painel/painel.js — um script injetado não executa aqui. -->
+
+<main id="telaEntrar" class="caixa-central" hidden>
+  <p class="eyebrow">Astro Consórcios · equipe</p>
+  <h1>Entrar no painel</h1>
+  <form id="formEntrar" class="formulario" autocomplete="on">
+    <label>E-mail<input id="entEmail" type="email" autocomplete="username" required></label>
+    <label>Senha<input id="entSenha" type="password" autocomplete="current-password" required></label>
+    <button class="btn" type="submit">Entrar</button>
+    <p class="recado ruim" id="entErro" hidden></p>
+  </form>
+  <form id="form2fa" class="formulario" hidden>
+    <label>Código de 6 dígitos do aplicativo autenticador
+      <input id="entCodigo" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9 ]{6,7}" maxlength="7" required></label>
+    <button class="btn" type="submit">Confirmar</button>
+    <p class="recado ruim" id="entErro2" hidden></p>
+  </form>
+  <p class="nota">Esqueceu a senha? Peça ao administrador para redefinir.</p>
+</main>
+
+<main id="telaTrocar" class="caixa-central" hidden>
+  <p class="eyebrow">Primeiro acesso</p>
+  <h1>Crie a sua senha</h1>
+  <p>Você entrou com uma senha provisória. Troque por uma que só você saiba — uma frase de 12+ caracteres é o mais seguro.</p>
+  <form id="formTrocar" class="formulario">
+    <label>Senha provisória<input id="trAtual" type="password" autocomplete="current-password" required></label>
+    <label>Nova senha<input id="trNova" type="password" autocomplete="new-password" minlength="12" required></label>
+    <button class="btn" type="submit">Salvar e continuar</button>
+    <p class="recado ruim" id="trErro" hidden></p>
+  </form>
+</main>
+
+<div id="telaPainel" hidden>
+  <header class="topo">
+    <div class="marca"><img src="/img/astro-simbolo.png" alt="" width="28" height="28"> <strong>Astro</strong> <span>painel</span></div>
+    <nav class="abas" id="abas" aria-label="Seções do painel">
+      <button type="button" data-aba="contatos" class="ativa">Contatos</button>
+      <button type="button" data-aba="funil">Funil</button>
+      <button type="button" data-aba="agenda">Agenda</button>
+      <button type="button" data-aba="equipe" data-admin>Equipe</button>
+      <button type="button" data-aba="auditoria" data-admin>Auditoria</button>
+      <button type="button" data-aba="conta">Minha conta</button>
+    </nav>
+    <div class="quem"><span id="quemNome"></span> <button type="button" class="btn fantasma pequeno" id="sair">Sair</button></div>
+  </header>
+
+  <section class="aba" id="aba-contatos">
+    <div class="barra">
+      <label>Período
+        <select id="fMeses"><option value="1">Este mês</option><option value="3" selected>3 meses</option><option value="6">6 meses</option><option value="12">12 meses</option><option value="24">24 meses</option></select></label>
+      <label>Modalidade
+        <select id="fModalidade"><option value="">Todas</option><option value="imovel">Imóvel</option><option value="carro">Veículo</option><option value="maquinario">Maquinário</option><option value="exterior">Exterior</option><option value="outro">Outro</option></select></label>
+      <label class="cresce">Buscar<input id="fBusca" type="search" placeholder="nome, telefone, campanha…"></label>
+      <label><input type="checkbox" id="fMeus"> Só os meus</label>
+      <button class="btn fantasma pequeno" type="button" id="exportarCsv" data-admin>Exportar planilha</button>
+    </div>
+    <div class="funil-chips" id="chipsEtapa"></div>
+    <div class="rolo">
+      <table class="tabela">
+        <thead><tr><th>Quando</th><th>Contato</th><th>Interesse</th><th>Origem</th><th>Etapa</th><th>Responsável</th><th></th></tr></thead>
+        <tbody id="listaContatos"></tbody>
+      </table>
+    </div>
+    <p class="vazio" id="semContatos" hidden>Nenhum contato com esses filtros.</p>
+  </section>
+
+  <section class="aba" id="aba-funil" hidden>
+    <div class="cartoes-numero" id="numeros"></div>
+    <div class="grade-2" id="graficos"></div>
+    <p class="nota">Conversão = contatos marcados como <strong>fechado</strong> ÷ todos os contatos do período. Origem vem das UTMs dos anúncios (utm_source/utm_campaign), do clique de anúncio (gclid/fbclid) ou do site que trouxe a pessoa.</p>
+  </section>
+
+  <section class="aba" id="aba-agenda" hidden>
+    <h2>Quando você atende</h2>
+    <div class="caixa">
+      <div id="semana"></div>
+      <div class="grade-campos">
+        <label>Duração da reunião (min)<input class="pequeno" id="agDuracao" type="number" min="15" max="240" step="5"></label>
+        <label>Folga entre reuniões (min)<input class="pequeno" id="agIntervalo" type="number" min="0" max="120" step="5"></label>
+        <label>Antecedência mínima (h)<input class="pequeno" id="agAntecedencia" type="number" min="0" max="168"></label>
+        <label>Dias visíveis à frente<input class="pequeno" id="agJanela" type="number" min="1" max="90"></label>
+      </div>
+      <label>Link fixo de sala <small>(vazio = uma sala nova por reunião)</small><input id="agSala" type="url" placeholder="https://meet.google.com/abc-defg-hij"></label>
+      <div class="linha">
+        <input id="agBloqueio" type="date"> <button class="btn fantasma pequeno" type="button" id="agAddBloqueio">Bloquear este dia</button>
+      </div>
+      <div id="agBloqueios" class="linha"></div>
+      <button class="btn" type="button" id="agSalvar" data-admin>Salvar disponibilidade</button>
+      <p class="recado" id="agRecado" hidden></p>
+    </div>
+    <h2>Reuniões marcadas</h2>
+    <div class="caixa rolo">
+      <table class="tabela"><thead><tr><th>Quando</th><th>Quem</th><th>Assunto</th><th>Sala</th><th></th></tr></thead><tbody id="agReservas"></tbody></table>
+      <p class="vazio" id="agVazio" hidden>Nada marcado.</p>
+    </div>
+  </section>
+
+  <section class="aba" id="aba-equipe" hidden>
+    <h2>Equipe</h2>
+    <div class="caixa rolo"><table class="tabela"><thead><tr><th>Nome</th><th>E-mail</th><th>Papel</th><th>2 etapas</th><th>Último acesso</th><th></th></tr></thead><tbody id="listaEquipe"></tbody></table></div>
+    <h2>Adicionar pessoa</h2>
+    <form class="caixa grade-campos" id="formEquipe">
+      <label>Nome<input id="eqNome" required maxlength="80"></label>
+      <label>E-mail<input id="eqEmail" type="email" required></label>
+      <label>Papel<select id="eqPapel"><option value="consultor">Consultor</option><option value="admin">Administrador</option></select></label>
+      <label>Senha provisória<input id="eqSenha" type="text" minlength="12" required autocomplete="off"></label>
+      <button class="btn" type="submit">Criar acesso</button>
+      <p class="recado" id="eqRecado" hidden></p>
+    </form>
+    <p class="nota">Consultor vê os contatos sem responsável e os dele; administrador vê tudo, exporta planilha e gerencia a equipe. Quem recebe senha provisória é obrigado a trocar no primeiro acesso.</p>
+  </section>
+
+  <section class="aba" id="aba-auditoria" hidden>
+    <h2>Registro de acessos e ações</h2>
+    <div class="caixa rolo"><table class="tabela"><thead><tr><th>Quando</th><th>Quem</th><th>Ação</th><th>Alvo</th><th>IP</th></tr></thead><tbody id="listaAuditoria"></tbody></table></div>
+    <p class="nota">Guardado por 12 meses. O IP aparece com o final apagado.</p>
+  </section>
+
+  <section class="aba" id="aba-conta" hidden>
+    <h2>Trocar senha</h2>
+    <form class="caixa grade-campos" id="formSenha">
+      <label>Senha atual<input id="csAtual" type="password" autocomplete="current-password" required></label>
+      <label>Nova senha<input id="csNova" type="password" autocomplete="new-password" minlength="12" required></label>
+      <button class="btn" type="submit">Trocar</button>
+      <p class="recado" id="csRecado" hidden></p>
+    </form>
+    <h2>Verificação em duas etapas</h2>
+    <div class="caixa" id="caixa2fa"></div>
+  </section>
+</div>
+
+<dialog id="detalhe" class="detalhe" aria-labelledby="dtNome">
+  <form method="dialog" class="fechar"><button class="btn fantasma pequeno" aria-label="Fechar">Fechar</button></form>
+  <div id="detalheCorpo"></div>
+</dialog>
+</body>
+</html>
