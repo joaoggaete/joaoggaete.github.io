@@ -467,7 +467,8 @@
     '2fa_falhou': 'Código de 2 etapas errado', '2fa_ativado': 'Ligou 2 etapas', '2fa_desativado': 'Desligou 2 etapas',
     senha_trocada: 'Trocou a senha', senha_redefinida: 'Senha redefinida', usuario_criado: 'Criou usuário', usuario_alterado: 'Alterou usuário',
     lead_excluido: 'Excluiu dados de contato', lead_exportado: 'Exportou dados de contato', contatos_exportados: 'Exportou planilha',
-    agenda_config: 'Mudou a agenda', reuniao_cancelada: 'Desmarcou reunião', retencao: 'Limpeza automática (prazo de guarda)', instalacao: 'Instalação' };
+    agenda_config: 'Mudou a agenda', reuniao_cancelada: 'Desmarcou reunião', retencao: 'Limpeza automática (prazo de guarda)', instalacao: 'Instalação',
+    recuperacao_admin: 'Acesso de administrador recuperado pelo instalador' };
   function carregaAuditoria() {
     pedir('auditoria', null, 'GET').then(function (r) {
       if (!r.b.ok) return;

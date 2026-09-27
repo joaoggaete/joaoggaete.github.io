@@ -78,9 +78,20 @@ if (!$instalado) {
       try {
         Cripto::gerarChavesSeFaltar();
         Banco::criarTabelas();
-        $ja = Banco::um('SELECT COUNT(*) AS n FROM usuarios');
-        if ((int) ($ja['n'] ?? 0) === 0) {
-          $u = Usuarios::criar((string) ($_POST['nome'] ?? ''), (string) ($_POST['email'] ?? ''), 'admin', (string) ($_POST['senha'] ?? ''), false);
+        /* Primeira instalação: cria o administrador. Reinstalação (alguém
+           apagou o instalado.lock para recuperar o acesso): se o e-mail já
+           existe, redefine a senha e devolve o papel de administrador; se não
+           existe, cria mais um administrador. Os dados continuam no banco.
+           Só chega aqui quem tem acesso aos arquivos do servidor E sabe o
+           código de instalação. */
+        $email = mb_strtolower(trim((string) ($_POST['email'] ?? '')));
+        $existente = Banco::um('SELECT id FROM usuarios WHERE email = ?', [$email]);
+        if ($existente) {
+          Usuarios::redefinirSenha($existente['id'], (string) ($_POST['senha'] ?? ''));
+          Banco::atualizar('usuarios', $existente['id'], ['papel' => 'admin', 'ativo' => 1, 'trocar_senha' => 0, 'atualizado' => agora_iso()]);
+          Auditoria::registrar('recuperacao_admin', $existente['id'], [], $existente['id']);
+        } else {
+          $u = Usuarios::criar((string) ($_POST['nome'] ?? ''), $email, 'admin', (string) ($_POST['senha'] ?? ''), false);
           Auditoria::registrar('instalacao', $u['id'], ['php' => PHP_VERSION, 'banco' => Banco::tipo()], $u['id']);
         }
         file_put_contents(ASTRO_DADOS . '/instalado.lock', agora_iso() . "\n");
