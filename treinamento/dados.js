@@ -889,6 +889,594 @@ window.CENARIOS_TREINO = [
       ok: 'Sr. Márcio: "Tá, ainda vou pensar melhor sobre isso."',
       fraco: 'Sr. Márcio: "Acho que ainda prefiro juntar sozinho, me sinto mais seguro assim."'
     }
+  },
+
+  {
+    id: 'carro-qualificacao-duas-opcoes', produto: 'carro', etapa: 'qualificacao', dificuldade: 'facil',
+    titulo: 'Indeciso entre carro popular e um acima da categoria',
+    resumo: 'Anderson está olhando entre um carro popular e um mais completo, sem clareza ainda do orçamento real.',
+    objetivo: 'Entender orçamento e uso real antes de recomendar categoria, sem empurrar a opção mais cara.',
+    turnos: [
+      {
+        clienteAbertura: 'Anderson: "To olhando entre um carro popular e um mais completo, um pouco acima. Ainda não sei bem qual faz mais sentido."',
+        opcoes: [
+          { texto: 'Legal! Pra te ajudar a decidir certo: hoje, sem apertar o orçamento, quanto sobra confortável no seu mês? E esse carro é mais pro dia a dia ou tem algum uso específico, tipo família crescendo, trabalho?', qualidade: 'ideal', pontos: 3,
+            feedback: 'Pergunta orçamento e uso juntos — base real pra recomendar com critério, não com achismo.' },
+          { texto: 'O mais completo geralmente vale mais a pena a longo prazo.', qualidade: 'ok', pontos: 1,
+            feedback: 'Opina sem saber orçamento nem uso dele ainda — prematuro.' },
+          { texto: 'Eu recomendaria ir direto no mais completo, compensa o investimento.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Empurra a opção mais cara sem nenhuma informação sobre o caso dele.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Anderson: "Sobra uns 900 tranquilo. É mais pro dia a dia mesmo, mas minha família tá crescendo."',
+        clienteSeFracoAntes: 'Anderson: "Ainda não sei, por isso tô perguntando pra você."',
+        opcoes: [
+          { texto: 'Com família crescendo, vale considerar um pouco de espaço a mais, mas sempre dentro do que os 900 permitem com folga — não precisa esticar o orçamento pra isso.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Conecta o contexto real (família) com o limite de orçamento, sem forçar categoria maior além do que cabe.' },
+          { texto: 'Então acho que o mais completo faz mais sentido pra família.', qualidade: 'ok', pontos: 1,
+            feedback: 'Direção razoável, mas não reforça o limite de orçamento que ele acabou de dar.' },
+          { texto: 'Pra família crescendo, vale a pena esticar um pouco o orçamento e ir no topo de linha.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Sugere estourar o orçamento que ele mesmo definiu como confortável.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Anderson: "Faz sentido, prefiro não apertar. Quais opções cabem nesses 900?"',
+        clienteSeFracoAntes: 'Anderson: "Tá, mas e agora, qual eu escolho?"',
+        opcoes: [
+          { texto: 'Vou te passar as opções de grupo que cabem nesses 900 com folga, dos dois modelos, pra você comparar prazo e ver qual encaixa melhor no que a família precisa.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Entrega um próximo passo concreto respeitando o orçamento real que ele confirmou.' },
+          { texto: 'Vou te mandar informações dos dois carros então.', qualidade: 'ok', pontos: 1,
+            feedback: 'Cumpre, mas sem filtrar pelo orçamento que ele acabou de confirmar.' },
+          { texto: 'Vou te passar as opções do mais completo, acho que é isso que você precisa.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Decide por ele, ignorando o processo de comparação que ele mesmo pediu.' }
+        ]
+      }
+    ],
+    desfechos: {
+      otimo: 'Anderson: "Perfeito, é exatamente isso que eu precisava, bora ver as opções."',
+      ok: 'Anderson: "Tá bom, manda aí que eu vejo."',
+      fraco: 'Anderson: "Acho que prefiro decidir com mais calma sozinho antes."'
+    }
+  },
+
+  {
+    id: 'carro-apresentacao-primeira-vez', produto: 'carro', etapa: 'apresentacao', dificuldade: 'facil',
+    titulo: 'Nunca ouviu falar de consórcio',
+    resumo: 'Juliana nunca ouviu falar de consórcio e precisa entender o conceito do zero antes de qualquer coisa.',
+    objetivo: 'Explicar o conceito básico com clareza — sem juros, taxa de administração, contemplação por sorteio ou lance — sem sobrecarregar de informação nem gerar expectativa errada.',
+    turnos: [
+      {
+        clienteAbertura: 'Juliana: "Nunca ouvi falar de consórcio direito, pra ser sincera. Como que funciona isso?"',
+        opcoes: [
+          { texto: 'Sem problema, vou direto ao ponto: é uma forma de comprar o carro parcelado, só que sem juros de financiamento — no lugar dos juros tem uma taxa de administração. A diferença é que você não sai com o carro na hora, precisa ser sorteada ou dar um lance pra ser contemplada.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Explica o conceito central em poucas frases, cobrindo o ponto mais importante: não sai com o bem na hora.' },
+          { texto: 'É um jeito de comprar parcelado sem juros, bem popular hoje em dia.', qualidade: 'ok', pontos: 1,
+            feedback: 'Simplifica demais — não menciona a contemplação, essencial pra ela não se surpreender depois.' },
+          { texto: 'É bem simples, você entra no grupo e já pode escolher o carro na hora.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Informação errada e grave: passa a entender que sai com o carro imediatamente.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Juliana: "Ah, entendi. E essa taxa de administração é cara?"',
+        clienteSeFracoAntes: 'Juliana: "Mas então eu não saio com o carro na hora? Isso muda tudo pra mim."',
+        opcoes: [
+          { texto: 'Ela varia por administradora, mas dá pra comparar: no exemplo do nosso simulador, um bem de 300 mil em 120 meses fica em torno de 354 mil no consórcio contra 516 mil no financiamento — isso são estimativas, o valor real depende do seu caso.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Responde com números do material aprovado, deixando claro que são estimativas.' },
+          { texto: 'Ela costuma ser bem menor que os juros de um financiamento.', qualidade: 'ok', pontos: 1,
+            feedback: 'Direção certa, mas sem números concretos do material.' },
+          { texto: 'É bem baixinha, tipo 2% só.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Inventa um percentual que não está em nenhum material aprovado.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Juliana: "Entendi, faz sentido. E como que funciona pra eu ser sorteada?"',
+        clienteSeFracoAntes: 'Juliana: "Hmm, isso complica um pouco, eu queria o carro mais rápido."',
+        opcoes: [
+          { texto: 'A assembleia acontece uma vez por mês, e quem já está no grupo antes dela concorre no sorteio — também dá pra usar lance pra tentar antecipar. Não tem prazo garantido, mas existe uma estratégia baseada em probabilidade por trás, não é só sorte pura.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Explica o mecanismo real sem prometer prazo, mostrando que há estratégia — resposta completa e honesta.' },
+          { texto: 'Todo mês tem sorteio, então sua chance existe desde já.', qualidade: 'ok', pontos: 1,
+            feedback: 'Correto mas incompleto — não menciona lance nem estratégia.' },
+          { texto: 'Normalmente é bem rápido, a maioria é sorteada nos primeiros meses.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Cria expectativa de prazo que ninguém pode garantir.' }
+        ]
+      }
+    ],
+    desfechos: {
+      otimo: 'Juliana: "Agora entendi direitinho, obrigada por explicar com calma."',
+      ok: 'Juliana: "Tá, acho que entendi, vou pensar melhor."',
+      fraco: 'Juliana: "Ainda fiquei meio confusa, acho que quero mesmo é algo mais rápido."'
+    }
+  },
+
+  {
+    id: 'carro-fechamento-decidir-com-conjuge', produto: 'carro', etapa: 'fechamento', dificuldade: 'medio',
+    titulo: 'Quer decidir com a esposa antes de assinar',
+    resumo: 'Rodrigo gostou de tudo, mas quer conversar com a esposa antes de fechar.',
+    objetivo: 'Respeitar o tempo da decisão em conjunto sem pressionar, facilitando o caminho pra ele voltar depois.',
+    turnos: [
+      {
+        clienteAbertura: 'Rodrigo: "Gostei de tudo, mas preciso conversar com minha esposa antes de fechar."',
+        opcoes: [
+          { texto: 'Faz todo sentido decidirem juntos, é uma decisão importante. Posso te mandar um resumo por escrito com tudo que conversamos, pra facilitar essa conversa com ela?', qualidade: 'ideal', pontos: 3,
+            feedback: 'Respeita a decisão em conjunto sem pressionar, e oferece uma ferramenta concreta pra facilitar.' },
+          { texto: 'Sem problema, me avisa quando decidirem.', qualidade: 'ok', pontos: 1,
+            feedback: 'Respeita, mas não ajuda ativamente — perde a chance de facilitar a conversa dele com a esposa.' },
+          { texto: 'Entendo, mas essa condição que te passei pode não estar disponível depois, é melhor decidir logo.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Cria urgência artificial pra pressionar uma decisão em conjunto — vai contra o respeito que a situação pede.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Rodrigo: "Isso ajudaria muito, ela vai querer entender os números certinho."',
+        clienteSeFracoAntes: 'Rodrigo: "Não sei se isso muda algo, ela só vai falar não com pressa."',
+        opcoes: [
+          { texto: 'Vou te mandar certinho: valor do crédito, parcela, prazo e a diferença pro financiamento, tudo com a ressalva de que são estimativas. Assim ela consegue avaliar com calma, sem eu estar no meio explicando.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Prepara um material claro e honesto (com a ressalva de estimativa) pra decisão informada em conjunto.' },
+          { texto: 'Vou te mandar os números principais então.', qualidade: 'ok', pontos: 1,
+            feedback: 'Cumpre, mas sem garantir clareza nem a ressalva de estimativa.' },
+          { texto: 'Vou te mandar já destacando os pontos mais fortes pra convencer ela.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Monta o material como peça de persuasão em vez de informação neutra — pode soar manipulador se ela perceber.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Rodrigo: "Perfeito, isso ajuda bastante. Te aviso assim que a gente conversar."',
+        clienteSeFracoAntes: 'Rodrigo: "Tá, mas acho que ela vai achar caro de qualquer jeito."',
+        opcoes: [
+          { texto: 'Sem problema, fico no aguardo. Se surgir alguma dúvida de vocês dois nesse meio tempo, pode me chamar a qualquer momento, sem compromisso.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Fecha deixando a porta aberta, sem pressionar prazo nenhum.' },
+          { texto: 'Tranquilo, fico esperando vocês decidirem.', qualidade: 'ok', pontos: 1,
+            feedback: 'Educado, mas não deixa claro que pode ajudar em dúvidas no meio do caminho.' },
+          { texto: 'Beleza, mas tenta decidir rápido que essa condição pode mudar.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Repete a pressão de urgência artificial, mesmo já avisado que isso incomoda.' }
+        ]
+      }
+    ],
+    desfechos: {
+      otimo: 'Rodrigo: "Vou conversar com calma com ela e te retorno, obrigado pela paciência."',
+      ok: 'Rodrigo: "Tá, vamos ver o que ela acha."',
+      fraco: 'Rodrigo: "Acho que vou procurar outra opção, sinceramente."'
+    }
+  },
+
+  {
+    id: 'moto-prospeccao-lead-instagram', produto: 'moto', etapa: 'prospeccao', dificuldade: 'medio',
+    titulo: 'Lead frio de anúncio no Instagram',
+    resumo: 'Gabriel preencheu um formulário num anúncio de Instagram sobre consórcio de moto e nem lembra bem do que se tratava.',
+    objetivo: 'Confirmar o interesse real e o contexto do lead antes de qualquer proposta — lead de anúncio costuma ser mais frio que indicação.',
+    turnos: [
+      {
+        clienteAbertura: 'Gabriel: "Oi, vi um anúncio de vocês no Instagram e preenchi o formulário, mas nem lembro direito o que era."',
+        opcoes: [
+          { texto: 'Oi, Gabriel! Era sobre consórcio de moto — você preencheu um formulário perguntando sobre isso. Faz sentido pra você hoje pensar em trocar ou comprar uma moto, ou foi só curiosidade?', qualidade: 'ideal', pontos: 3,
+            feedback: 'Contextualiza a origem do contato e confirma o interesse real antes de avançar — essencial em lead de anúncio.' },
+          { texto: 'Oi! Era sobre nosso consórcio de moto, você tem interesse?', qualidade: 'ok', pontos: 1,
+            feedback: 'Direto, mas não contextualiza que foi ele quem preencheu — isso ajuda a lembrar e confiar.' },
+          { texto: 'Oi! Vou te passar uma simulação de moto pra você ver como fica.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Pula direto pra simulação sem confirmar se ele lembra do contato ou tem interesse real agora.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Gabriel: "Ah, é verdade, lembrei agora. Tenho sim, queria trocar de moto."',
+        clienteSeFracoAntes: 'Gabriel: "Foi mais curiosidade mesmo, acho que preenchi sem muito compromisso."',
+        opcoes: [
+          { texto: 'Entendo, sem problema nenhum. Já que despertou sua curiosidade, posso te fazer 2-3 perguntas rápidas pra ver se faz sentido pra você, sem compromisso de decidir nada agora?', qualidade: 'ideal', pontos: 3,
+            feedback: 'Não descarta o lead frio, mas também não força — propõe qualificação leve e sem pressão.' },
+          { texto: 'Ah, tudo bem, mas de qualquer forma o consórcio pode ser uma boa opção pra você.', qualidade: 'ok', pontos: 1,
+            feedback: 'Insiste no produto sem validar o nível real de interesse dele.' },
+          { texto: 'Tudo bem, vou te mandar as condições de qualquer forma, você confere quando quiser.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Empurra informação pra alguém que já sinalizou baixo interesse — desgaste desnecessário.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Gabriel: "Pode, pode perguntar."',
+        clienteSeFracoAntes: 'Gabriel: "Pode ser, mas rapidinho então."',
+        opcoes: [
+          { texto: 'Perfeito. Pra qual uso seria a moto, o que você pensa em pagar por mês sem apertar, e você tem alguma moto pra dar de entrada ou lance?', qualidade: 'ideal', pontos: 3,
+            feedback: 'Qualificação objetiva e enxuta, respeitando o tempo curto que ele sinalizou.' },
+          { texto: 'Legal, me conta o que você procura numa moto.', qualidade: 'ok', pontos: 1,
+            feedback: 'Pergunta válida, mas mais aberta que o necessário pra quem pediu rapidez.' },
+          { texto: 'Ótimo, vou te passar o valor do crédito que consigo pra você e já vemos as opções.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Pula a qualificação e vai direto pro crédito, mesmo ele tendo pedido algo rápido e direto.' }
+        ]
+      }
+    ],
+    desfechos: {
+      otimo: 'Gabriel: "Boa, gostei de ser rápido assim, pode me chamar de novo com uma proposta."',
+      ok: 'Gabriel: "Tá, responde aí rapidinho que eu vejo."',
+      fraco: 'Gabriel: "Ah, deixa pra lá por enquanto, não é prioridade agora."'
+    }
+  },
+
+  {
+    id: 'moto-apresentacao-entregadora', produto: 'moto', etapa: 'apresentacao', dificuldade: 'medio',
+    titulo: 'Quer moto pra trabalhar de entregadora o quanto antes',
+    resumo: 'Patrícia quer uma moto pra trabalhar como entregadora e tem pressa — nunca ouviu falar de consórcio.',
+    objetivo: 'Explicar o conceito com clareza, sendo honesto que o crédito não sai na hora — essencial alinhar expectativa com quem tem pressa de começar a trabalhar.',
+    turnos: [
+      {
+        clienteAbertura: 'Patrícia: "Quero uma moto pra trabalhar de entregadora o quanto antes. Nunca fiz consórcio, como funciona?"',
+        opcoes: [
+          { texto: 'Entendo a pressa. Só já sendo direta: o consórcio não te dá a moto na hora, é uma forma de comprar parcelado sem juros, mas você só recebe o crédito quando é sorteada ou dá um lance. Se você precisa trabalhar já, talvez outra forma de aquisição sirva melhor nesse momento.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Alinha a expectativa mais importante logo de cara — honesto até quando isso significa que não é a solução certa agora.' },
+          { texto: 'É uma forma de comprar parcelado sem juros, bem em conta.', qualidade: 'ok', pontos: 1,
+            feedback: 'Não menciona o ponto crítico (não sai com a moto na hora), decisivo pra quem tem pressa de trabalhar.' },
+          { texto: 'Perfeito pra isso, você já pode usar a moto assim que entrar no grupo.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Informação falsa e grave — pode fazer ela desistir de outra opção esperando algo que não vai acontecer a tempo.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Patrícia: "Ah, entendi, então não é bem pra agora. Mas quanto tempo mais ou menos leva?"',
+        clienteSeFracoAntes: 'Patrícia: "Nossa, isso muda tudo, eu preciso começar logo."',
+        opcoes: [
+          { texto: 'Não existe prazo garantido, é por sorteio ou lance, então não dá pra prometer um tempo. Se seu caso é urgente, talvez valha a pena considerar outra forma de conseguir a moto agora, e usar o consórcio depois pra trocar ou ter uma segunda moto.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Honestidade total sobre a falta de prazo, e ainda propõe um caminho genuinamente útil pro caso dela.' },
+          { texto: 'Geralmente não demora muito, mas não dá pra garantir.', qualidade: 'ok', pontos: 1,
+            feedback: 'Não promete, mas também não é claro o suficiente sobre a incerteza real do prazo.' },
+          { texto: 'Olha, geralmente sai bem rápido, uns 3 meses.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Dá uma estimativa de prazo que ninguém pode garantir — promessa proibida.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Patrícia: "Entendi, obrigada por ser honesta. Vou ver outras opções por enquanto, mas guardo seu contato."',
+        clienteSeFracoAntes: 'Patrícia: "Tá, então não é pra mim agora."',
+        opcoes: [
+          { texto: 'Faz sentido. Fico à disposição quando fizer sentido pra você, seja pra trocar de moto depois ou pra ter uma segunda mais pra frente — sem pressa nenhuma.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Fecha com honestidade e sem forçar uma venda que não serve o momento dela — constrói confiança de longo prazo.' },
+          { texto: 'Tranquilo, qualquer coisa me chama.', qualidade: 'ok', pontos: 1,
+            feedback: 'Educado, mas não reforça o valor de longo prazo da relação.' },
+          { texto: 'Mas pensa bem, você pode perder essa condição se não entrar agora.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Insiste em pressionar mesmo reconhecendo que o produto não serve o momento dela — quebra a confiança construída.' }
+        ]
+      }
+    ],
+    desfechos: {
+      otimo: 'Patrícia: "Valorizei muito sua honestidade, com certeza volto quando fizer sentido."',
+      ok: 'Patrícia: "Tá, guardo seu contato então."',
+      fraco: 'Patrícia: "Fiquei com um pé atrás, vou procurar em outro lugar mesmo."'
+    }
+  },
+
+  {
+    id: 'moto-posvenda-indicacao', produto: 'moto', etapa: 'posvenda', dificuldade: 'facil',
+    titulo: 'Cliente satisfeito, momento de pedir indicação',
+    resumo: 'Wesley foi contemplado recentemente e está muito satisfeito — bom momento pra pedir indicação sem soar oportunista.',
+    objetivo: 'Pedir indicação de forma genuína, sem forçar, aproveitando um momento real de satisfação do cliente.',
+    turnos: [
+      {
+        clienteAbertura: 'Wesley: "Cara, muito feliz com a moto nova, valeu mesmo pela ajuda em todo o processo!"',
+        opcoes: [
+          { texto: 'Que alegria ouvir isso, Wesley! Fico muito feliz que deu certo. Se surgir alguém no seu círculo pensando em trocar de veículo, fico à disposição, mas isso só se fizer sentido pra você, sem nenhuma cobrança.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Aproveita o momento de satisfação genuína pra pedir indicação de forma leve, sem nenhuma cobrança.' },
+          { texto: 'Que bom! Aproveitando, você conhece alguém que também tem interesse em consórcio?', qualidade: 'ok', pontos: 1,
+            feedback: 'Pede indicação de forma mais direta, sem tanto cuidado no tom, mas não é agressivo.' },
+          { texto: 'Que bom! Você pode me passar o contato de uns 3 amigos que também topariam entrar?', qualidade: 'fraca', pontos: -1,
+            feedback: 'Pede uma quantidade específica de contatos de forma impositiva logo depois de um agradecimento genuíno.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Wesley: "Na verdade tenho um amigo que comentou outro dia que quer trocar de carro."',
+        clienteSeFracoAntes: 'Wesley: "Não sei, não costumo indicar essas coisas assim de cara."',
+        opcoes: [
+          { texto: 'Perfeito, se ele topar, posso conversar com ele com o mesmo cuidado que tive com você, sem nenhuma pressão. Só me passa o contato quando achar melhor, sem pressa nenhuma.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Reforça o mesmo padrão de atendimento sem pressão, respeitando o ritmo dele pra passar o contato.' },
+          { texto: 'Legal, pode me passar o contato dele então?', qualidade: 'ok', pontos: 1,
+            feedback: 'Aceita a indicação, mas não reforça o cuidado que teve com ele, perdendo a chance de reforçar confiança.' },
+          { texto: 'Perfeito, me passa agora que eu já ligo pra ele hoje.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Cria pressa artificial numa indicação espontânea, o que pode incomodar Wesley e o amigo dele.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Wesley: "Tá, vou falar com ele e te aviso."',
+        clienteSeFracoAntes: 'Wesley: "Prefiro não misturar as coisas, mas se ele perguntar eu falo de você."',
+        opcoes: [
+          { texto: 'Combinado, fico no aguardo sem pressa nenhuma. De qualquer forma, muito obrigado pela confiança até aqui, foi um prazer te atender.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Fecha com gratidão genuína, sem prender a conversa à indicação — reforça a relação além do interesse comercial.' },
+          { texto: 'Combinado, fico esperando então.', qualidade: 'ok', pontos: 1,
+            feedback: 'Cumpre, mas sem reforçar a relação além do pedido de indicação.' },
+          { texto: 'Combinado, mas não esquece hein, isso ajuda muito nas minhas metas do mês.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Expõe o interesse comercial pessoal de forma deselegante pro cliente satisfeito.' }
+        ]
+      }
+    ],
+    desfechos: {
+      otimo: 'Wesley: "Pode deixar, fico feliz em ajudar depois de todo esse cuidado."',
+      ok: 'Wesley: "Tá, vamos ver."',
+      fraco: 'Wesley: "Prefiro deixar quieto por enquanto, mas valeu."'
+    }
+  },
+
+  {
+    id: 'agro-prospeccao-feira-agropecuaria', produto: 'agro', etapa: 'prospeccao', dificuldade: 'dificil',
+    titulo: 'Contato pego numa feira agropecuária',
+    resumo: 'Sr. Waldir deu o contato num estande de feira, mas está cansado de abordagem de vendedor.',
+    objetivo: 'Reconectar o contexto do primeiro contato e qualificar interesse real sem parecer vendedor de feira insistente.',
+    turnos: [
+      {
+        clienteAbertura: 'Sr. Waldir: "Peguei seu contato lá na feira, mas olha, eu ando bem cheio de gente querendo me vender coisa."',
+        opcoes: [
+          { texto: 'Entendo bem, feira é assim mesmo. Não vou te tomar muito tempo: você chegou a comentar lá que pensa em renovar algum equipamento, ou foi só passando pelo estande?', qualidade: 'ideal', pontos: 3,
+            feedback: 'Reconhece o cansaço dele sem se ofender, e retoma o contexto específico pra confirmar interesse real.' },
+          { texto: 'Sem problema, só queria te apresentar as opções de consórcio que temos pra maquinário.', qualidade: 'ok', pontos: 1,
+            feedback: 'Parte pra apresentação de produto antes de confirmar interesse real — justo o que ele disse estar cansado de ouvir.' },
+          { texto: 'Imagina, mas o nosso é diferente, vale a pena você conhecer.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Minimiza a objeção dele com frase genérica de vendas — o oposto do que ele acabou de pedir.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Sr. Waldir: "Ah, é verdade, comentei sobre um trator que preciso trocar, mas não decidi nada ainda."',
+        clienteSeFracoAntes: 'Sr. Waldir: "Olha, se for só empurrar produto, prefiro nem continuar."',
+        opcoes: [
+          { texto: 'Fico tranquilo com isso, não tô aqui pra empurrar nada agora — só queria entender melhor sua situação pra ver se em algum momento faz sentido eu te ajudar. Topa eu te fazer só 2 perguntas rápidas?', qualidade: 'ideal', pontos: 3,
+            feedback: 'Baixa a guarda dele reconhecendo que não haverá pressão, e pede permissão explícita antes de continuar.' },
+          { texto: 'Sem problema, só queria entender melhor sua necessidade.', qualidade: 'ok', pontos: 1,
+            feedback: 'Intenção correta, mas não pede permissão explícita — ajudaria a reconstruir a confiança dele.' },
+          { texto: 'Entendo, mas acho que vale a pena você pelo menos ver os números, não custa nada.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Insiste em avançar mesmo depois dele sinalizar desconforto com abordagem de vendas.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Sr. Waldir: "Pode, mas rapidinho."',
+        clienteSeFracoAntes: 'Sr. Waldir: "Tá, pode fazer as perguntas, mas sem compromisso."',
+        opcoes: [
+          { texto: 'Combinado. Só pra entender: que tipo de trator você usa hoje, e pensando num próximo, seria mais upgrade de potência ou só repor um mais antigo?', qualidade: 'ideal', pontos: 3,
+            feedback: 'Pergunta objetiva e técnica, mostrando respeito pelo tempo dele e conhecimento real da necessidade.' },
+          { texto: 'Legal, me fala mais sobre a sua propriedade e o que você produz.', qualidade: 'ok', pontos: 1,
+            feedback: 'Pergunta válida, mas mais aberta do que o necessário pra quem pediu rapidez.' },
+          { texto: 'Ótimo, então me passa seu CPF que já adianto uma pré-análise de crédito.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Pede dado sensível cedo demais, numa etapa que ainda é só de entender a necessidade.' }
+        ]
+      }
+    ],
+    desfechos: {
+      otimo: 'Sr. Waldir: "Isso sim, gostei de você ter perguntado antes de empurrar. Pode me ligar outro dia com calma."',
+      ok: 'Sr. Waldir: "Tá, pode ser, mas sem pressa."',
+      fraco: 'Sr. Waldir: "Prefiro não continuar por enquanto, tá bem?"'
+    }
+  },
+
+  {
+    id: 'agro-qualificacao-orcamento-safra', produto: 'agro', etapa: 'qualificacao', dificuldade: 'medio',
+    titulo: 'Quer investir, mas depende do resultado da safra',
+    resumo: 'Dona Iracema quer investir em maquinário, mas condiciona tudo ao resultado da próxima safra, orçamento incerto.',
+    objetivo: 'Entender a real disponibilidade financeira e o timing dela antes de propor prazo/parcela, sem forçar decisão antes da hora certa.',
+    turnos: [
+      {
+        clienteAbertura: 'Dona Iracema: "Quero mesmo investir num equipamento novo, mas depende de como for a próxima safra, ainda não sei quanto vou ter disponível."',
+        opcoes: [
+          { texto: 'Faz todo sentido considerar isso. Me conta: sem contar com a safra ainda, hoje você já tem algum valor disponível pra começar, ou a ideia é só decidir depois da colheita?', qualidade: 'ideal', pontos: 3,
+            feedback: 'Entende com clareza o timing real dela antes de qualquer proposta, sem forçar uma decisão prematura.' },
+          { texto: 'Entendo, mas o consórcio pode ser uma boa forma de já começar enquanto espera a safra.', qualidade: 'ok', pontos: 1,
+            feedback: 'Sugere avançar sem antes entender se ela tem algo disponível agora ou não.' },
+          { texto: 'Não precisa esperar a safra, dá pra começar com uma parcela baixinha agora mesmo.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Empurra uma decisão antes do timing real dela, ignorando a incerteza que ela mesma trouxe.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Dona Iracema: "Hoje eu já tenho uma reserva pequena, mas o grosso mesmo depende da safra."',
+        clienteSeFracoAntes: 'Dona Iracema: "Olha, prefiro só decidir depois da colheita, pra ser sincera."',
+        opcoes: [
+          { texto: 'Entendo perfeitamente. Podemos usar essa reserva pequena como referência pra montar uma simulação com parcela confortável mesmo sem a safra, e você decide com calma quando tiver o resultado — sem nenhum compromisso agora.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Usa a informação real dela (reserva pequena) sem forçar comprometer o valor da safra ainda incerto.' },
+          { texto: 'Tudo bem, posso te passar uma simulação geral só pra referência.', qualidade: 'ok', pontos: 1,
+            feedback: 'Aceita esperar, mas sem aproveitar a informação da reserva pequena pra já ser mais específico.' },
+          { texto: 'Sem problema, mas recomendo já garantir sua vaga no grupo antes que acabe.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Cria urgência artificial pra apressar uma decisão que ela mesma disse depender da safra.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Dona Iracema: "Isso ajuda, gostei de ver uma referência sem compromisso."',
+        clienteSeFracoAntes: 'Dona Iracema: "Tá, mas eu só decido mesmo depois da colheita."',
+        opcoes: [
+          { texto: 'Combinado, fico com essa simulação de referência guardada e retorno com você depois da colheita, ou antes se você quiser revisar algo. Sem pressa nenhuma da minha parte.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Respeita totalmente o timing dela — postura correta pra um caso que depende de um evento futuro incerto.' },
+          { texto: 'Tá bom, fico no aguardo então.', qualidade: 'ok', pontos: 1,
+            feedback: 'Respeita o timing, mas sem deixar claro um próximo passo concreto.' },
+          { texto: 'Tá bom, mas não demora muito, viu, pra não perder a condição.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Insiste em pressionar prazo mesmo depois dela reforçar a dependência da safra.' }
+        ]
+      }
+    ],
+    desfechos: {
+      otimo: 'Dona Iracema: "Gostei de você respeitar meu tempo, te procuro depois da colheita com certeza."',
+      ok: 'Dona Iracema: "Tá bom, fico com isso guardado."',
+      fraco: 'Dona Iracema: "Vou pensar melhor, mas fiquei incomodada com a pressa."'
+    }
+  },
+
+  {
+    id: 'agro-fechamento-duas-modalidades', produto: 'agro', etapa: 'fechamento', dificuldade: 'medio',
+    titulo: 'Indeciso entre duas modalidades de grupo',
+    resumo: 'Sr. Benedito decidiu entrar no consórcio de maquinário, mas está em dúvida entre duas modalidades com prazos/parcelas diferentes.',
+    objetivo: 'Ajudar a decidir com base no fluxo de caixa real da propriedade (sazonalidade da safra), não só no valor da parcela isolado.',
+    turnos: [
+      {
+        clienteAbertura: 'Sr. Benedito: "Decidi entrar, só fiquei em dúvida entre as duas modalidades que você me passou, uma com parcela fixa e outra que parece variar um pouco."',
+        opcoes: [
+          { texto: 'Boa pergunta pra fazer antes de fechar. Me conta: sua renda na propriedade é mais concentrada em época de safra, ou mais distribuída ao longo do ano?', qualidade: 'ideal', pontos: 3,
+            feedback: 'Investiga a sazonalidade real do fluxo de caixa dele — o critério certo pra essa decisão no agro.' },
+          { texto: 'A parcela fixa costuma ser mais tranquila de planejar.', qualidade: 'ok', pontos: 1,
+            feedback: 'Dá uma direção genérica sem entender o fluxo de caixa específico dele.' },
+          { texto: 'Recomendo a fixa, é sempre melhor não ter surpresa.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Recomenda sem entender a sazonalidade real da propriedade, que pode pedir justo o contrário.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Sr. Benedito: "É bem concentrada na safra mesmo, no resto do ano fica mais apertado."',
+        clienteSeFracoAntes: 'Sr. Benedito: "Ah, não parei pra pensar nisso, é uma mistura das duas."',
+        opcoes: [
+          { texto: 'Então faz mais sentido considerar a modalidade que acompanha melhor esse ritmo, evitando parcela pesada nos meses de entressafra quando o caixa aperta mais.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Conecta a sazonalidade real da renda dele com a recomendação certa — argumento específico e bem fundamentado.' },
+          { texto: 'Então talvez a modalidade variável sirva melhor pro seu caso.', qualidade: 'ok', pontos: 1,
+            feedback: 'Chega perto da conclusão certa, mas sem explicar a lógica da entressafra.' },
+          { texto: 'Não tem problema, qualquer uma das duas se ajusta bem no fim das contas.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Minimiza uma diferença real que pode pesar bastante no fluxo de caixa dele na entressafra.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Sr. Benedito: "Faz sentido, vamos com essa que acompanha a safra então."',
+        clienteSeFracoAntes: 'Sr. Benedito: "Tá, então vamos com a que você achar melhor."',
+        opcoes: [
+          { texto: 'Fechado, vou preparar a documentação dessa modalidade. Qualquer ajuste que precisar mais pra frente, conforme a safra for vindo, me chama que a gente revisa junto.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Fecha com clareza e ainda deixa aberto o acompanhamento contínuo, valioso num negócio sazonal.' },
+          { texto: 'Combinado, vou providenciar tudo então.', qualidade: 'ok', pontos: 1,
+            feedback: 'Fecha certo, mas sem reforçar o acompanhamento contínuo que é valioso nesse contexto.' },
+          { texto: 'Combinado, e já aproveitando, seria uma boa você considerar um segundo equipamento também.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Tenta emplacar um upsell não solicitado no meio do fechamento de uma decisão que já exigiu bastante reflexão.' }
+        ]
+      }
+    ],
+    desfechos: {
+      otimo: 'Sr. Benedito: "Gostei de pensar isso junto com você, ficou bem mais claro agora."',
+      ok: 'Sr. Benedito: "Tá bom, vamos assim então."',
+      fraco: 'Sr. Benedito: "Vou pensar mais um pouco antes de decidir qual."'
+    }
+  },
+
+  {
+    id: 'imovel-prospeccao-lead-site', produto: 'imovel', etapa: 'prospeccao', dificuldade: 'facil',
+    titulo: 'Pediu simulação no site só "pra ter uma ideia"',
+    resumo: 'Camila R. preencheu formulário no site pedindo simulação de imóvel, primeiro contato, ainda não sabe bem o que quer.',
+    objetivo: 'Confirmar o interesse e entender minimamente o objetivo dela antes de qualquer proposta, tratando um lead de site com o mesmo cuidado de qualquer outro.',
+    turnos: [
+      {
+        clienteAbertura: 'Camila R.: "Oi, pedi uma simulação no site de vocês, mas foi mais pra ter uma ideia mesmo, não tô decidida a nada ainda."',
+        opcoes: [
+          { texto: 'Oi, Camila! Sem problema pedir só pra ter uma ideia, é super normal. Me conta rapidinho: você já tem em mente comprar um imóvel pra morar, investir, ou ainda tá só explorando as possibilidades?', qualidade: 'ideal', pontos: 3,
+            feedback: 'Acolhe o estágio inicial dela sem pressa, e faz a pergunta certa pra entender o objetivo antes de qualquer proposta.' },
+          { texto: 'Tranquilo, qualquer simulação ajuda a ter uma ideia. Que tipo de imóvel você procura?', qualidade: 'ok', pontos: 1,
+            feedback: 'Pergunta razoável, mas pula direto pro tipo de imóvel sem entender primeiro o objetivo dela.' },
+          { texto: 'Sem problema, vou já te passar uma simulação completa pra você ver os números.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Parte direto pra simulação sem entender nada do que ela procura, desperdiçando a chance de qualificar.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Camila R.: "Acho que seria mais pra investir, tipo alugar depois."',
+        clienteSeFracoAntes: 'Camila R.: "Ainda não sei bem, só queria ver como funciona."',
+        opcoes: [
+          { texto: 'Legal, pra investimento faz sentido pensar em região e perfil de inquilino também, não só o valor do imóvel. Você já tem uma região em mente ou ainda tá em aberto?', qualidade: 'ideal', pontos: 3,
+            feedback: 'Aprofunda a qualificação de forma específica pro objetivo dela, mostrando entendimento do caso.' },
+          { texto: 'Entendi, pra investir o consórcio também é uma boa opção.', qualidade: 'ok', pontos: 1,
+            feedback: 'Confirma que o produto serve, mas não aprofunda a qualificação específica de investimento.' },
+          { texto: 'Pra investir, recomendo já ir num valor mais alto de crédito, rende mais.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Recomenda valor sem entender região nem perfil, e ainda insinua retorno financeiro sem base concreta.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Camila R.: "Ainda tá em aberto, mas gostei de pensar nisso."',
+        clienteSeFracoAntes: 'Camila R.: "Olha, ainda é muito cedo pra essas perguntas, só queria entender o básico mesmo."',
+        opcoes: [
+          { texto: 'Sem problema nenhum, dá pra ir devagar. Te mando um material simples explicando o básico de como funciona, e quando fizer sentido aprofundar a conversa, é só me chamar, sem pressa nenhuma.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Respeita o estágio bem inicial dela, oferecendo algo de valor sem forçar avançar mais rápido do que ela quer.' },
+          { texto: 'Tudo bem, vou te passar mais informações então.', qualidade: 'ok', pontos: 1,
+            feedback: 'Aceita ir mais devagar, mas sem entregar algo específico e de valor pro estágio dela.' },
+          { texto: 'Entendo, mas é bom já ir se decidindo, essas condições não ficam disponíveis pra sempre.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Pressiona uma decisão rápida justamente quando ela pediu mais tempo e menos perguntas.' }
+        ]
+      }
+    ],
+    desfechos: {
+      otimo: 'Camila R.: "Adorei, isso é exatamente o que eu precisava por enquanto, obrigada!"',
+      ok: 'Camila R.: "Tá, pode mandar mais informação sim."',
+      fraco: 'Camila R.: "Acho que vou preferir pesquisar sozinha por enquanto."'
+    }
+  },
+
+  {
+    id: 'imovel-apresentacao-reforma', produto: 'imovel', etapa: 'apresentacao', dificuldade: 'medio',
+    titulo: 'Quer usar consórcio pra reformar, não pra comprar',
+    resumo: 'Sr. Nilton não quer comprar imóvel novo, quer reformar o que já tem — caso menos comum, precisa entender que o produto cobre isso.',
+    objetivo: 'Confirmar que consórcio de imóvel também cobre reforma/construção, explicando com honestidade o que precisa de confirmação específica.',
+    turnos: [
+      {
+        clienteAbertura: 'Sr. Nilton: "Eu não quero comprar imóvel novo, quero reformar o que já tenho. Consórcio serve pra isso também?"',
+        opcoes: [
+          { texto: 'Serve sim — o crédito de consórcio de imóvel cobre tanto compra quanto reforma ou construção do que você já tem. A mecânica é a mesma: sem juros de financiamento, com contemplação por sorteio ou lance.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Confirma corretamente que reforma é um uso válido, sem inventar detalhe extra.' },
+          { texto: 'Acho que sim, deve servir também pra isso.', qualidade: 'ok', pontos: 1,
+            feedback: 'Responde com insegurança quando é uma informação que está no material e deveria ser afirmada com confiança.' },
+          { texto: 'Não, consórcio de imóvel é só pra comprar um novo, pra reforma tem que ser outro tipo de crédito.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Informação errada — o material do site confirma que reforma e construção são usos cobertos.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Sr. Nilton: "Que bom que serve, isso muda tudo pra mim. Como fica o valor do crédito nesse caso?"',
+        clienteSeFracoAntes: 'Sr. Nilton: "Tá, mas e o valor, funciona igual à compra?"',
+        opcoes: [
+          { texto: 'A lógica é a mesma: você define o valor do crédito baseado no que a reforma vai custar, e a faixa atendida vai de 150 mil a mais de 4 milhões, então dá pra encaixar desde uma reforma menor até uma bem grande.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Responde com o dado real do material aplicado corretamente ao contexto de reforma.' },
+          { texto: 'O valor você escolhe conforme o que precisa gastar na reforma.', qualidade: 'ok', pontos: 1,
+            feedback: 'Correto, mas não cita a faixa real disponível, perdendo a chance de mostrar amplitude.' },
+          { texto: 'Pra reforma geralmente o valor máximo é bem menor que pra compra.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Inventa uma limitação que não existe em nenhum material — pode desanimar o cliente à toa.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Sr. Nilton: "Entendi, faz sentido. Como que eu recebo esse valor depois de contemplado, é tudo de uma vez?"',
+        clienteSeFracoAntes: 'Sr. Nilton: "Tá, e quando eu recebo isso, pra já ir contratando a reforma?"',
+        opcoes: [
+          { texto: 'Isso é um detalhe específico de liberação que muda conforme a administradora e o uso — pra te dar a resposta certa sem chutar, vale a pena a gente ver isso junto com uma pessoa que analisa esse tipo de caso, já que envolve documentação de obra.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Reconhece que é um detalhe operacional específico e não inventa a resposta — honestidade em vez de suposição.' },
+          { texto: 'Deve ser liberado de uma vez só, mas posso confirmar isso depois.', qualidade: 'ok', pontos: 1,
+            feedback: 'Chuta a resposta mesmo dizendo que vai confirmar depois — já cria uma expectativa que pode estar errada.' },
+          { texto: 'Sim, cai tudo de uma vez na sua conta assim que for contemplado.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Afirma um processo específico de liberação sem confirmação, podendo gerar problema na hora real da obra.' }
+        ]
+      }
+    ],
+    desfechos: {
+      otimo: 'Sr. Nilton: "Ótimo, vamos seguir com isso então, gostei da clareza."',
+      ok: 'Sr. Nilton: "Tá bom, confirma esse detalhe pra mim depois."',
+      fraco: 'Sr. Nilton: "Fiquei em dúvida se isso realmente serve pro meu caso, vou pensar mais."'
+    }
+  },
+
+  {
+    id: 'imovel-posvenda-trocar-de-bem', produto: 'imovel', etapa: 'posvenda', dificuldade: 'dificil',
+    titulo: 'Contemplada, mas mudou de ideia sobre o imóvel',
+    resumo: 'Sra. Beatriz foi contemplada, mas mudou de ideia e quer usar o crédito num imóvel diferente do que tinha em mente antes.',
+    objetivo: 'Confirmar com honestidade a flexibilidade real do crédito contemplado, sem inventar regra, encaminhando o que exige confirmação específica.',
+    turnos: [
+      {
+        clienteAbertura: 'Sra. Beatriz: "Fui contemplada, mas mudei de ideia: agora quero um imóvel diferente do que eu tinha em mente antes. Isso muda alguma coisa?"',
+        opcoes: [
+          { texto: 'Que bom que foi contemplada! Sobre mudar de ideia: o crédito contemplado geralmente não é amarrado a um imóvel específico que você tinha decidido antes, mas cada administradora tem suas regras específicas de uso — vale a pena confirmarmos isso certinho antes de você seguir com a escolha nova.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Dá uma resposta geral correta e honesta, mas evita afirmar detalhes específicos sem confirmação.' },
+          { texto: 'Não deve mudar nada, geralmente dá pra usar em qualquer imóvel.', qualidade: 'ok', pontos: 1,
+            feedback: 'Responde com uma generalização sem se comprometer a confirmar os detalhes específicos da administradora dela.' },
+          { texto: 'Não, imagina, muda nada, você usa como quiser, sem nenhuma restrição.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Afirma com certeza total algo que pode variar por administradora — arriscado sem confirmação.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Sra. Beatriz: "Que bom, então posso já ir procurando esse novo imóvel?"',
+        clienteSeFracoAntes: 'Sra. Beatriz: "Mas então por que vocês perguntaram tanto sobre o imóvel antes, se no fim pode mudar?"',
+        opcoes: [
+          { texto: 'As perguntas de antes ajudam a estimar o valor de crédito certo pro que você queria na época — mas o processo de usar o crédito depois de contemplada tem suas próprias regras, que precisam ser confirmadas com a administradora antes de você fechar negócio com o novo imóvel.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Explica a diferença entre a fase de planejamento e a fase de uso do crédito, sem inventar regra de nenhuma das duas.' },
+          { texto: 'As perguntas de antes eram só pra referência, agora o importante é confirmar o uso do crédito.', qualidade: 'ok', pontos: 1,
+            feedback: 'Direção correta, mas menos clara sobre o motivo real das perguntas anteriores.' },
+          { texto: 'Isso foi só uma formalidade no início, na prática não interfere em nada agora.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Trata a qualificação anterior como algo sem importância, o que não é verdade e pode soar deselegante.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Sra. Beatriz: "Entendi, faz sentido confirmar antes de seguir."',
+        clienteSeFracoAntes: 'Sra. Beatriz: "Tá, mas então quem confirma isso pra mim?"',
+        opcoes: [
+          { texto: 'Vou verificar isso certinho com quem acompanha seu contrato e te retorno com a resposta confirmada antes de você avançar com o novo imóvel, pra você não ter surpresa no meio do caminho.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Assume a responsabilidade de buscar a confirmação certa antes dela agir, evitando deixá-la exposta a uma surpresa.' },
+          { texto: 'Vou perguntar e te aviso assim que souber.', qualidade: 'ok', pontos: 1,
+            feedback: 'Cumpre o básico, mas sem reforçar a importância de esperar a confirmação antes de agir.' },
+          { texto: 'Pode ir procurando o imóvel enquanto isso, deve dar tudo certo.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Deixa ela seguir em frente sem a confirmação necessária, arriscando um problema real na hora de usar o crédito.' }
+        ]
+      }
+    ],
+    desfechos: {
+      otimo: 'Sra. Beatriz: "Prefiro mesmo esperar essa confirmação, obrigada por checar antes."',
+      ok: 'Sra. Beatriz: "Tá bom, fico esperando você confirmar."',
+      fraco: 'Sra. Beatriz: "Já vou procurando por conta própria mesmo, depois a gente ajusta."'
+    }
   }
 
 ];
