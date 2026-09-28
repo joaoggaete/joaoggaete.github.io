@@ -15,7 +15,7 @@ reuniões, assistente Apollo e o painel da equipe.
 | `api/` | endpoints PHP: `leads.php`, `agenda.php`, `apollo.php`, `painel.php` |
 | `app/` | código do servidor, configuração e dados — bloqueado para a web |
 | `painel/` | painel da equipe (contatos, funil, agenda, equipe, auditoria) e instalador |
-| `docs/` | [como publicar](docs/HOSPEDAGEM.md) e [estratégia, pesquisa e revisão dos vídeos](docs/ESTRATEGIA.md) |
+| `docs/` | [como publicar](docs/HOSPEDAGEM.md), [estratégia, pesquisa e revisão dos vídeos](docs/ESTRATEGIA.md) e [prompts de produção dos vídeos](docs/videos/00-guia-de-producao.md) |
 
 ## Testar no computador
 
