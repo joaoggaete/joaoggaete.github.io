@@ -595,6 +595,300 @@ window.CENARIOS_TREINO = [
       ok: 'Fernanda: "Tá, acho que fecho, mas ainda vou reler tudo com calma."',
       fraco: 'Fernanda: "Isso me deixou insegura, vou conversar com outra pessoa antes de decidir."'
     }
+  },
+
+  {
+    id: 'carro-objecao-guardar-dinheiro', produto: 'carro', etapa: 'objecoes', dificuldade: 'dificil',
+    titulo: '"Prefiro guardar o dinheiro e comprar à vista depois"',
+    resumo: 'Larissa prefere guardar dinheiro todo mês numa poupança/CDB e comprar o carro à vista quando juntar o valor todo.',
+    objetivo: 'Não prometer que o consórcio rende mais que investir (isso é consultoria financeira, não é papel do vendedor) — mostrar a vantagem real: disciplina do compromisso mensal e a chance de contemplação antes de juntar 100% sozinha.',
+    turnos: [
+      {
+        clienteAbertura: 'Larissa: "Eu prefiro guardar esse dinheiro numa poupança e comprar o carro à vista quando juntar tudo. Por que eu pagaria uma taxa de administração à toa?"',
+        opcoes: [
+          { texto: 'Faz muito sentido guardar dinheiro, é uma disciplina ótima. Só uma pergunta: hoje, guardando por conta, você consegue manter esse valor todo mês sem mexer nele por nenhum motivo?', qualidade: 'ideal', pontos: 3,
+            feedback: 'Valida a estratégia dela sem desqualificar investir, e traz a pergunta certa: disciplina é o ponto real, não rentabilidade — evita entrar em terreno de consultoria financeira.' },
+          { texto: 'O consórcio no fim das contas rende mais que a poupança, compensa mais.', qualidade: 'ok', pontos: 1,
+            feedback: 'Isso é uma comparação de rentabilidade que o vendedor não pode fazer — consórcio não é produto de investimento, e essa afirmação pode ser falsa dependendo do caso dela.' },
+          { texto: 'Poupança rende muito pouco hoje em dia, praticamente perde pra inflação, é bobagem guardar lá.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Entra em consultoria de investimento, desqualificando outro produto financeiro — não é papel do vendedor e pode ser uma informação incorreta.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Larissa: "Confesso que às vezes uso uma parte pra outras coisas no meio do caminho."',
+        clienteSeFracoAntes: 'Larissa: "Isso não vem ao caso, eu quero saber por que pagar taxa então."',
+        opcoes: [
+          { texto: 'É mais comum do que parece — o valor guardado por conta acaba sendo usado pra outras coisas no meio do caminho. No consórcio, o compromisso mensal é contratual, o que ajuda a manter a disciplina até o fim. E não tem juros de financiamento, só a taxa de administração diluída no seu lugar.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Usa a vantagem real do consórcio (disciplina contratual) sem inventar nada sobre rentabilidade — argumento honesto e forte.' },
+          { texto: 'Entendo, mas no consórcio isso não acontece, você é obrigada a pagar.', qualidade: 'ok', pontos: 1,
+            feedback: 'Não erra, mas soa mais como pressão do que como benefício genuíno de disciplina.' },
+          { texto: 'Isso mesmo, e além disso a taxa de administração é bem menor que qualquer imposto que incide sobre investimento.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Compara com tributação de investimentos sem nenhum dado real — outra afirmação de consultoria financeira sem base.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Larissa: "Entendi, faz sentido a questão da disciplina. Mas e se eu for sorteada rápido, eu já compro o carro sem ter juntado tudo?"',
+        clienteSeFracoAntes: 'Larissa: "Tá, mas e a rentabilidade, isso eu não posso simplesmente calcular sozinha?"',
+        opcoes: [
+          { texto: 'Exatamente, essa é a outra vantagem: se você for contemplada por sorteio ou lance, tem acesso ao crédito antes de ter guardado 100% sozinha — sem prazo garantido, claro, mas é uma chance real. Já a parte de rentabilidade e comparação com investimento, isso é bom avaliar com quem cuida disso pra você, eu não posso opinar tecnicamente.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Explica a vantagem real (contemplação antecipada) com honestidade sobre a falta de garantia de prazo, e reconhece o limite do que pode opinar sobre investimento.' },
+          { texto: 'Isso, você pode ser sorteada rápido e já sair com o carro.', qualidade: 'ok', pontos: 1,
+            feedback: 'Fica perto de sugerir uma expectativa de prazo, sem reforçar que não há garantia nenhuma disso.' },
+          { texto: 'Isso, e olha, particularmente eu acho que compensa muito mais que ficar guardando, é só fazer as contas.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Dá uma opinião pessoal de que compensa financeiramente mais, o que soa como consultoria de investimento disfarçada.' }
+        ]
+      }
+    ],
+    desfechos: {
+      otimo: 'Larissa: "Faz sentido, gostei da parte da disciplina. Vou pensar com mais calma agora."',
+      ok: 'Larissa: "Tá, ainda tô meio em dúvida entre as duas opções."',
+      fraco: 'Larissa: "Acho que prefiro continuar guardando por conta mesmo, mais seguro."'
+    }
+  },
+
+  {
+    id: 'carro-objecao-dinheiro-preso', produto: 'carro', etapa: 'objecoes', dificuldade: 'medio',
+    titulo: '"E se eu precisar desse dinheiro numa emergência?"',
+    resumo: 'Vinícius tem receio de comprometer dinheiro todo mês num consórcio e não poder usar esse valor se precisar numa emergência.',
+    objetivo: 'Ser honesto sobre o compromisso contratual do consórcio, sem inventar facilidades que não existem, e ajudar a dimensionar a parcela dentro do que realmente sobra.',
+    turnos: [
+      {
+        clienteAbertura: 'Vinícius: "Minha preocupação é essa: se eu comprometo uma parcela todo mês, e se eu precisar desse dinheiro numa emergência? Fica preso, não é?"',
+        opcoes: [
+          { texto: 'Boa pergunta, e prefiro ser honesto: a parcela do consórcio é um compromisso mensal, não é como ter o dinheiro guardado que você resgata a qualquer hora. Por isso é importante definirmos uma parcela que caiba tranquilo no seu orçamento, sem comprometer sua reserva de emergência.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Responde com honestidade real em vez de minimizar, e já direciona pro que importa: dimensionar a parcela certa.' },
+          { texto: 'Em caso de emergência, dá pra usar o FGTS ou vender a cota, tem várias saídas.', qualidade: 'ok', pontos: 1,
+            feedback: 'Menciona possibilidades sem confirmar se de fato se aplicam ao caso dele nem explicar como funcionam de verdade — pode criar expectativa errada.' },
+          { texto: 'Não, imagina, é super fácil sacar esse dinheiro de volta quando você quiser.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Isso é falso — o consórcio não é resgatável como uma poupança, essa afirmação pode gerar um problema sério de confiança depois.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Vinícius: "Ah, entendi, faz sentido calcular certinho então. Hoje eu tenho uma reserva separada, seria tipo isso mesmo?"',
+        clienteSeFracoAntes: 'Vinícius: "Então quer dizer que realmente fica preso, isso me deixa inseguro."',
+        opcoes: [
+          { texto: 'Isso mesmo, ótimo você já ter uma reserva separada — ela continua sendo sua rede de segurança, intocada. A parcela do consórcio entra como um compromisso à parte, dentro do que sobra sem mexer nessa reserva.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Reforça a separação clara entre reserva de emergência e parcela do consórcio — orientação responsável, sem inventar solução mágica.' },
+          { texto: 'Isso, o importante é você ter uma reserva à parte pra imprevistos.', qualidade: 'ok', pontos: 1,
+            feedback: 'Correto mas genérico — não conecta com o fato de ele já ter uma reserva, perde a chance de reforçar especificamente o caso dele.' },
+          { texto: 'Fica tranquilo, se precisar a gente sempre dá um jeito de resolver pra você.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Promessa vaga e sem base — sugere uma flexibilidade que não existe de verdade no contrato.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Vinícius: "Tá bom, então vamos calcular uma parcela que não mexa nessa minha reserva."',
+        clienteSeFracoAntes: 'Vinícius: "Tá, mas ainda tô com um pé atrás com esse compromisso."',
+        opcoes: [
+          { texto: 'Perfeito, vamos montar a simulação com uma parcela que sobre confortável sem tocar na sua reserva — assim você entra tranquilo, sabendo exatamente no que está se comprometendo.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Fecha reforçando transparência total sobre o compromisso — a base de uma decisão consciente, não empurrada.' },
+          { texto: 'Tá bom, vou te passar uma simulação então.', qualidade: 'ok', pontos: 1,
+            feedback: 'Cumpre o combinado, mas perde a chance de reforçar a transparência que ele estava buscando.' },
+          { texto: 'Sem crise, é só uma parcelinha, no fim das contas nem vai fazer diferença no seu orçamento.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Minimiza uma preocupação legítima dele com um comentário vago que pode soar como desrespeito à cautela dele.' }
+        ]
+      }
+    ],
+    desfechos: {
+      otimo: 'Vinícius: "Gostei da transparência, vamos ver essa simulação então."',
+      ok: 'Vinícius: "Tá, manda aí, mas ainda vou pensar bem."',
+      fraco: 'Vinícius: "Ainda tô inseguro com esse compromisso, vou esperar mais um pouco."'
+    }
+  },
+
+  {
+    id: 'moto-objecao-desistencia', produto: 'moto', etapa: 'objecoes', dificuldade: 'medio',
+    titulo: '"Se eu desistir, recebo tudo de volta rapidinho?"',
+    resumo: 'Camila pergunta se pode desistir do consórcio quando quiser e recuperar o que já pagou, antes de se comprometer.',
+    objetivo: 'Explicar com honestidade como funciona a saída de um grupo, sem inventar regras favoráveis que não existem.',
+    turnos: [
+      {
+        clienteAbertura: 'Camila: "Antes de entrar, quero saber: se eu desistir no meio do caminho, eu recebo de volta tudo que paguei, rapidinho?"',
+        opcoes: [
+          { texto: 'Pergunta importante de fazer antes de entrar. Vou ser direta: desistir não é como cancelar uma assinatura — envolve as regras do grupo e da administradora, e não é uma devolução imediata do valor total. Prefiro te explicar isso com clareza agora do que você descobrir depois.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Responde com honestidade total antes da venda — evita criar uma falsa expectativa que geraria decepção grave lá na frente.' },
+          { texto: 'Dá pra desistir sim, mas tem um processo pra reaver o valor.', qualidade: 'ok', pontos: 1,
+            feedback: 'Não é falso, mas fica vago sobre o que realmente esse processo envolve — ela pode continuar com uma expectativa incompleta.' },
+          { texto: 'Sim, é tranquilo, você pede e recebe de volta rapidinho, sem complicação.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Isso não é verdade — passar essa expectativa pode gerar um problema sério de confiança se ela realmente desistir um dia.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Camila: "Ah, entendi, é bom saber isso antes. Como funciona então, mais ou menos?"',
+        clienteSeFracoAntes: 'Camila: "Então quer dizer que eu não tenho controle sobre meu próprio dinheiro?"',
+        opcoes: [
+          { texto: 'Você tem, sim — é o seu dinheiro, mas ele está dentro de uma lógica de grupo, regida pela Lei 11.795 e fiscalizada pelo Banco Central. Isso significa que a saída segue regras contratuais específicas da administradora, e não é algo que eu consigo detalhar de cabeça com precisão — mas dá pra te mostrar isso por escrito no contrato antes de você decidir.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Reconhece a preocupação legítima dela, ancora na regulação real e é honesto sobre não improvisar detalhes contratuais.' },
+          { texto: 'É porque o dinheiro fica dentro do grupo, não é uma conta individual sua.', qualidade: 'ok', pontos: 1,
+            feedback: 'Explica uma parte real do mecanismo, mas de um jeito que pode soar alarmante sem o contexto da regulação por trás.' },
+          { texto: 'Calma, isso quase nunca vira problema, a maioria nunca desiste mesmo.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Desvia da pergunta real dela com uma estatística inventada, em vez de explicar o mecanismo com honestidade.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Camila: "Tá, faz sentido, posso ver isso no contrato antes de decidir então?"',
+        clienteSeFracoAntes: 'Camila: "Tá, isso me deixou insegura, sinceramente."',
+        opcoes: [
+          { texto: 'Com certeza, você recebe o contrato completo por e-mail antes de qualquer compromisso, com acesso ao portal da administradora — assim você lê com calma essa parte específica antes de decidir qualquer coisa.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Reforça transparência total com o processo real — exatamente o que dá segurança de verdade, sem prometer nada além disso.' },
+          { texto: 'Sim, você recebe o contrato depois, mas essa parte específica eu não sei de cabeça.', qualidade: 'ok', pontos: 1,
+            feedback: 'Confirma que ela vai ver o contrato, mas admite não saber a resposta específica sem redirecionar pra uma fonte concreta agora.' },
+          { texto: 'Relaxa, isso é só um detalhe pequeno, o importante é você aproveitar as vantagens do consórcio.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Minimiza uma dúvida legítima e tenta desviar o foco — justo o oposto da transparência que constrói confiança.' }
+        ]
+      }
+    ],
+    desfechos: {
+      otimo: 'Camila: "Gostei da sua honestidade, quero ver o contrato antes de decidir mesmo."',
+      ok: 'Camila: "Tá, vou aguardar o contrato pra entender melhor."',
+      fraco: 'Camila: "Isso me deixou insegura, vou pensar bastante antes de continuar."'
+    }
+  },
+
+  {
+    id: 'agro-objecao-compra-a-vista', produto: 'agro', etapa: 'objecoes', dificuldade: 'medio',
+    titulo: '"A safra foi boa, por que não comprar à vista?"',
+    resumo: 'Dona Marlene, produtora rural, recebeu um bom valor pela safra e está pensando em comprar um trator usado à vista em vez de entrar num consórcio.',
+    objetivo: 'Reconhecer que comprar à vista tem vantagens reais, sem desqualificar, mostrando quando o consórcio dá acesso a um bem melhor sem comprometer todo o capital de giro.',
+    turnos: [
+      {
+        clienteAbertura: 'Dona Marlene: "A safra foi boa esse ano, dá pra eu comprar um trator usado à vista direto. Por que eu entraria num consórcio?"',
+        opcoes: [
+          { texto: 'Que bom que a safra foi boa! Só uma pergunta antes: esse trator usado já é o equipamento ideal pra sua produção, ou seria mais uma solução de momento pra não comprometer o capital da safra?', qualidade: 'ideal', pontos: 3,
+            feedback: 'Reconhece a conquista dela e faz a pergunta certa: entender se está abrindo mão do equipamento ideal só pra resolver rápido.' },
+          { texto: 'Com consórcio você consegue um trator novo sem gastar tudo de uma vez.', qualidade: 'ok', pontos: 1,
+            feedback: 'Direção certa, mas afirma antes de entender a real necessidade dela — pula a qualificação.' },
+          { texto: 'Trator usado dá muito problema, não vale a pena, é melhor sempre comprar novo.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Desqualifica a decisão dela sem conhecer o equipamento específico — presunçoso e sem embasamento técnico do vendedor.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Dona Marlene: "Na verdade eu queria mesmo um modelo mais novo, com mais potência pra área que expandi."',
+        clienteSeFracoAntes: 'Dona Marlene: "Olha, eu só quero resolver isso rápido com o dinheiro que já tenho em mãos."',
+        opcoes: [
+          { texto: 'Entendo a vontade de resolver rápido. Uma forma de pensar: usando parte do valor da safra como lance num consórcio pro modelo mais novo que você realmente precisa, você não compromete todo o capital de giro de uma vez — e ainda concorre à contemplação por sorteio ou lance.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Conecta o capital disponível como lance (sem comprometer o giro) com a necessidade real dela, sem prometer prazo.' },
+          { texto: 'Faz sentido, com consórcio você não usa todo o capital de giro de uma vez.', qualidade: 'ok', pontos: 1,
+            feedback: 'Correto, mas genérico — não conecta com o que ela especificamente precisa nem com o uso do valor da safra como lance.' },
+          { texto: 'Isso, é arriscado usar todo o dinheiro da safra numa compra só, guarda uma parte.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Dá conselho financeiro sobre como ela deve gerir o capital da propriedade — não é papel do vendedor opinar sobre isso.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Dona Marlene: "Interessante, não tinha pensado em usar como lance. Como fica isso pra mim ver os números?"',
+        clienteSeFracoAntes: 'Dona Marlene: "Tá, mas eu ainda acho que à vista resolve mais rápido, sem enrolação."',
+        opcoes: [
+          { texto: 'Faz sentido eu te mostrar uma simulação com esse valor como lance, pra você comparar lado a lado com a opção à vista do trator usado e decidir com números reais na mão — sem compromisso nenhum.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Propõe o próximo passo certo (simulação comparativa) sem forçar a decisão — deixa ela decidir com informação concreta.' },
+          { texto: 'Bom, vou te passar informações gerais sobre como funciona o lance.', qualidade: 'ok', pontos: 1,
+            feedback: 'Vago — ela já demonstrou interesse concreto no modelo mais novo e merece uma proposta mais específica.' },
+          { texto: 'Você tem razão, à vista realmente resolve mais rápido, mas o consórcio no fim compensa muito mais financeiramente.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Concorda que à vista é mais rápido mas ainda assim afirma vantagem financeira sem comparação real.' }
+        ]
+      }
+    ],
+    desfechos: {
+      otimo: 'Dona Marlene: "Show, manda essa simulação, quero ver os números com calma."',
+      ok: 'Dona Marlene: "Tá, me manda informação que eu vejo depois."',
+      fraco: 'Dona Marlene: "Acho que vou mesmo comprar o usado à vista, resolve mais rápido pra mim."'
+    }
+  },
+
+  {
+    id: 'imovel-objecao-compra-a-vista', produto: 'imovel', etapa: 'objecoes', dificuldade: 'medio',
+    titulo: '"Recebi uma herança, por que não comprar à vista?"',
+    resumo: 'Sr. Eduardo recebeu uma herança e está considerando comprar um imóvel menor à vista agora, em vez de entrar num consórcio para um imóvel melhor.',
+    objetivo: 'Reconhecer honestamente quando comprar à vista pode fazer sentido, sem desqualificar, e mostrar quando o consórcio amplia o poder de compra sem abrir mão de liquidez.',
+    turnos: [
+      {
+        clienteAbertura: 'Sr. Eduardo: "Recebi uma herança, dá pra comprar um apartamento menor à vista agora mesmo. Por que eu entraria num consórcio?"',
+        opcoes: [
+          { texto: 'Que ótimo poder considerar isso à vista. Só pra te ajudar a decidir com clareza: esse apartamento menor à vista já é o que você realmente quer, ou seria um meio-termo pra não usar consórcio?', qualidade: 'ideal', pontos: 3,
+            feedback: 'Não desqualifica comprar à vista, e faz a pergunta certa pra entender se ele está abrindo mão do imóvel que realmente quer só pra evitar o consórcio.' },
+          { texto: 'Com consórcio você consegue um imóvel melhor sem gastar tudo de uma vez.', qualidade: 'ok', pontos: 1,
+            feedback: 'Direção certa, mas afirma antes de entender o que ele realmente quer — pula a qualificação.' },
+          { texto: 'Comprar à vista não é uma boa ideia, você fica sem nenhuma reserva depois.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Desqualifica a decisão dele sem saber o contexto completo — presunçoso.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Sr. Eduardo: "Na verdade eu queria um apartamento maior, mas achei que à vista era o caminho mais rápido."',
+        clienteSeFracoAntes: 'Sr. Eduardo: "Olha, eu só quero resolver isso rápido e sem burocracia, é isso."',
+        opcoes: [
+          { texto: 'Entendo a vontade de resolver rápido. Uma forma de pensar: usando parte da herança como lance num consórcio pro apartamento maior que você quer, você mantém uma reserva livre e ainda concorre à contemplação por sorteio ou lance — sem os juros de um financiamento se precisasse complementar de outro jeito.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Conecta a herança como lance (uso inteligente do capital) com o objetivo real dele, sem prometer prazo e sem desqualificar a alternativa à vista.' },
+          { texto: 'Faz sentido, com consórcio você não usa todo o dinheiro de uma vez.', qualidade: 'ok', pontos: 1,
+            feedback: 'Correto, mas genérico — não conecta com o que ele especificamente quer nem com o uso da herança como lance.' },
+          { texto: 'Isso, é melhor não usar toda a herança de uma vez, guarda uma parte pra você mesmo.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Dá conselho financeiro pessoal sobre como ele deve usar a herança — não é papel do vendedor opinar sobre isso.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Sr. Eduardo: "Interessante, não tinha pensado em usar como lance. Como que funciona pra eu ver os números?"',
+        clienteSeFracoAntes: 'Sr. Eduardo: "Tá, mas eu ainda acho que à vista resolve mais rápido, sem enrolação."',
+        opcoes: [
+          { texto: 'Faz sentido eu te mostrar uma simulação com esse valor como lance, pra você comparar lado a lado com a opção à vista e decidir com números reais na mão — sem compromisso nenhum.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Propõe o próximo passo certo (simulação comparativa) sem forçar a decisão — deixa ele decidir com informação concreta.' },
+          { texto: 'Bom, vou te passar informações gerais sobre como funciona o lance.', qualidade: 'ok', pontos: 1,
+            feedback: 'Vago — ele já demonstrou interesse concreto e merece uma proposta de próximo passo mais específica.' },
+          { texto: 'Você tem razão, à vista realmente é mais rápido, mas o consórcio no fim compensa mais financeiramente.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Concorda que à vista é mais rápido mas ainda assim afirma vantagem financeira sem comparação real — inconsistente e sem base.' }
+        ]
+      }
+    ],
+    desfechos: {
+      otimo: 'Sr. Eduardo: "Show, manda essa simulação, quero ver os números com calma."',
+      ok: 'Sr. Eduardo: "Tá, me manda informação que eu vejo depois."',
+      fraco: 'Sr. Eduardo: "Acho que vou mesmo pelo caminho mais direto e comprar à vista."'
+    }
+  },
+
+  {
+    id: 'imovel-objecao-guardar-dinheiro', produto: 'imovel', etapa: 'objecoes', dificuldade: 'dificil',
+    titulo: '"Vou juntar dinheiro e comprar à vista daqui uns anos"',
+    resumo: 'Sr. Márcio prefere guardar dinheiro investindo mês a mês e comprar o imóvel à vista só quando juntar o valor total.',
+    objetivo: 'Não prometer rentabilidade nem comparar com investimento — mostrar a vantagem real: disciplina do compromisso e chance de contemplação antes de juntar tudo sozinho.',
+    turnos: [
+      {
+        clienteAbertura: 'Sr. Márcio: "Prefiro juntar dinheiro investindo e comprar o imóvel à vista daqui uns anos, quando tiver o valor todo. Assim não pago taxa de administração à toa."',
+        opcoes: [
+          { texto: 'Faz sentido como estratégia de guardar dinheiro. Posso te perguntar uma coisa importante: nesse tempo que você levaria pra juntar o valor todo, o preço desse imóvel tende a ficar parado, ou ele também sobe com o tempo?', qualidade: 'ideal', pontos: 3,
+            feedback: 'Traz uma reflexão honesta e real (valorização do imóvel ao longo do tempo) sem inventar percentual nenhum — deixa ele mesmo concluir o raciocínio.' },
+          { texto: 'O consórcio compensa mais porque o imóvel só vai ficar mais caro enquanto você guarda dinheiro.', qualidade: 'ok', pontos: 1,
+            feedback: 'A ideia é válida, mas afirma como fato garantido sem deixar ele refletir, e sem nenhum dado concreto por trás.' },
+          { texto: 'Investir hoje em dia não rende quase nada, é melhor nem tentar guardar, entra logo no consórcio.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Desqualifica investir sem embasamento nenhum — consultoria de investimento que não é papel do vendedor.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Sr. Márcio: "Verdade, imóvel sempre tende a subir de preço, isso é um ponto."',
+        clienteSeFracoAntes: 'Sr. Márcio: "Isso eu não sei te dizer, mas mesmo assim prefiro juntar sozinho."',
+        opcoes: [
+          { texto: 'Exatamente, esse é um ponto real pra considerar. E tem outra coisa: guardando por conta, muita gente acaba usando parte do dinheiro no meio do caminho pra outras coisas. No consórcio, o compromisso mensal é contratual, o que ajuda a manter a disciplina até o fim, sem os juros de um financiamento.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Soma dois argumentos reais e honestos (valorização do imóvel + disciplina contratual) sem inventar número de rentabilidade nenhum.' },
+          { texto: 'É, e além disso no consórcio você não corre o risco de gastar esse dinheiro com outra coisa.', qualidade: 'ok', pontos: 1,
+            feedback: 'Argumento válido mas colocado de forma solta, sem conectar com o que ele acabou de reconhecer sobre valorização.' },
+          { texto: 'Isso, e fora que investimento hoje não bate nem perto da valorização de imóvel, então sai perdendo guardando.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Faz uma comparação numérica implícita entre investimento e valorização imobiliária sem nenhum dado real — terreno de consultoria financeira.' }
+        ]
+      },
+      {
+        clienteAbertura: 'Sr. Márcio: "Faz sentido, nunca tinha pensado por esse lado. E se eu for contemplado rápido, adianta isso tudo?"',
+        clienteSeFracoAntes: 'Sr. Márcio: "Tá, mas e se eu nunca for sorteado, não saio perdendo tempo assim?"',
+        opcoes: [
+          { texto: 'Se você for contemplado por sorteio ou lance, sim, você tem acesso ao crédito antes de ter juntado tudo sozinho — mas não existe prazo garantido pra isso, ser sincero é importante. O que dá pra garantir é uma estratégia baseada em probabilidade, revisada a cada assembleia, em vez de só esperar parado.', qualidade: 'ideal', pontos: 3,
+            feedback: 'Responde com honestidade total, sem prometer prazo, e reforça que existe um trabalho ativo por trás — a resposta mais correta possível pra essa pergunta.' },
+          { texto: 'Isso, você pode ser contemplado rápido e sair na frente de quem tá juntando sozinho.', qualidade: 'ok', pontos: 1,
+            feedback: 'Sugere uma vantagem de tempo sem deixar claro que não há garantia nenhuma de prazo.' },
+          { texto: 'Com certeza, é bem raro alguém esperar muito tempo, geralmente sai rapidinho.', qualidade: 'fraca', pontos: -1,
+            feedback: 'Cria uma expectativa de prazo curto que ninguém pode garantir — exatamente o tipo de promessa proibida.' }
+        ]
+      }
+    ],
+    desfechos: {
+      otimo: 'Sr. Márcio: "Isso abriu minha cabeça, principalmente a parte da valorização. Vou repensar."',
+      ok: 'Sr. Márcio: "Tá, ainda vou pensar melhor sobre isso."',
+      fraco: 'Sr. Márcio: "Acho que ainda prefiro juntar sozinho, me sinto mais seguro assim."'
+    }
   }
 
 ];
