@@ -33,14 +33,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/nav.css">
-<link rel="stylesheet" href="/site.css">
+<link rel="stylesheet" href="nav.css">
+<link rel="stylesheet" href="site.css">
 <!-- a estética da página inicial (fita, vidro, títulos, simulador): gerada do index.html -->
-<link rel="stylesheet" href="/estetica.css">
-<script src="/taxas.js" defer></script>
-<script src="/nav.js" defer></script>
-<script src="/site.js" defer></script>
-<script src="/estetica.js" defer></script>
+<link rel="stylesheet" href="estetica.css">
+<script src="taxas.js" defer></script>
+<script src="nav.js" defer></script>
+<script src="site.js" defer></script>
+<script src="estetica.js" defer></script>
 <script type="application/ld+json">
 {
  "@context": "https://schema.org",
@@ -157,13 +157,13 @@
 <!-- #cabecalho (gerado por ferramentas/layout.js a partir de parciais/cabecalho.html — não edite aqui) -->
 <nav id="nav" aria-label="Principal">
   <div class="nav-inner">
-    <a class="nav-logo-link" href="/" aria-label="Astro Consórcios, ir para a página inicial">
+    <a class="nav-logo-link" href="index.html" aria-label="Astro Consórcios, ir para a página inicial">
       <span class="nav-logo">
         <span class="nav-cracha" aria-hidden="true">
           <svg class="nav-marca" viewBox="0 0 400 252" focusable="false"><use href="#marcaAstro"/></svg>
           <span class="nav-gira"></span>
         </span>
-        <img class="nav-palavra" src="/img/astro-palavra.webp" width="612" height="250" decoding="async" alt="Astro Consórcios">
+        <img class="nav-palavra" src="img/astro-palavra.webp" width="612" height="250" decoding="async" alt="Astro Consórcios">
       </span>
     </a>
     <ul class="nav-links">
@@ -172,22 +172,22 @@
           <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <ul class="nav-drop-menu">
-          <li><a href="/imoveis.html">Imóveis<small>Compra, construção, reforma e quitação</small></a></li>
-          <li><a href="/veiculos.html">Veículos<small>Carros, motos, náuticos e frotas</small></a></li>
-          <li><a href="/maquinario.html">Maquinário e Agro<small>Máquinas agrícolas e industriais</small></a></li>
-          <li><a href="/exterior.html">Brasileiros no exterior<small>Renda lá fora, patrimônio aqui</small></a></li>
+          <li><a href="imoveis.html">Imóveis<small>Compra, construção, reforma e quitação</small></a></li>
+          <li><a href="veiculos.html">Veículos<small>Carros, motos, náuticos e frotas</small></a></li>
+          <li><a href="maquinario.html">Maquinário e Agro<small>Máquinas agrícolas e industriais</small></a></li>
+          <li><a href="exterior.html">Brasileiros no exterior<small>Renda lá fora, patrimônio aqui</small></a></li>
         </ul>
       </li>
-      <li><a href="/videos.html" class="nav-videos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6L19 12z" fill="currentColor"/></svg>Vídeos</a></li>
+      <li><a href="videos.html" class="nav-videos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6L19 12z" fill="currentColor"/></svg>Vídeos</a></li>
       <li class="nav-drop">
         <button type="button" class="nav-drop-btn" aria-expanded="false">Aprenda
           <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <ul class="nav-drop-menu">
-          <li><a href="/como-funciona.html">Como funciona o consórcio<small>O método: grupo, lance e acompanhamento</small></a></li>
-          <li><a href="/lances.html">Sorteio, lance fixo e lance livre<small>As três formas de ser contemplado</small></a></li>
-          <li><a href="/duvidas.html">Perguntas frequentes<small>FGTS, entrada, reajuste, desistência</small></a></li>
-          <li><a href="/seguranca.html">Segurança e regulação<small>Banco Central, contrato e seus dados</small></a></li>
+          <li><a href="como-funciona.html">Como funciona o consórcio<small>O método: grupo, lance e acompanhamento</small></a></li>
+          <li><a href="lances.html">Sorteio, lance fixo e lance livre<small>As três formas de ser contemplado</small></a></li>
+          <li><a href="duvidas.html">Perguntas frequentes<small>FGTS, entrada, reajuste, desistência</small></a></li>
+          <li><a href="seguranca.html">Segurança e regulação<small>Banco Central, contrato e seus dados</small></a></li>
         </ul>
       </li>
       <li class="nav-drop">
@@ -195,9 +195,9 @@
           <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <ul class="nav-drop-menu">
-          <li><a href="/#calculadora">Custo total<small>Consórcio × financiamento, mês a mês</small></a></li>
-          <li><a href="/lances.html#simulador-lance">Estratégia de lance<small>Sorteio, fixo e livre com taxas reais</small></a></li>
-          <li><a href="/como-funciona.html#prazos">Prazo do plano<small>Quanto muda ao alongar a parcela</small></a></li>
+          <li><a href="index.html#calculadora">Custo total<small>Consórcio × financiamento, mês a mês</small></a></li>
+          <li><a href="lances.html#simulador-lance">Estratégia de lance<small>Sorteio, fixo e livre com taxas reais</small></a></li>
+          <li><a href="como-funciona.html#prazos">Prazo do plano<small>Quanto muda ao alongar a parcela</small></a></li>
         </ul>
       </li>
       <li class="nav-drop">
@@ -205,9 +205,9 @@
           <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <ul class="nav-drop-menu">
-          <li><a href="/sobre.html">Por que a Astro<small>O trabalho por trás da escolha</small></a></li>
-          <li><a href="/contato.html">Fale com a gente<small>WhatsApp, vídeo ou no escritório</small></a></li>
-          <li><a href="/agendar.html">Agendar reunião por vídeo<small>Escolha um horário, sem custo</small></a></li>
+          <li><a href="sobre.html">Por que a Astro<small>O trabalho por trás da escolha</small></a></li>
+          <li><a href="contato.html">Fale com a gente<small>WhatsApp, vídeo ou no escritório</small></a></li>
+          <li><a href="agendar.html">Agendar reunião por vídeo<small>Escolha um horário, sem custo</small></a></li>
         </ul>
       </li>
     </ul>
@@ -225,7 +225,7 @@
           <p class="busca-vazio" id="buscaVazio" hidden>Nada encontrado. Tenta outra palavra, ou fala com a gente pelo WhatsApp.</p>
         </div>
       </div>
-      <a class="nav-inicio" href="/" aria-label="Página inicial"><svg class="nav-inicio-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5M6.5 9.8V20h11V9.8" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="nav-inicio-txt">Página inicial</span></a>
+      <a class="nav-inicio" href="index.html" aria-label="Página inicial"><svg class="nav-inicio-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5M6.5 9.8V20h11V9.8" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="nav-inicio-txt">Página inicial</span></a>
       <button class="tema-btn" type="button" aria-label="Mudar para o modo claro" aria-pressed="false"><svg class="sol" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.9"/><path d="M12 2.6v2.2M12 19.2v2.2M21.4 12h-2.2M4.8 12H2.6M18.6 5.4l-1.6 1.6M7 17l-1.6 1.6M18.6 18.6L17 17M7 7 5.4 5.4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><svg class="lua" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.5 14.2A8.6 8.6 0 0 1 9.8 3.5a8.6 8.6 0 1 0 10.7 10.7Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg></button>
       <a href="#simular" class="nav-cta">Simular meu crédito</a>
     </div>
@@ -239,28 +239,28 @@
      bloco de contenção e prende qualquer position:fixed dentro dele -->
 <div class="nav-painel" id="navPainel" role="dialog" aria-label="Menu de navegação">
   <ul>
-    <li><a href="/">Página inicial</a></li>
+    <li><a href="index.html">Página inicial</a></li>
     <li class="nav-drop">
       <button type="button" class="nav-drop-btn" aria-expanded="false">Soluções
         <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <ul class="nav-drop-menu">
-        <li><a href="/imoveis.html">Imóveis</a></li>
-        <li><a href="/veiculos.html">Veículos</a></li>
-        <li><a href="/maquinario.html">Maquinário e Agro</a></li>
-        <li><a href="/exterior.html">Brasileiros no exterior</a></li>
+        <li><a href="imoveis.html">Imóveis</a></li>
+        <li><a href="veiculos.html">Veículos</a></li>
+        <li><a href="maquinario.html">Maquinário e Agro</a></li>
+        <li><a href="exterior.html">Brasileiros no exterior</a></li>
       </ul>
     </li>
-    <li><a href="/videos.html">Vídeos explicativos</a></li>
+    <li><a href="videos.html">Vídeos explicativos</a></li>
     <li class="nav-drop">
       <button type="button" class="nav-drop-btn" aria-expanded="false">Aprenda
         <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <ul class="nav-drop-menu">
-        <li><a href="/como-funciona.html">Como funciona o consórcio</a></li>
-        <li><a href="/lances.html">Sorteio, lance fixo e lance livre</a></li>
-        <li><a href="/duvidas.html">Perguntas frequentes</a></li>
-        <li><a href="/seguranca.html">Segurança e regulação</a></li>
+        <li><a href="como-funciona.html">Como funciona o consórcio</a></li>
+        <li><a href="lances.html">Sorteio, lance fixo e lance livre</a></li>
+        <li><a href="duvidas.html">Perguntas frequentes</a></li>
+        <li><a href="seguranca.html">Segurança e regulação</a></li>
       </ul>
     </li>
     <li class="nav-drop">
@@ -268,9 +268,9 @@
         <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <ul class="nav-drop-menu">
-        <li><a href="/#calculadora">Custo total</a></li>
-        <li><a href="/lances.html#simulador-lance">Estratégia de lance</a></li>
-        <li><a href="/como-funciona.html#prazos">Prazo do plano</a></li>
+        <li><a href="index.html#calculadora">Custo total</a></li>
+        <li><a href="lances.html#simulador-lance">Estratégia de lance</a></li>
+        <li><a href="como-funciona.html#prazos">Prazo do plano</a></li>
       </ul>
     </li>
     <li class="nav-drop">
@@ -278,9 +278,9 @@
         <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <ul class="nav-drop-menu">
-        <li><a href="/sobre.html">Por que a Astro</a></li>
-        <li><a href="/contato.html">Fale com a gente</a></li>
-        <li><a href="/agendar.html">Agendar reunião por vídeo</a></li>
+        <li><a href="sobre.html">Por que a Astro</a></li>
+        <li><a href="contato.html">Fale com a gente</a></li>
+        <li><a href="agendar.html">Agendar reunião por vídeo</a></li>
       </ul>
     </li>
   </ul>
@@ -290,7 +290,7 @@
 <!-- /cabecalho -->
 
 <main id="conteudo">
-<div class="migalhas container" role="navigation" aria-label="Você está em"><ol><li><a href="/">Início</a></li><li aria-current="page">Simular meu crédito</li></ol></div><section class="heroi" style="padding-bottom:0">
+<div class="migalhas container" role="navigation" aria-label="Você está em"><ol><li><a href="index.html">Início</a></li><li aria-current="page">Simular meu crédito</li></ol></div><section class="heroi" style="padding-bottom:0">
   <div class="container secao-cab" style="margin-bottom:0">
     <p class="eyebrow">Simulação personalizada</p>
     <h1>Veja a estratégia <em>para o seu caso.</em></h1>
@@ -535,7 +535,7 @@
     <div class="lf-isca" aria-hidden="true"><label>Não preencha<input type="text" name="empresa_site" tabindex="-1" autocomplete="off"></label></div>
     <p class="lf-erro" role="alert" hidden></p>
     <button class="btn btn-primario btn-largo" type="submit">Receber minha simulação</button>
-    <p class="lf-nota">Gratuito e sem compromisso · sem consulta ao SPC/Serasa · resposta de uma pessoa, não de robô.<br>Ao enviar, você concorda com a <a href="/privacidade.html">Política de Privacidade</a>.</p>
+    <p class="lf-nota">Gratuito e sem compromisso · sem consulta ao SPC/Serasa · resposta de uma pessoa, não de robô.<br>Ao enviar, você concorda com a <a href="privacidade.html">Política de Privacidade</a>.</p>
   </form>
   <div class="lead-ok" hidden>
     <div class="lead-ok-marca" aria-hidden="true">✓</div>
@@ -543,7 +543,7 @@
     <p>Abrimos o WhatsApp com a sua simulação pronta — é só tocar em <strong>enviar</strong>. Um especialista responde o mais breve possível, em horário comercial.</p>
     <div class="acoes">
       <a class="btn btn-wa lead-ok-wa" href="https://wa.me/554599999999" target="_blank" rel="noopener noreferrer">Abrir o WhatsApp de novo</a>
-      <a class="btn btn-fantasma" href="/agendar.html">Prefiro reunião por vídeo</a>
+      <a class="btn btn-fantasma" href="agendar.html">Prefiro reunião por vídeo</a>
     </div>
   </div>
   <noscript><p class="lf-nota" style="margin-top:14px">Sem JavaScript o formulário não envia. <a href="https://wa.me/554599999999">Fale com a gente pelo WhatsApp</a>.</p></noscript>
@@ -554,7 +554,7 @@
   <div class="container estreito">
     <div class="secao-cab"><p class="eyebrow">Perguntas frequentes</p><h2>Antes de enviar</h2></div>
     <div class="faq"><details class="vidro"><summary>Simular tem custo ou compromisso?</summary><div><p>Nenhum. A simulação é gratuita, sem compromisso e sem consulta ao SPC/Serasa. A análise de crédito só acontece na administradora, e só se você decidir seguir.</p></div></details><details class="vidro"><summary>O que eu recebo?</summary><div><p>A simulação por escrito — crédito, parcela, prazo e taxa de administração — com o grupo sugerido pelo histórico de contemplação e a estratégia de lance para o seu objetivo.</p></div></details><details class="vidro"><summary>Quem responde?</summary><div><p>Uma pessoa da Astro, pelo WhatsApp, o mais breve possível em horário comercial. Se preferir, marque uma reunião por vídeo.</p></div></details><details class="vidro"><summary>A Astro cobra alguma taxa pelo serviço?</summary><div><p>Não há taxa de consultoria à parte. A remuneração da Astro já está na distribuição oficial das administradoras parceiras, sem custo adicionado ao seu contrato.</p></div></details></div>
-    <p class="nota-rodape">Prefere entender primeiro? <a href="/videos.html">Veja os vídeos</a> · <a href="/duvidas.html">Ver todas as perguntas</a></p>
+    <p class="nota-rodape">Prefere entender primeiro? <a href="videos.html">Veja os vídeos</a> · <a href="duvidas.html">Ver todas as perguntas</a></p>
   </div>
 </section>
 </main>
@@ -567,9 +567,9 @@
 <div class="rodape" role="contentinfo">
   <div class="rodape-inner">
     <div class="rodape-marca">
-      <a href="/" class="rodape-logo" aria-label="Astro Consórcios, página inicial">
-        <img src="/img/marca-estatica-prata.webp" width="176" height="110" alt="" loading="lazy" decoding="async">
-        <img src="/img/astro-palavra.webp" width="612" height="250" alt="Astro Consórcios" loading="lazy" decoding="async">
+      <a href="index.html" class="rodape-logo" aria-label="Astro Consórcios, página inicial">
+        <img src="img/marca-estatica-prata.webp" width="176" height="110" alt="" loading="lazy" decoding="async">
+        <img src="img/astro-palavra.webp" width="612" height="250" alt="Astro Consórcios" loading="lazy" decoding="async">
       </a>
       <p class="rodape-tese">Consultoria e representação estratégica de consórcios. Análise de grupo, estratégia de lance e acompanhamento até a contemplação.</p>
       <div class="rodape-acoes">
@@ -580,37 +580,37 @@
     <div class="rodape-col">
       <p class="rodape-tit">Soluções</p>
       <ul>
-        <li><a href="/imoveis.html">Consórcio de imóveis</a></li>
-        <li><a href="/veiculos.html">Consórcio de veículos</a></li>
-        <li><a href="/maquinario.html">Maquinário e agro</a></li>
-        <li><a href="/exterior.html">Brasileiros no exterior</a></li>
+        <li><a href="imoveis.html">Consórcio de imóveis</a></li>
+        <li><a href="veiculos.html">Consórcio de veículos</a></li>
+        <li><a href="maquinario.html">Maquinário e agro</a></li>
+        <li><a href="exterior.html">Brasileiros no exterior</a></li>
       </ul>
     </div>
     <div class="rodape-col">
       <p class="rodape-tit">Aprenda</p>
       <ul>
-        <li><a href="/videos.html">Vídeos explicativos</a></li>
-        <li><a href="/como-funciona.html">Como funciona</a></li>
-        <li><a href="/lances.html">Sorteio e lances</a></li>
-        <li><a href="/duvidas.html">Perguntas frequentes</a></li>
+        <li><a href="videos.html">Vídeos explicativos</a></li>
+        <li><a href="como-funciona.html">Como funciona</a></li>
+        <li><a href="lances.html">Sorteio e lances</a></li>
+        <li><a href="duvidas.html">Perguntas frequentes</a></li>
       </ul>
     </div>
     <div class="rodape-col">
       <p class="rodape-tit">Simuladores</p>
       <ul>
-        <li><a href="/#calculadora">Custo total</a></li>
-        <li><a href="/lances.html#simulador-lance">Estratégia de lance</a></li>
-        <li><a href="/como-funciona.html#prazos">Prazo do plano</a></li>
-        <li><a href="/simular.html" aria-current="page">Simulação personalizada</a></li>
+        <li><a href="index.html#calculadora">Custo total</a></li>
+        <li><a href="lances.html#simulador-lance">Estratégia de lance</a></li>
+        <li><a href="como-funciona.html#prazos">Prazo do plano</a></li>
+        <li><a href="simular.html" aria-current="page">Simulação personalizada</a></li>
       </ul>
     </div>
     <div class="rodape-col">
       <p class="rodape-tit">A Astro</p>
       <ul>
-        <li><a href="/sobre.html">Por que a Astro</a></li>
-        <li><a href="/seguranca.html">Segurança e regulação</a></li>
-        <li><a href="/contato.html">Fale com a gente</a></li>
-        <li><a href="/agendar.html">Agendar reunião</a></li>
+        <li><a href="sobre.html">Por que a Astro</a></li>
+        <li><a href="seguranca.html">Segurança e regulação</a></li>
+        <li><a href="contato.html">Fale com a gente</a></li>
+        <li><a href="agendar.html">Agendar reunião</a></li>
       </ul>
     </div>
   </div>
@@ -620,7 +620,7 @@
     <li>Atendimento em todo o Brasil e para quem mora fora</li>
   </ul>
   <div class="rodape-legal">
-    <p>&copy; 2026 Astro Consórcios · Rua Rio de Janeiro, 1823 — Centro, Cascavel/PR · Segunda a sexta, 8h30 às 18h · <a href="/privacidade.html">Política de Privacidade</a></p>
+    <p>&copy; 2026 Astro Consórcios · Rua Rio de Janeiro, 1823 — Centro, Cascavel/PR · Segunda a sexta, 8h30 às 18h · <a href="privacidade.html">Política de Privacidade</a></p>
     <p>A Astro atua na intermediação, representação e consultoria estratégica de consórcios. Operações reguladas pela Lei nº 11.795/2008. A contemplação ocorre por sorteio ou por lance, conforme as regras de cada grupo — nenhum prazo de contemplação é garantido. O contrato de adesão é celebrado entre o consorciado e a administradora, fiscalizada pelo Banco Central do Brasil.</p>
   </div>
 </div>
@@ -630,7 +630,7 @@
 <div class="consent" id="consent" role="region" aria-label="Aviso de cookies" hidden>
   <p class="consent-txt">Usamos cookies para medir como o site é usado e, quando houver,
     mensurar nossos anúncios. Você pode recusar sem perder nada do site.
-    <a href="/privacidade.html">Como tratamos seus dados</a>.</p>
+    <a href="privacidade.html">Como tratamos seus dados</a>.</p>
   <div class="consent-acoes">
     <button class="consent-btn consent-nao" type="button" id="consentNao">Recusar</button>
     <button class="consent-btn consent-sim" type="button" id="consentSim">Aceitar</button>

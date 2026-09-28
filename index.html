@@ -124,7 +124,7 @@ fbq('track', 'PageView');
      resto do nav já está na folha própria abaixo, que carrega depois e por
      isso continua valendo onde as duas se sobrepõem (--nav-h, --larg
      responsivos inclusive). Antes desse <style>, de propósito. -->
-<link rel="stylesheet" href="/nav.css">
+<link rel="stylesheet" href="nav.css">
 <style>
 /* ==========================================================================
    ASTRO CONSÓRCIOS — sistema visual
@@ -6721,8 +6721,8 @@ nav{z-index:300!important}
 .modal-card .modal-link:hover{ text-decoration:underline; text-underline-offset:4px }
 :root[data-tema="claro"] .modal-card .modal-link{ color:#0E4F9E }
 </style>
-<link rel="stylesheet" href="/mobile-compat.css">
-<script src="/nav.js" defer></script>
+<link rel="stylesheet" href="mobile-compat.css">
+<script src="nav.js" defer></script>
 </head>
 <body>
 
@@ -6965,13 +6965,13 @@ nav{z-index:300!important}
 <!-- #cabecalho (gerado por ferramentas/layout.js a partir de parciais/cabecalho.html — não edite aqui) -->
 <nav id="nav" aria-label="Principal">
   <div class="nav-inner">
-    <a class="nav-logo-link" href="/" aria-current="page" aria-label="Astro Consórcios, ir para a página inicial">
+    <a class="nav-logo-link" href="index.html" aria-current="page" aria-label="Astro Consórcios, ir para a página inicial">
       <span class="nav-logo">
         <span class="nav-cracha" aria-hidden="true">
           <svg class="nav-marca" viewBox="0 0 400 252" focusable="false"><use href="#marcaAstro"/></svg>
           <span class="nav-gira"></span>
         </span>
-        <img class="nav-palavra" src="/img/astro-palavra.webp" width="612" height="250" decoding="async" alt="Astro Consórcios">
+        <img class="nav-palavra" src="img/astro-palavra.webp" width="612" height="250" decoding="async" alt="Astro Consórcios">
       </span>
     </a>
     <ul class="nav-links">
@@ -6980,22 +6980,22 @@ nav{z-index:300!important}
           <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <ul class="nav-drop-menu">
-          <li><a href="/imoveis.html">Imóveis<small>Compra, construção, reforma e quitação</small></a></li>
-          <li><a href="/veiculos.html">Veículos<small>Carros, motos, náuticos e frotas</small></a></li>
-          <li><a href="/maquinario.html">Maquinário e Agro<small>Máquinas agrícolas e industriais</small></a></li>
-          <li><a href="/exterior.html">Brasileiros no exterior<small>Renda lá fora, patrimônio aqui</small></a></li>
+          <li><a href="imoveis.html">Imóveis<small>Compra, construção, reforma e quitação</small></a></li>
+          <li><a href="veiculos.html">Veículos<small>Carros, motos, náuticos e frotas</small></a></li>
+          <li><a href="maquinario.html">Maquinário e Agro<small>Máquinas agrícolas e industriais</small></a></li>
+          <li><a href="exterior.html">Brasileiros no exterior<small>Renda lá fora, patrimônio aqui</small></a></li>
         </ul>
       </li>
-      <li><a href="/videos.html" class="nav-videos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6L19 12z" fill="currentColor"/></svg>Vídeos</a></li>
+      <li><a href="videos.html" class="nav-videos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6L19 12z" fill="currentColor"/></svg>Vídeos</a></li>
       <li class="nav-drop">
         <button type="button" class="nav-drop-btn" aria-expanded="false">Aprenda
           <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <ul class="nav-drop-menu">
-          <li><a href="/como-funciona.html">Como funciona o consórcio<small>O método: grupo, lance e acompanhamento</small></a></li>
-          <li><a href="/lances.html">Sorteio, lance fixo e lance livre<small>As três formas de ser contemplado</small></a></li>
-          <li><a href="/duvidas.html">Perguntas frequentes<small>FGTS, entrada, reajuste, desistência</small></a></li>
-          <li><a href="/seguranca.html">Segurança e regulação<small>Banco Central, contrato e seus dados</small></a></li>
+          <li><a href="como-funciona.html">Como funciona o consórcio<small>O método: grupo, lance e acompanhamento</small></a></li>
+          <li><a href="lances.html">Sorteio, lance fixo e lance livre<small>As três formas de ser contemplado</small></a></li>
+          <li><a href="duvidas.html">Perguntas frequentes<small>FGTS, entrada, reajuste, desistência</small></a></li>
+          <li><a href="seguranca.html">Segurança e regulação<small>Banco Central, contrato e seus dados</small></a></li>
         </ul>
       </li>
       <li class="nav-drop">
@@ -7003,9 +7003,9 @@ nav{z-index:300!important}
           <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <ul class="nav-drop-menu">
-          <li><a href="/#calculadora">Custo total<small>Consórcio × financiamento, mês a mês</small></a></li>
-          <li><a href="/lances.html#simulador-lance">Estratégia de lance<small>Sorteio, fixo e livre com taxas reais</small></a></li>
-          <li><a href="/como-funciona.html#prazos">Prazo do plano<small>Quanto muda ao alongar a parcela</small></a></li>
+          <li><a href="#calculadora">Custo total<small>Consórcio × financiamento, mês a mês</small></a></li>
+          <li><a href="lances.html#simulador-lance">Estratégia de lance<small>Sorteio, fixo e livre com taxas reais</small></a></li>
+          <li><a href="como-funciona.html#prazos">Prazo do plano<small>Quanto muda ao alongar a parcela</small></a></li>
         </ul>
       </li>
       <li class="nav-drop">
@@ -7013,9 +7013,9 @@ nav{z-index:300!important}
           <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <ul class="nav-drop-menu">
-          <li><a href="/sobre.html">Por que a Astro<small>O trabalho por trás da escolha</small></a></li>
-          <li><a href="/contato.html">Fale com a gente<small>WhatsApp, vídeo ou no escritório</small></a></li>
-          <li><a href="/agendar.html">Agendar reunião por vídeo<small>Escolha um horário, sem custo</small></a></li>
+          <li><a href="sobre.html">Por que a Astro<small>O trabalho por trás da escolha</small></a></li>
+          <li><a href="contato.html">Fale com a gente<small>WhatsApp, vídeo ou no escritório</small></a></li>
+          <li><a href="agendar.html">Agendar reunião por vídeo<small>Escolha um horário, sem custo</small></a></li>
         </ul>
       </li>
     </ul>
@@ -7046,28 +7046,28 @@ nav{z-index:300!important}
      bloco de contenção e prende qualquer position:fixed dentro dele -->
 <div class="nav-painel" id="navPainel" role="dialog" aria-label="Menu de navegação">
   <ul>
-    <li><a href="/" aria-current="page">Página inicial</a></li>
+    <li><a href="index.html" aria-current="page">Página inicial</a></li>
     <li class="nav-drop">
       <button type="button" class="nav-drop-btn" aria-expanded="false">Soluções
         <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <ul class="nav-drop-menu">
-        <li><a href="/imoveis.html">Imóveis</a></li>
-        <li><a href="/veiculos.html">Veículos</a></li>
-        <li><a href="/maquinario.html">Maquinário e Agro</a></li>
-        <li><a href="/exterior.html">Brasileiros no exterior</a></li>
+        <li><a href="imoveis.html">Imóveis</a></li>
+        <li><a href="veiculos.html">Veículos</a></li>
+        <li><a href="maquinario.html">Maquinário e Agro</a></li>
+        <li><a href="exterior.html">Brasileiros no exterior</a></li>
       </ul>
     </li>
-    <li><a href="/videos.html">Vídeos explicativos</a></li>
+    <li><a href="videos.html">Vídeos explicativos</a></li>
     <li class="nav-drop">
       <button type="button" class="nav-drop-btn" aria-expanded="false">Aprenda
         <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <ul class="nav-drop-menu">
-        <li><a href="/como-funciona.html">Como funciona o consórcio</a></li>
-        <li><a href="/lances.html">Sorteio, lance fixo e lance livre</a></li>
-        <li><a href="/duvidas.html">Perguntas frequentes</a></li>
-        <li><a href="/seguranca.html">Segurança e regulação</a></li>
+        <li><a href="como-funciona.html">Como funciona o consórcio</a></li>
+        <li><a href="lances.html">Sorteio, lance fixo e lance livre</a></li>
+        <li><a href="duvidas.html">Perguntas frequentes</a></li>
+        <li><a href="seguranca.html">Segurança e regulação</a></li>
       </ul>
     </li>
     <li class="nav-drop">
@@ -7075,9 +7075,9 @@ nav{z-index:300!important}
         <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <ul class="nav-drop-menu">
-        <li><a href="/#calculadora">Custo total</a></li>
-        <li><a href="/lances.html#simulador-lance">Estratégia de lance</a></li>
-        <li><a href="/como-funciona.html#prazos">Prazo do plano</a></li>
+        <li><a href="#calculadora">Custo total</a></li>
+        <li><a href="lances.html#simulador-lance">Estratégia de lance</a></li>
+        <li><a href="como-funciona.html#prazos">Prazo do plano</a></li>
       </ul>
     </li>
     <li class="nav-drop">
@@ -7085,9 +7085,9 @@ nav{z-index:300!important}
         <svg class="nav-drop-caret" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <ul class="nav-drop-menu">
-        <li><a href="/sobre.html">Por que a Astro</a></li>
-        <li><a href="/contato.html">Fale com a gente</a></li>
-        <li><a href="/agendar.html">Agendar reunião por vídeo</a></li>
+        <li><a href="sobre.html">Por que a Astro</a></li>
+        <li><a href="contato.html">Fale com a gente</a></li>
+        <li><a href="agendar.html">Agendar reunião por vídeo</a></li>
       </ul>
     </li>
   </ul>
@@ -7167,7 +7167,7 @@ nav{z-index:300!important}
                   </span>
                 </button>
                 <span class="item-legenda">Por que vale a pena fechar com a Astro</span>
-                <a class="item-cta" href="/sobre.html">Diferencial <svg class="seta" width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+                <a class="item-cta" href="sobre.html">Diferencial <svg class="seta" width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
               </div>
               <div class="video-card vidro carrossel-item" id="videoCardAtendimento">
                 <button type="button" class="video-capa" id="videoPlayAtendimento" aria-label="Assistir: como falar com a gente, do seu jeito">
@@ -7402,7 +7402,7 @@ nav{z-index:300!important}
         <strong class="lance-callout-tit">Quer ser contemplado antes do fim do prazo?</strong>
         <p>Sorteio, lance fixo ou lance livre — cada forma muda sua parcela e sua chance de contemplar. Simule as três com as taxas reais.</p>
       </div>
-      <a href="/lances.html" class="btn btn-primario btn-largo lance-callout-btn">Ver as 3 estratégias e simular</a>
+      <a href="lances.html" class="btn btn-primario btn-largo lance-callout-btn">Ver as 3 estratégias e simular</a>
     </div>
   </div>
 </section>
@@ -7597,7 +7597,7 @@ nav{z-index:300!important}
                   <p class="menor">Não abriu? <a class="inline" href="https://wa.me/554599999999">toque aqui</a>.</p>
                   <p class="menor" style="margin-top:18px">Prefere conversar com calma? A reunião por vídeo leva
                     cerca de uma hora e também não custa nada.</p>
-                  <a href="/agendar.html" class="btn btn-primario btn-largo"
+                  <a href="agendar.html" class="btn btn-primario btn-largo"
                      onclick="rastrear('InitiateCheckout', { origem:'pos-simulador-agenda' })">Escolher um horário</a>
                   <a href="#estruturas" class="btn btn-fantasma btn-largo" style="margin-top:10px">Ver onde aplicamos o planejamento</a>
                 </div>
@@ -7690,7 +7690,7 @@ nav{z-index:300!important}
           <svg viewBox="0 0 24 24"><path d="M8 5.2v13.6L19 12z" fill="currentColor"/></svg>
         </span>
       </button>
-      <p class="video-alt">Explicação de 36 segundos, com legendas. <a href="/videos.html">Ver todos os vídeos</a></p>
+      <p class="video-alt">Explicação de 36 segundos, com legendas. <a href="videos.html">Ver todos os vídeos</a></p>
     </div>
 
     <div class="verdade-grid stag">
@@ -7761,7 +7761,7 @@ nav{z-index:300!important}
           <li>Áreas comerciais e galpões</li>
           <li>Quitação de financiamento bancário</li>
         </ul>
-          <a class="modal-link" href="/imoveis.html">Ver consórcio de imóveis <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a class="modal-link" href="imoveis.html">Ver consórcio de imóveis <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         <div class="modal-marca" aria-hidden="true">
           <svg class="modal-marca-simbolo" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.4L18.29 14.99L14.21 15.57L12 10.8L9.48 16.25L4.74 16.92ZM3.88 18.65L8.69 17.96L7 21.6L2.4 21.6ZM14.9 17.07L19.04 16.48L21.6 21.6L17 21.6Z"/></svg>
           <span class="modal-marca-casa">Astro</span>
@@ -7781,7 +7781,7 @@ nav{z-index:300!important}
           <li>Motos, náuticos e frotas corporativas</li>
           <li>Uso do valor da troca como parte do lance</li>
         </ul>
-          <a class="modal-link" href="/veiculos.html">Ver consórcio de veículos <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a class="modal-link" href="veiculos.html">Ver consórcio de veículos <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         <div class="modal-marca" aria-hidden="true">
           <svg class="modal-marca-simbolo" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.4L18.29 14.99L14.21 15.57L12 10.8L9.48 16.25L4.74 16.92ZM3.88 18.65L8.69 17.96L7 21.6L2.4 21.6ZM14.9 17.07L19.04 16.48L21.6 21.6L17 21.6Z"/></svg>
           <span class="modal-marca-casa">Astro</span>
@@ -7800,7 +7800,7 @@ nav{z-index:300!important}
           <li>Equipamentos e injetoras industriais</li>
           <li>Expansão tecnológica e atualização de ativos</li>
         </ul>
-          <a class="modal-link" href="/maquinario.html">Ver maquinário e agro <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a class="modal-link" href="maquinario.html">Ver maquinário e agro <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         <div class="modal-marca" aria-hidden="true">
           <svg class="modal-marca-simbolo" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.4L18.29 14.99L14.21 15.57L12 10.8L9.48 16.25L4.74 16.92ZM3.88 18.65L8.69 17.96L7 21.6L2.4 21.6ZM14.9 17.07L19.04 16.48L21.6 21.6L17 21.6Z"/></svg>
           <span class="modal-marca-casa">Astro</span>
@@ -8035,7 +8035,7 @@ nav{z-index:300!important}
         <h3>Reunião por vídeo</h3>
         <p>Para quem prefere conversar com calma. <strong>Cerca de uma hora</strong>, você escolhe o horário
            e recebe o link da sala na hora. Atendemos o Brasil inteiro e quem mora fora.</p>
-        <a class="btn btn-fantasma" style="margin-top:22px" href="/agendar.html">
+        <a class="btn btn-fantasma" style="margin-top:22px" href="agendar.html">
           Escolher um horário
           <svg class="seta" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
@@ -8055,7 +8055,7 @@ nav{z-index:300!important}
           <p><strong>R. Rio de Janeiro, 1823</strong><br>Centro, Cascavel, Paraná</p>
           <p>Atendimento presencial com hora marcada, para você não pegar a
              gente no meio de uma reunião.</p>
-          <a class="btn btn-fantasma" style="margin-top:22px" href="/agendar.html">
+          <a class="btn btn-fantasma" style="margin-top:22px" href="agendar.html">
             Combinar um horário
             <svg class="seta" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
@@ -8077,7 +8077,7 @@ nav{z-index:300!important}
       <h2 class="section-title">Três leituras que <span>valem o seu tempo</span></h2>
     </div>
     <div class="paginas-grid stag">
-      <a class="pagina-card" href="/como-funciona.html">
+      <a class="pagina-card" href="como-funciona.html">
         <div class="pagina-tag">Como funciona</div>
         <h3>O método por trás da estratégia</h3>
         <p>Como escolhemos o grupo, como o prazo muda o custo e o passo a passo para fechar o contrato com segurança.</p>
@@ -8085,7 +8085,7 @@ nav{z-index:300!important}
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>
       </a>
-      <a class="pagina-card" href="/exterior.html">
+      <a class="pagina-card" href="exterior.html">
         <div class="pagina-tag">Brasileiros no exterior</div>
         <h3>Ganha em outra moeda?</h3>
         <p>Quanto a parcela pesa em dólar ou euro, como contratar sem estar no Brasil e o que a administradora aceita como renda.</p>
@@ -8093,7 +8093,7 @@ nav{z-index:300!important}
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>
       </a>
-      <a class="pagina-card" href="/seguranca.html">
+      <a class="pagina-card" href="seguranca.html">
         <div class="pagina-tag">Segurança e privacidade</div>
         <h3>Pra onde vai o seu dinheiro</h3>
         <p>A base legal do consórcio, o papel do Banco Central e onde a Astro entra (e onde não entra) nesse processo.</p>
@@ -8195,9 +8195,9 @@ nav{z-index:300!important}
 <div class="rodape" role="contentinfo">
   <div class="rodape-inner">
     <div class="rodape-marca">
-      <a href="/" aria-current="page" class="rodape-logo" aria-label="Astro Consórcios, página inicial">
-        <img src="/img/marca-estatica-prata.webp" width="176" height="110" alt="" loading="lazy" decoding="async">
-        <img src="/img/astro-palavra.webp" width="612" height="250" alt="Astro Consórcios" loading="lazy" decoding="async">
+      <a href="index.html" aria-current="page" class="rodape-logo" aria-label="Astro Consórcios, página inicial">
+        <img src="img/marca-estatica-prata.webp" width="176" height="110" alt="" loading="lazy" decoding="async">
+        <img src="img/astro-palavra.webp" width="612" height="250" alt="Astro Consórcios" loading="lazy" decoding="async">
       </a>
       <p class="rodape-tese">Consultoria e representação estratégica de consórcios. Análise de grupo, estratégia de lance e acompanhamento até a contemplação.</p>
       <div class="rodape-acoes">
@@ -8208,37 +8208,37 @@ nav{z-index:300!important}
     <div class="rodape-col">
       <p class="rodape-tit">Soluções</p>
       <ul>
-        <li><a href="/imoveis.html">Consórcio de imóveis</a></li>
-        <li><a href="/veiculos.html">Consórcio de veículos</a></li>
-        <li><a href="/maquinario.html">Maquinário e agro</a></li>
-        <li><a href="/exterior.html">Brasileiros no exterior</a></li>
+        <li><a href="imoveis.html">Consórcio de imóveis</a></li>
+        <li><a href="veiculos.html">Consórcio de veículos</a></li>
+        <li><a href="maquinario.html">Maquinário e agro</a></li>
+        <li><a href="exterior.html">Brasileiros no exterior</a></li>
       </ul>
     </div>
     <div class="rodape-col">
       <p class="rodape-tit">Aprenda</p>
       <ul>
-        <li><a href="/videos.html">Vídeos explicativos</a></li>
-        <li><a href="/como-funciona.html">Como funciona</a></li>
-        <li><a href="/lances.html">Sorteio e lances</a></li>
-        <li><a href="/duvidas.html">Perguntas frequentes</a></li>
+        <li><a href="videos.html">Vídeos explicativos</a></li>
+        <li><a href="como-funciona.html">Como funciona</a></li>
+        <li><a href="lances.html">Sorteio e lances</a></li>
+        <li><a href="duvidas.html">Perguntas frequentes</a></li>
       </ul>
     </div>
     <div class="rodape-col">
       <p class="rodape-tit">Simuladores</p>
       <ul>
-        <li><a href="/#calculadora">Custo total</a></li>
-        <li><a href="/lances.html#simulador-lance">Estratégia de lance</a></li>
-        <li><a href="/como-funciona.html#prazos">Prazo do plano</a></li>
-        <li><a href="/simular.html">Simulação personalizada</a></li>
+        <li><a href="#calculadora">Custo total</a></li>
+        <li><a href="lances.html#simulador-lance">Estratégia de lance</a></li>
+        <li><a href="como-funciona.html#prazos">Prazo do plano</a></li>
+        <li><a href="simular.html">Simulação personalizada</a></li>
       </ul>
     </div>
     <div class="rodape-col">
       <p class="rodape-tit">A Astro</p>
       <ul>
-        <li><a href="/sobre.html">Por que a Astro</a></li>
-        <li><a href="/seguranca.html">Segurança e regulação</a></li>
-        <li><a href="/contato.html">Fale com a gente</a></li>
-        <li><a href="/agendar.html">Agendar reunião</a></li>
+        <li><a href="sobre.html">Por que a Astro</a></li>
+        <li><a href="seguranca.html">Segurança e regulação</a></li>
+        <li><a href="contato.html">Fale com a gente</a></li>
+        <li><a href="agendar.html">Agendar reunião</a></li>
       </ul>
     </div>
   </div>
@@ -8248,7 +8248,7 @@ nav{z-index:300!important}
     <li>Atendimento em todo o Brasil e para quem mora fora</li>
   </ul>
   <div class="rodape-legal">
-    <p>&copy; 2026 Astro Consórcios · Rua Rio de Janeiro, 1823 — Centro, Cascavel/PR · Segunda a sexta, 8h30 às 18h · <a href="/privacidade.html">Política de Privacidade</a></p>
+    <p>&copy; 2026 Astro Consórcios · Rua Rio de Janeiro, 1823 — Centro, Cascavel/PR · Segunda a sexta, 8h30 às 18h · <a href="privacidade.html">Política de Privacidade</a></p>
     <p>A Astro atua na intermediação, representação e consultoria estratégica de consórcios. Operações reguladas pela Lei nº 11.795/2008. A contemplação ocorre por sorteio ou por lance, conforme as regras de cada grupo — nenhum prazo de contemplação é garantido. O contrato de adesão é celebrado entre o consorciado e a administradora, fiscalizada pelo Banco Central do Brasil.</p>
   </div>
 </div>
@@ -8260,7 +8260,7 @@ nav{z-index:300!important}
 <!-- TAXAS DE REFERÊNCIA: fonte única do site, em /taxas.js (a mesma lida
      pelas páginas de imóvel, veículo, maquinário e lances). Sem defer: os
      scripts abaixo leem window.AstroTaxas logo que rodam. -->
-<script src="/taxas.js"></script>
+<script src="taxas.js"></script>
 <script>
 /* ==========================================================================
    1. RASTREAMENTO E FORMULÁRIO
@@ -8357,7 +8357,7 @@ function enviarWhats() {
      resposta (keepalive): quem desiste dentro do WhatsApp não some mais.
      Sem servidor PHP, o fetch falha calado e o WhatsApp segue igual. */
   try {
-    fetch('/api/leads.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
+    fetch('api/leads.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
       body: JSON.stringify({ nome: nome, whatsapp: fone, modalidade: modal, valor: valor, prazo: prazo, lance: lance,
         mensagem: valorExato ? 'Valor do simulador: ' + valorExato : '', canal: 'formulario', pagina: '/',
         origem: (typeof window.AstroOrigem === 'function') ? window.AstroOrigem() : {} }) }).catch(function(){});
@@ -9062,6 +9062,10 @@ document.addEventListener('DOMContentLoaded', function () {
     var X0 = 4, X1 = 996, Y0 = 248, YTOP = 26, LBL = 24, CAB1 = 12, CAB2 = 256, GY = 18;
     /* a régua lia 18% e nada mais, e escrevia no MESMO elemento da diferença
        que o simulador: a tela mostrava dois totais para o mesmo consórcio. */
+    /* sem as taxas (/taxas.js não carregou) a régua não tem o que desenhar —
+       e um erro aqui derrubaria o script inteiro: menu, tema, e as seções
+       que só aparecem quando ele roda. Fica inerte; o resto da página segue. */
+    if (!window.AstroTaxas) return { set:function(){}, desenharGrade:function(){}, pv:function(){}, fim:function(){}, remedir:function(){} };
     /* lidos a cada remedição: a modalidade muda o prazo */
     var N = window.AstroTaxas.def().N, I = window.AstroTaxas.def().I, ADM = window.AstroTaxas.def().ADM;
 
@@ -9283,7 +9287,7 @@ document.addEventListener('DOMContentLoaded', function () {
      ====================================================================== */
   (function(){
     var sl = document.getElementById('calcValor');
-    if (!sl) return;
+    if (!sl || !window.AstroTaxas) return;   /* sem taxas, sem conta — mas sem derrubar a página */
     var txt = document.getElementById('calcValorTexto'),
         fin = document.getElementById('calcFin'),
         con = document.getElementById('calcCon'),
@@ -9614,19 +9618,19 @@ document.addEventListener('DOMContentLoaded', function () {
      daqui, então nunca fica desatualizado com o conteúdo real. */
   (function(){
     var INDICE = [
-      { tit:'Simular meu crédito (simulação personalizada)', cat:'Página', url:'/simular.html' },
-      { tit:'Consórcio de imóveis', cat:'Solução', url:'/imoveis.html' },
-      { tit:'Consórcio de veículos, motos e frotas', cat:'Solução', url:'/veiculos.html' },
-      { tit:'Consórcio de maquinário agrícola e industrial', cat:'Solução', url:'/maquinario.html' },
-      { tit:'Vídeos explicativos', cat:'Vídeos', url:'/videos.html' },
-      { tit:'Perguntas frequentes (todas)', cat:'Aprenda', url:'/duvidas.html' },
-      { tit:'Por que a Astro', cat:'A Astro', url:'/sobre.html' },
-      { tit:'Fale com a gente: WhatsApp, vídeo ou presencial', cat:'A Astro', url:'/contato.html' },
-      { tit:'Agendar reunião por vídeo', cat:'A Astro', url:'/agendar.html' },
-      { tit:'Sorteio, lance fixo e lance livre', cat:'Aprenda', url:'/lances.html' },
-      { tit:'Como funciona o consórcio', cat:'Página', url:'/como-funciona.html' },
-      { tit:'Brasileiros no exterior', cat:'Página', url:'/exterior.html' },
-      { tit:'Segurança e privacidade', cat:'Página', url:'/seguranca.html' },
+      { tit:'Simular meu crédito (simulação personalizada)', cat:'Página', url:'simular.html' },
+      { tit:'Consórcio de imóveis', cat:'Solução', url:'imoveis.html' },
+      { tit:'Consórcio de veículos, motos e frotas', cat:'Solução', url:'veiculos.html' },
+      { tit:'Consórcio de maquinário agrícola e industrial', cat:'Solução', url:'maquinario.html' },
+      { tit:'Vídeos explicativos', cat:'Vídeos', url:'videos.html' },
+      { tit:'Perguntas frequentes (todas)', cat:'Aprenda', url:'duvidas.html' },
+      { tit:'Por que a Astro', cat:'A Astro', url:'sobre.html' },
+      { tit:'Fale com a gente: WhatsApp, vídeo ou presencial', cat:'A Astro', url:'contato.html' },
+      { tit:'Agendar reunião por vídeo', cat:'A Astro', url:'agendar.html' },
+      { tit:'Sorteio, lance fixo e lance livre', cat:'Aprenda', url:'lances.html' },
+      { tit:'Como funciona o consórcio', cat:'Página', url:'como-funciona.html' },
+      { tit:'Brasileiros no exterior', cat:'Página', url:'exterior.html' },
+      { tit:'Segurança e privacidade', cat:'Página', url:'seguranca.html' },
       { tit:'Como o consórcio realmente funciona', cat:'Seção', url:'#verdade' },
       { tit:'Modalidades: imóveis, veículos e maquinário', cat:'Seção', url:'#estruturas' },
       { tit:'O que muda quando a Astro acompanha', cat:'Seção', url:'#diferencial-astro' },
@@ -10667,7 +10671,7 @@ document.addEventListener('DOMContentLoaded', function () {
       try {
         var ctrl = new AbortController();
         var relogio = setTimeout(function(){ ctrl.abort(); }, 12000);
-        var r = await fetch('/api/apollo.php', {
+        var r = await fetch('api/apollo.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ pergunta: texto, historico: historico.slice(-6) }),
@@ -10705,7 +10709,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /* servidor sem PHP, ou Apollo sem chave configurada: some tudo, sem
        erro na tela (resposta que não é JSON também cai no catch) */
-    fetch('/api/apollo.php?saude=1', { credentials: 'same-origin' })
+    fetch('api/apollo.php?saude=1', { credentials: 'same-origin' })
       .then(function(r){ return r.json(); })
       .then(function(d){ if (!d || !d.ligado){ balao.remove(); painel.remove(); } })
       .catch(function(){ balao.remove(); painel.remove(); });
@@ -10718,7 +10722,7 @@ document.addEventListener('DOMContentLoaded', function () {
 <div class="consent" id="consent" role="region" aria-label="Aviso de cookies" hidden>
   <p class="consent-txt">Usamos cookies para medir como o site é usado e, quando houver,
     mensurar nossos anúncios. Você pode recusar sem perder nada do site.
-    <a href="/privacidade.html">Como tratamos seus dados</a>.</p>
+    <a href="privacidade.html">Como tratamos seus dados</a>.</p>
   <div class="consent-acoes">
     <button class="consent-btn consent-nao" type="button" id="consentNao">Recusar</button>
     <button class="consent-btn consent-sim" type="button" id="consentSim">Aceitar</button>

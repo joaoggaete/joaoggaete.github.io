@@ -8,3 +8,6 @@
 app/config.php
 app/dados/
 astro-config.php
+
+# teste no computador (TESTAR-NO-COMPUTADOR): banco, chaves e logs de teste
+teste-local/dados/

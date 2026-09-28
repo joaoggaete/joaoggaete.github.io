@@ -33,10 +33,18 @@ O número de WhatsApp aparece em alguns lugares. Para trocar o
 3. **Banco de dados** → Bancos de dados MySQL → criar banco + usuário.
    Anote: nome do banco, usuário e senha. O host é `localhost`.
 
+## 2b. Testar no computador antes (opcional, recomendado)
+
+Dois cliques em `TESTAR-NO-COMPUTADOR.bat` (Windows) ou `testar-no-mac.command`
+(Mac): o site abre em `http://localhost:8080/`. Sem PHP instalado, abre as
+páginas (formulário cai no WhatsApp); com PHP, o site inteiro, com painel de
+teste. Detalhes no README.
+
 ## 3. Enviar os arquivos
 
 Envie **tudo** para `public_html/` (Gerenciador de Arquivos ou FTP), **exceto**:
-`.git/`, `.claude/`, `docs/`, `ferramentas/`, `parciais/` (não fazem mal lá —
+`.git/`, `.claude/`, `docs/`, `ferramentas/`, `parciais/`, `teste-local/`,
+`TESTAR-NO-COMPUTADOR.bat` e `testar-no-mac.command` (não fazem mal lá —
 estão bloqueados —, mas não servem para nada no servidor).
 
 ## 4. Configurar

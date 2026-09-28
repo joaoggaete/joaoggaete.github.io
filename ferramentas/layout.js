@@ -77,12 +77,21 @@ function marcarAtual(html, url) {
   return html;
 }
 
+/* CAMINHOS RELATIVOS ("imoveis.html", não "/imoveis.html"). Todas as páginas
+   moram na raiz, então no servidor dá no mesmo — e assim o site também abre
+   direto do disco (dois cliques no index.html), como sempre abriu. Com "/…"
+   o navegador procurava nav.css, taxas.js e as imagens na raiz do HD, o
+   script da home quebrava e a página ficava em branco. A página inicial é
+   "index.html" (o .htaccess devolve para "/"). Exceção: 404.html, que tem
+   <base href="/"> porque aparece em qualquer profundidade de endereço. */
 function montar(nome, pagina, cfg, params) {
-  const url = cfg.url || '/' + pagina;
+  const url = pagina;
   let html = parcial(nome)
-    .split('{{CTA}}').join(cfg.cta || '/simular.html')
+    .split('{{CTA}}').join(cfg.cta || 'simular.html')
     .split('{{WHATSAPP}}').join(WHATSAPP)
-    .split('{{INICIO}}').join(cfg.inicio === false ? '' : '<a class="nav-inicio" href="/" aria-label="Página inicial"><svg class="nav-inicio-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5M6.5 9.8V20h11V9.8" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="nav-inicio-txt">Página inicial</span></a>');
+    .split('{{INICIO}}').join(cfg.inicio === false ? '' : '<a class="nav-inicio" href="index.html" aria-label="Página inicial"><svg class="nav-inicio-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5M6.5 9.8V20h11V9.8" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="nav-inicio-txt">Página inicial</span></a>');
+  /* na própria home, "index.html#calculadora" recarregaria a página: vira só "#calculadora" */
+  if (pagina === 'index.html') html = html.split('href="index.html#').join('href="#');
   const padrao = { modalidade: '', canal: 'formulario' };
   const todos = Object.assign({}, padrao, params || {});
   Object.keys(todos).forEach(k => { html = html.split('{{' + k.toUpperCase() + '}}').join(todos[k]); });
@@ -184,7 +193,9 @@ function linksQuebrados() {
     t.replace(/['"]((?:\/)?(?:video|img)\/[\w.-]+\.(?:mp4|webm|jpe?g|png|webp|svg))['"]/g, (m, u) => { alvos.add(u); });
     for (const u of alvos) {
       if (!u || /^(https?:|mailto:|tel:|data:|javascript:|\/\/)/.test(u) || u.includes('{{')) continue;
-      if (/^\/(api|painel)\//.test(u) || u === '/api/' ) continue;
+      if (/^\/?(api|painel)\//.test(u)) continue;
+      /* "/…" só na 404 (que tem <base href="/">): nas outras, quebra quem abre do disco */
+      if (f !== '404.html' && /^\/[^/]/.test(u)) { faltando.push(f + ' → ' + u + ' (use caminho relativo, sem a barra inicial)'); continue; }
       const rel = u.replace(/^\//, '');
       const caminho = path.join(RAIZ, rel);
       const existe = fs.existsSync(caminho) || fs.existsSync(caminho + '.html') || (rel === '' ) || (fs.existsSync(caminho) && fs.statSync(caminho).isDirectory());

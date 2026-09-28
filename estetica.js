@@ -136,6 +136,10 @@
     var X0 = 4, X1 = 996, Y0 = 248, YTOP = 26, LBL = 24, CAB1 = 12, CAB2 = 256, GY = 18;
     /* a régua lia 18% e nada mais, e escrevia no MESMO elemento da diferença
        que o simulador: a tela mostrava dois totais para o mesmo consórcio. */
+    /* sem as taxas (/taxas.js não carregou) a régua não tem o que desenhar —
+       e um erro aqui derrubaria o script inteiro: menu, tema, e as seções
+       que só aparecem quando ele roda. Fica inerte; o resto da página segue. */
+    if (!window.AstroTaxas) return { set:function(){}, desenharGrade:function(){}, pv:function(){}, fim:function(){}, remedir:function(){} };
     /* lidos a cada remedição: a modalidade muda o prazo */
     var N = window.AstroTaxas.def().N, I = window.AstroTaxas.def().I, ADM = window.AstroTaxas.def().ADM;
 
@@ -271,7 +275,7 @@
 
   (function(){
     var sl = document.getElementById('calcValor');
-    if (!sl) return;
+    if (!sl || !window.AstroTaxas) return;   /* sem taxas, sem conta — mas sem derrubar a página */
     var txt = document.getElementById('calcValorTexto'),
         fin = document.getElementById('calcFin'),
         con = document.getElementById('calcCon'),

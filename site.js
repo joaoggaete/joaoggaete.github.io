@@ -127,7 +127,7 @@
          sai mesmo que a aba perca o foco para o WhatsApp. Se o servidor não
          existir (site aberto sem PHP), nada quebra: o WhatsApp segue. */
       try {
-        fetch('/api/leads.php', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        fetch('api/leads.php', { method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(corpo), keepalive: true, credentials: 'same-origin' }).catch(function () {});
       } catch (e) {}
 

@@ -17,5 +17,21 @@ reuniões, assistente Apollo e o painel da equipe.
 | `painel/` | painel da equipe (contatos, funil, agenda, equipe, auditoria) e instalador |
 | `docs/` | [como publicar](docs/HOSPEDAGEM.md) e [estratégia, pesquisa e revisão dos vídeos](docs/ESTRATEGIA.md) |
 
-Antes de publicar: `node ferramentas/layout.js --verificar`.
-Para testar com o servidor no computador: `php -S localhost:5500 -t .`
+## Testar no computador
+
+- **Windows:** dois cliques em `TESTAR-NO-COMPUTADOR.bat`. **Mac:** dois cliques
+  em `testar-no-mac.command` (se o Mac bloquear: botão direito → Abrir).
+  O site abre em `http://localhost:8080/`. Para parar, feche a janela preta.
+  - Sem PHP instalado, o atalho usa o PowerShell que já vem no Windows: páginas,
+    simulador e vídeos funcionam; formulário e agenda caem no WhatsApp.
+  - Com PHP instalado, o site fica completo: formulário grava, agenda e painel
+    funcionam, num banco de teste em `teste-local/dados/` (que nunca sobe
+    para a hospedagem). Painel: `http://localhost:8080/painel/instalar.php`,
+    código de instalação `teste-no-computador`.
+- **Sem servidor nenhum:** dois cliques no `index.html` também abrem o site
+  (todos os caminhos são relativos). Só formulário, agenda e Apollo precisam
+  de servidor.
+
+Antes de publicar: `node ferramentas/layout.js --verificar` (confere menu,
+rodapé, estética, simulador e links — inclusive caminho com "/" no começo,
+que quebraria a abertura direto do disco).

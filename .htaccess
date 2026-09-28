@@ -30,9 +30,9 @@ AddDefaultCharset utf-8
   # código e dados do servidor, ferramentas de desenvolvimento, arquivos ocultos
   # (.well-known fica liberado: é por ali que o certificado SSL se renova)
   RewriteRule ^\.well-known/ - [L]
-  RewriteRule ^(app|ferramentas|parciais|docs|netlify|node_modules)(/|$) - [R=404,L]
+  RewriteRule ^(app|ferramentas|parciais|docs|netlify|node_modules|teste-local)(/|$) - [R=404,L]
   RewriteRule (^|/)\. - [R=404,L]
-  RewriteRule \.(md|sql|sqlite|log|lock|bak|sh|ini|env|json\.dist|toml|yml|yaml)$ - [R=404,L,NC]
+  RewriteRule \.(md|sql|sqlite|log|lock|bak|sh|bat|cmd|command|ps1|ini|env|json\.dist|toml|yml|yaml)$ - [R=404,L,NC]
   RewriteRule ^(composer\.(json|lock)|package(-lock)?\.json|LEIAME.*)$ - [R=404,L,NC]
 
   # ---- 4. Endereços antigos → novos ----
@@ -41,10 +41,20 @@ AddDefaultCharset utf-8
   RewriteRule ^\.netlify/functions/agenda$ /api/agenda.php [QSA,L]
 
   # ---- 5. Endereço sem ".html" (/imoveis abre imoveis.html) ----
+  # Os links internos são relativos ("imoveis.html"), para o site abrir
+  # também direto do disco. Por isso "/imoveis/" (com barra no fim) volta
+  # para "/imoveis": servida ali, a página procuraria /imoveis/nav.css.
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+  RewriteRule ^([a-z0-9-]+)/$ /$1 [R=301,L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{DOCUMENT_ROOT}/$1.html -f
-  RewriteRule ^([a-z0-9-]+)/?$ /$1.html [L]
+  RewriteRule ^([a-z0-9-]+)$ /$1.html [L]
+  # o link "Página inicial" é "index.html" (funciona do disco); no site,
+  # o endereço certo é "/". THE_REQUEST olha só o que o visitante pediu,
+  # senão o próprio DirectoryIndex (/ → index.html) entraria em laço.
+  RewriteCond %{THE_REQUEST} \s/index\.html[\s?#]
+  RewriteRule ^index\.html$ / [R=301,L]
 </IfModule>
 
 # ---- Cabeçalhos de segurança ----

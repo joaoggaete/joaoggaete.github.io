@@ -15,7 +15,10 @@ if (PHP_VERSION_ID < 80100) {
 }
 
 define('ASTRO_APP', __DIR__);
-define('ASTRO_DADOS', __DIR__ . '/dados');
+/* ASTRO_DADOS pode vir de fora só no teste no computador (TESTAR-NO-COMPUTADOR):
+   assim chaves, banco de teste e instalado.lock ficam em teste-local/dados e
+   nunca se misturam com a pasta que sobe para a hospedagem. */
+define('ASTRO_DADOS', getenv('ASTRO_DADOS') ?: __DIR__ . '/dados');
 
 /* Erro nunca aparece para o visitante (mostraria caminho de arquivo,
    consulta SQL…): vai para um log dentro de app/dados, que a web não lê. */

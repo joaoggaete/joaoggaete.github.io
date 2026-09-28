@@ -102,7 +102,7 @@ strong{ color:var(--text) }
 .migalhas a:hover{ color:var(--text) }
 
 /* ---------- herói ---------- */
-.heroi{ position:relative; padding:clamp(36px,6vw,84px) 0 clamp(40px,6vw,80px) }
+.heroi{ position:relative; padding:clamp(36px,6vw,84px) 0 clamp(40px,6vw,80px); overflow-x:clip }  /* o véu abaixo passa das bordas: sem isto, rolagem lateral no celular */
 /* o brilho próprio do herói saiu: a atmosfera agora é a fita da home, e o
    recorte dele na borda da seção virava uma faixa atravessando a tela */
 /* O VÉU da coluna de texto — o mesmo do herói da home (.hero-lado-txt):
