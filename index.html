@@ -8692,8 +8692,14 @@ document.addEventListener('DOMContentLoaded', function () {
       if (mqMenos.matches) return;
       var base = arquivo();
       /* o poster entra sempre, mesmo quando o vídeo não vai tocar: sem ele o
-         fundo fica um retângulo vazio no lugar da fita */
-      v.setAttribute('poster', base + '.webp');
+         fundo fica um retângulo vazio no lugar da fita.
+         CAPA EM RESOLUÇÃO CHEIA ("-capa.webp"): a anterior (".webp") tinha
+         480 px de largura, esticada para a tela inteira — era ela que o
+         visitante via até o vídeo começar, e para sempre em quem pediu menos
+         movimento, está economizando dados ou com o iPhone em modo de pouca
+         energia (o autoplay não roda). É o 1º quadro do próprio vídeo, em
+         1920 px, e pesa 13 a 25 KB porque a cena é quase toda escura. */
+      v.setAttribute('poster', base + '-capa.webp');
       if (poupando()) return;
       if (carregada === base) { tocar(); return; }
       carregada = base;

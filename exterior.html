@@ -4663,7 +4663,7 @@ document.addEventListener('DOMContentLoaded', function(){ if (window.AstroNav) {
     function ligar(){
       if (mqMenos.matches) return;
       var base = arquivo();
-      v.setAttribute('poster', base + '.webp');
+      v.setAttribute('poster', base + '-capa.webp'); /* capa em resolução cheia: ver o comentário no index.html */
       if (poupando()) return;
       if (carregada === base) { tocar(); return; }
       carregada = base;
