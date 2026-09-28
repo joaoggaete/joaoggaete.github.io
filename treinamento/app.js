@@ -1,20 +1,25 @@
 /* ============================================================================
    TREINO DE VENDAS — lógica do front-end
-   Sem framework, sem build: só DOM puro, igual ao resto do site. Fala com
-   netlify/functions/treino.js para o role-play e a avaliação.
+   Sem IA, sem servidor, sem rede: tudo pré-escrito em dados.js. É uma árvore
+   de decisão de 3 momentos por cenário — a escolha muda a reação seguinte
+   do cliente e soma pontos que definem o desfecho e a nota final.
    ========================================================================= */
 (function () {
   'use strict';
 
-  var CHAVE_TOKEN = 'astro-treino-token';
+  var CHAVE_ACESSO = 'astro-treino-acesso';
   var CHAVE_PROGRESSO = 'astro-treino-progresso';
-  var URL_FUNCAO = '/.netlify/functions/treino';
+  var CODIGO_CERTO = '180498';
+  var PONTOS_POR_TURNO_IDEAL = 3;
 
   var estado = {
     produtoAtivo: 'todos',
     cenarioId: null,
-    historico: [],       /* [{de:'vendedor'|'cliente', texto}] */
-    enviando: false
+    turno: 0,          /* índice do turno atual (0, 1, 2) */
+    soma: 0,
+    escolhas: [],       /* [{qualidade, feedback}] */
+    ultimaQualidade: null,
+    travado: false
   };
 
   /* --------------------------- tema --------------------------- */
@@ -27,13 +32,7 @@
     try { localStorage.setItem('astro-tema', novo); } catch (e) {}
   }
 
-  /* --------------------------- acesso --------------------------- */
-  function pegarToken() {
-    try { return localStorage.getItem(CHAVE_TOKEN) || ''; } catch (e) { return ''; }
-  }
-  function salvarToken(t) {
-    try { localStorage.setItem(CHAVE_TOKEN, t); } catch (e) {}
-  }
+  /* --------------------------- acesso (só local, sem servidor) --------------------------- */
   function mostrarPortal(mensagemErro) {
     document.getElementById('portalAcesso').hidden = false;
     document.getElementById('erroAcesso').textContent = mensagemErro || '';
@@ -41,8 +40,18 @@
     campo.value = '';
     campo.focus();
   }
-  function esconderPortal() {
-    document.getElementById('portalAcesso').hidden = true;
+  function esconderPortal() { document.getElementById('portalAcesso').hidden = true; }
+  function jaTemAcesso() {
+    try { return localStorage.getItem(CHAVE_ACESSO) === CODIGO_CERTO; } catch (e) { return false; }
+  }
+  function tentarEntrar() {
+    var v = document.getElementById('campoCodigo').value.trim();
+    if (v === CODIGO_CERTO) {
+      try { localStorage.setItem(CHAVE_ACESSO, v); } catch (e) {}
+      esconderPortal();
+    } else {
+      mostrarPortal('Código incorreto. Tente de novo.');
+    }
   }
 
   /* --------------------------- progresso (localStorage) --------------------------- */
@@ -60,18 +69,6 @@
     if (atual.melhorNota === null || nota > atual.melhorNota) atual.melhorNota = nota;
     p[cenarioId] = atual;
     salvarProgresso(p);
-  }
-
-  /* --------------------------- chamada à função --------------------------- */
-  function chamarTreino(corpo) {
-    return fetch(URL_FUNCAO, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Treino-Token': pegarToken() },
-      body: JSON.stringify(corpo)
-    }).then(function (r) {
-      if (r.status === 401) { mostrarPortal('Código incorreto. Tente de novo.'); throw new Error('401'); }
-      return r.json();
-    });
   }
 
   /* --------------------------- lista de cenários --------------------------- */
@@ -127,7 +124,7 @@
     return d.innerHTML;
   }
 
-  /* --------------------------- sessão de chat --------------------------- */
+  /* --------------------------- sessão --------------------------- */
   function buscarCenario(id) {
     for (var i = 0; i < window.CENARIOS_TREINO.length; i++) {
       if (window.CENARIOS_TREINO[i].id === id) return window.CENARIOS_TREINO[i];
@@ -137,19 +134,17 @@
 
   function iniciarCenario(id) {
     estado.cenarioId = id;
-    estado.historico = [];
-    estado.enviando = false;
+    estado.turno = 0;
+    estado.soma = 0;
+    estado.escolhas = [];
+    estado.ultimaQualidade = null;
+    estado.travado = false;
     renderListaCenarios();
     renderCabecalhoChat();
     renderFicha();
-    renderMensagens();
     limparAvaliacao();
-    document.getElementById('campoMensagem').disabled = false;
-    document.getElementById('btnEnviar').disabled = false;
-    document.getElementById('btnDica').disabled = false;
     document.getElementById('btnReiniciar').disabled = false;
-    document.getElementById('btnEncerrar').disabled = false;
-    document.getElementById('campoMensagem').focus();
+    montarTurnoAtual(true);
   }
 
   function renderCabecalhoChat() {
@@ -179,144 +174,114 @@
         '<span class="selo dif-' + c.dificuldade + '">' + SELOS_DIFICULDADE[c.dificuldade] + '</span>' +
       '</div>' +
       '<div class="ficha-objetivo"><strong>Contexto:</strong> ' + escapar(c.resumo) + '</div>' +
-      '<div class="ficha-objetivo" style="margin-top:8px"><strong>Seu objetivo:</strong> ' + escapar(c.objetivo) + '</div>';
+      '<div class="ficha-objetivo" style="margin-top:8px"><strong>Seu objetivo:</strong> ' + escapar(c.objetivo) + '</div>' +
+      '<div class="ficha-objetivo" style="margin-top:8px;color:var(--text-3)">Passo ' + Math.min(estado.turno + 1, 3) + ' de 3</div>';
   }
 
-  function renderMensagens() {
-    var caixa = document.getElementById('mensagens');
-    if (estado.historico.length === 0) {
-      caixa.innerHTML = '<div class="vazio-chat">Mande a primeira mensagem como se estivesse abordando o cliente pelo WhatsApp.</div>';
-      return;
-    }
+  var caixaMensagens;
+  function limparMensagens() {
+    caixaMensagens = document.getElementById('mensagens');
+    caixaMensagens.innerHTML = '';
+  }
+
+  function bolha(texto, classe) {
+    var el = document.createElement('div');
+    el.className = 'bolha ' + classe;
+    el.textContent = texto;
+    caixaMensagens.appendChild(el);
+    caixaMensagens.scrollTop = caixaMensagens.scrollHeight;
+    return el;
+  }
+
+  function montarTurnoAtual(primeiraVez) {
+    var c = buscarCenario(estado.cenarioId);
+    if (primeiraVez) limparMensagens();
+    var turno = c.turnos[estado.turno];
+    var textoCliente = (estado.ultimaQualidade === 'fraca' && turno.clienteSeFracoAntes)
+      ? turno.clienteSeFracoAntes
+      : turno.clienteAbertura;
+    bolha(textoCliente, 'cliente');
+    renderOpcoes(turno.opcoes);
+    renderFicha();
+  }
+
+  function renderOpcoes(opcoes) {
+    var caixa = document.getElementById('opcoesResposta');
     caixa.innerHTML = '';
-    estado.historico.forEach(function (m) {
-      var bolha = document.createElement('div');
-      bolha.className = 'bolha ' + (m.de === 'cliente' ? 'cliente' : 'vendedor');
-      bolha.textContent = m.texto;
-      caixa.appendChild(bolha);
+    estado.travado = false;
+    opcoes.forEach(function (op, i) {
+      var b = document.createElement('button');
+      b.className = 'opcao-resposta';
+      b.innerHTML = '<span class="opcao-letra">' + String.fromCharCode(65 + i) + '</span><span>' + escapar(op.texto) + '</span>';
+      b.onclick = function () { escolherOpcao(op); };
+      caixa.appendChild(b);
     });
-    caixa.scrollTop = caixa.scrollHeight;
   }
 
-  function mostrarDigitando(mostrar) {
-    var caixa = document.getElementById('mensagens');
-    var existente = document.getElementById('bolhaDigitando');
-    if (mostrar && !existente) {
-      var bolha = document.createElement('div');
-      bolha.id = 'bolhaDigitando';
-      bolha.className = 'bolha cliente digitando';
-      bolha.textContent = 'digitando…';
-      caixa.appendChild(bolha);
-      caixa.scrollTop = caixa.scrollHeight;
-    } else if (!mostrar && existente) {
-      existente.remove();
-    }
-  }
+  function escolherOpcao(op) {
+    if (estado.travado) return;
+    estado.travado = true;
+    document.getElementById('opcoesResposta').innerHTML = '';
 
-  function definirTravado(travado) {
-    estado.enviando = travado;
-    document.getElementById('btnEnviar').disabled = travado;
-    document.getElementById('btnDica').disabled = travado;
-    document.getElementById('btnEncerrar').disabled = travado;
-    document.getElementById('campoMensagem').disabled = travado;
-  }
+    bolha(op.texto, 'vendedor');
+    var tag = document.createElement('div');
+    tag.className = 'feedback-inline feedback-' + op.qualidade;
+    var rotulo = op.qualidade === 'ideal' ? '✅ ótima escolha' : op.qualidade === 'ok' ? '🟡 dava pra melhorar' : '🔴 resposta arriscada';
+    tag.innerHTML = '<strong>' + rotulo + '</strong> — ' + escapar(op.feedback);
+    caixaMensagens.appendChild(tag);
+    caixaMensagens.scrollTop = caixaMensagens.scrollHeight;
 
-  function enviarMensagem() {
-    if (estado.enviando || !estado.cenarioId) return;
-    var campo = document.getElementById('campoMensagem');
-    var texto = campo.value.trim();
-    if (!texto) return;
-    estado.historico.push({ de: 'vendedor', texto: texto });
-    renderMensagens();
-    campo.value = '';
-    definirTravado(true);
-    mostrarDigitando(true);
+    estado.soma += op.pontos;
+    estado.escolhas.push({ qualidade: op.qualidade, feedback: op.feedback });
+    estado.ultimaQualidade = op.qualidade;
 
-    chamarTreino({ cenarioId: estado.cenarioId, historico: estado.historico.slice(0, -1), mensagem: texto, acao: 'responder' })
-      .then(function (r) {
-        mostrarDigitando(false);
-        if (r.erro === 'sem_chave') {
-          estado.historico.push({ de: 'cliente', texto: '(' + r.mensagem + ')' });
-        } else {
-          estado.historico.push({ de: 'cliente', texto: r.resposta || '(sem resposta)' });
-        }
-        renderMensagens();
-      })
-      .catch(function () {
-        mostrarDigitando(false);
-        estado.historico.push({ de: 'cliente', texto: '(erro de conexão, tente enviar de novo)' });
-        renderMensagens();
-      })
-      .then(function () { definirTravado(false); campo.focus(); });
-  }
-
-  function pedirDica() {
-    if (estado.enviando || !estado.cenarioId) return;
-    definirTravado(true);
-    var caixaDica = document.getElementById('dicaFlutuante');
-    caixaDica.hidden = false;
-    caixaDica.textContent = '💡 pensando numa dica…';
-    chamarTreino({ cenarioId: estado.cenarioId, historico: estado.historico, acao: 'dica' })
-      .then(function (r) { caixaDica.textContent = '💡 ' + (r.dica || 'sem dica agora'); })
-      .catch(function () { caixaDica.textContent = '💡 não consegui pensar numa dica agora'; })
-      .then(function () { definirTravado(false); });
+    setTimeout(function () {
+      estado.turno += 1;
+      var c = buscarCenario(estado.cenarioId);
+      if (estado.turno < c.turnos.length) {
+        montarTurnoAtual(false);
+      } else {
+        encerrarCenario();
+      }
+    }, 650);
   }
 
   function reiniciarCenario() {
     if (!estado.cenarioId) return;
-    estado.historico = [];
-    renderMensagens();
-    limparAvaliacao();
-    document.getElementById('dicaFlutuante').hidden = true;
+    iniciarCenario(estado.cenarioId);
   }
 
   function limparAvaliacao() {
     document.getElementById('painelAvaliacao').innerHTML = '';
   }
 
-  function encerrarEAvaliar() {
-    if (estado.enviando || !estado.cenarioId) return;
-    if (estado.historico.length < 2) {
-      document.getElementById('painelAvaliacao').innerHTML =
-        '<div class="vazio-ficha">Troque algumas mensagens antes de pedir a avaliação.</div>';
-      return;
-    }
-    definirTravado(true);
-    document.getElementById('painelAvaliacao').innerHTML = '<div class="vazio-ficha">Avaliando a conversa…</div>';
-    chamarTreino({ cenarioId: estado.cenarioId, historico: estado.historico, acao: 'feedback' })
-      .then(function (r) {
-        if (r.avaliacao) {
-          renderAvaliacao(r.avaliacao);
-          registrarTentativa(estado.cenarioId, Number(r.avaliacao.nota) || 0);
-          renderListaCenarios();
-        } else {
-          document.getElementById('painelAvaliacao').innerHTML =
-            '<div class="vazio-ficha">' + escapar(r.mensagem || 'Não consegui avaliar agora.') + '</div>';
-        }
-      })
-      .catch(function () {
-        document.getElementById('painelAvaliacao').innerHTML = '<div class="vazio-ficha">Erro de conexão ao avaliar.</div>';
-      })
-      .then(function () { definirTravado(false); });
+  function encerrarCenario() {
+    var c = buscarCenario(estado.cenarioId);
+    var maximo = c.turnos.length * PONTOS_POR_TURNO_IDEAL;
+    var minimo = -1 * c.turnos.length;
+    var nota = Math.max(0, Math.min(10, ((estado.soma - minimo) / (maximo - minimo)) * 10));
+
+    var tier = nota >= 7.5 ? 'otimo' : nota >= 4.5 ? 'ok' : 'fraco';
+    bolha(c.desfechos[tier], 'cliente');
+
+    registrarTentativa(estado.cenarioId, nota);
+    renderListaCenarios();
+    renderAvaliacao(nota, estado.escolhas);
   }
 
-  function renderAvaliacao(a) {
-    var nota = Number(a.nota) || 0;
-    var html = '<h2 class="rotulo">Avaliação do coach</h2><div class="avaliacao">' +
+  function renderAvaliacao(nota, escolhas) {
+    var fortes = escolhas.filter(function (e) { return e.qualidade === 'ideal'; }).map(function (e) { return e.feedback; });
+    var melhorar = escolhas.filter(function (e) { return e.qualidade !== 'ideal'; }).map(function (e) { return e.feedback; });
+
+    var html = '<h2 class="rotulo">Avaliação</h2><div class="avaliacao">' +
       '<div class="nota">' + nota.toFixed(1) + '<span> / 10</span></div>';
-    if (Array.isArray(a.pontosFortes) && a.pontosFortes.length) {
+    if (fortes.length) {
       html += '<div style="margin-top:10px"><strong style="font-size:12.5px;color:var(--verde)">PONTOS FORTES</strong><ul>' +
-        a.pontosFortes.map(function (p) { return '<li>' + escapar(p) + '</li>'; }).join('') + '</ul></div>';
+        fortes.map(function (p) { return '<li>' + escapar(p) + '</li>'; }).join('') + '</ul></div>';
     }
-    if (Array.isArray(a.pontosAMelhorar) && a.pontosAMelhorar.length) {
+    if (melhorar.length) {
       html += '<div><strong style="font-size:12.5px;color:var(--amarelo)">A MELHORAR</strong><ul>' +
-        a.pontosAMelhorar.map(function (p) { return '<li>' + escapar(p) + '</li>'; }).join('') + '</ul></div>';
-    }
-    if (a.fraseSugerida) {
-      html += '<div class="frase-sugerida">"' + escapar(a.fraseSugerida) + '"</div>';
-    }
-    if (a.resumo) {
-      html += '<div class="resumo">' + escapar(a.resumo) + '</div>';
+        melhorar.map(function (p) { return '<li>' + escapar(p) + '</li>'; }).join('') + '</ul></div>';
     }
     html += '</div>';
     document.getElementById('painelAvaliacao').innerHTML = html;
@@ -326,23 +291,13 @@
   function iniciar() {
     document.getElementById('btnTema').onclick = alternarTema;
     document.getElementById('btnTrocarCodigo').onclick = function () { mostrarPortal(''); };
-    document.getElementById('btnEntrar').onclick = function () {
-      var v = document.getElementById('campoCodigo').value.trim();
-      salvarToken(v);
-      esconderPortal();
-    };
+    document.getElementById('btnEntrar').onclick = tentarEntrar;
     document.getElementById('campoCodigo').addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') document.getElementById('btnEntrar').click();
+      if (e.key === 'Enter') tentarEntrar();
     });
-    document.getElementById('btnEnviar').onclick = enviarMensagem;
-    document.getElementById('campoMensagem').addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviarMensagem(); }
-    });
-    document.getElementById('btnDica').onclick = pedirDica;
     document.getElementById('btnReiniciar').onclick = reiniciarCenario;
-    document.getElementById('btnEncerrar').onclick = encerrarEAvaliar;
 
-    if (!pegarToken()) mostrarPortal(''); else esconderPortal();
+    if (!jaTemAcesso()) mostrarPortal(''); else esconderPortal();
 
     renderAbas();
     renderListaCenarios();
