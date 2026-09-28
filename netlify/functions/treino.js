@@ -193,7 +193,7 @@ exports.handler = async function (event) {
     return {
       statusCode: 200, headers: cors, body: JSON.stringify({
         erro: 'sem_chave',
-        mensagem: 'O treino ainda não está ligado (falta a chave de IA no Netlify).'
+        mensagem: 'O treino ainda não está ligado (falta a variável GEMINI_API_KEY).'
       })
     };
   }
