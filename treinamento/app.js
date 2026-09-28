@@ -14,13 +14,40 @@
 
   var estado = {
     produtoAtivo: 'todos',
+    busca: '',
     cenarioId: null,
+    modo: null,         /* 'pratica' | 'consulta' */
     turno: 0,          /* índice do turno atual (0, 1, 2) */
     soma: 0,
     escolhas: [],       /* [{qualidade, feedback}] */
     ultimaQualidade: null,
     travado: false
   };
+
+  /* --------------------------- busca (sem acento, sem caixa) --------------------------- */
+  function normalizar(s) {
+    return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  }
+  /* palavras conectoras curtas (já sem acento) que, sozinhas, batem em quase
+     qualquer texto e não ajudam a achar a objeção certa — "à vista" sem isso
+     viraria só "vista", que também aparece em "pontos de vista" etc. */
+  var PALAVRAS_IGNORADAS = ['a', 'o', 'e', 'de', 'do', 'da', 'em', 'no', 'na', 'se', 'os',
+    'as', 'ao', 'um', 'uma', 'que', 'com', 'pra', 'para', 'por', 'ou', 'eu', 'e'];
+
+  function cenarioCombinaComBusca(c, termo) {
+    if (!termo) return true;
+    var palavras = termo.split(/\s+/).filter(function (p) {
+      return p.length > 2 && PALAVRAS_IGNORADAS.indexOf(p) === -1;
+    });
+    if (!palavras.length) return true;
+    var alvo = [c.titulo, c.resumo, c.objetivo, window.PRODUTOS_TREINO[c.produto].nome, window.ETAPAS_TREINO[c.etapa]];
+    c.turnos.forEach(function (t) {
+      alvo.push(t.clienteAbertura, t.clienteSeFracoAntes);
+      t.opcoes.forEach(function (op) { alvo.push(op.texto, op.feedback); });
+    });
+    var textao = normalizar(alvo.join(' | '));
+    return palavras.every(function (palavra) { return textao.indexOf(palavra) !== -1; });
+  }
 
   /* --------------------------- tema --------------------------- */
   function alternarTema() {
@@ -94,17 +121,25 @@
     var caixa = document.getElementById('listaCenarios');
     caixa.innerHTML = '';
     var progresso = lerProgresso();
+    var termoBusca = normalizar(estado.busca.trim());
     var cenarios = window.CENARIOS_TREINO.filter(function (c) {
-      return estado.produtoAtivo === 'todos' || c.produto === estado.produtoAtivo;
+      return (estado.produtoAtivo === 'todos' || c.produto === estado.produtoAtivo) &&
+        cenarioCombinaComBusca(c, termoBusca);
     });
+    if (!cenarios.length) {
+      caixa.innerHTML = '<div class="vazio-busca">Nenhum cenário encontrado pra essa busca.</div>';
+      return;
+    }
     cenarios.forEach(function (c) {
-      var card = document.createElement('button');
+      var card = document.createElement('div');
       card.className = 'cartao-cenario' + (estado.cenarioId === c.id ? ' selecionado' : '');
       var infoProgresso = progresso[c.id];
       var linhaProgresso = infoProgresso
         ? ('melhor nota: ' + infoProgresso.melhorNota.toFixed(1) + ' · ' + infoProgresso.tentativas + 'x praticado')
         : '';
-      card.innerHTML =
+      var corpo = document.createElement('button');
+      corpo.className = 'cartao-corpo';
+      corpo.innerHTML =
         '<div class="cartao-topo"><span class="cartao-titulo">' + escapar(c.titulo) + '</span></div>' +
         '<div class="selos">' +
           '<span class="selo">' + window.PRODUTOS_TREINO[c.produto].emoji + ' ' + window.PRODUTOS_TREINO[c.produto].nome + '</span>' +
@@ -113,7 +148,13 @@
         '</div>' +
         '<div class="cartao-resumo">' + escapar(c.resumo) + '</div>' +
         (linhaProgresso ? '<div class="progresso-mini">' + linhaProgresso + '</div>' : '');
-      card.onclick = function () { iniciarCenario(c.id); };
+      corpo.onclick = function () { iniciarCenario(c.id); };
+      var verScript = document.createElement('button');
+      verScript.className = 'cartao-ver-script';
+      verScript.textContent = '📄 Ver resposta pronta';
+      verScript.onclick = function () { mostrarRoteiro(c.id); };
+      card.appendChild(corpo);
+      card.appendChild(verScript);
       caixa.appendChild(card);
     });
   }
@@ -134,17 +175,42 @@
 
   function iniciarCenario(id) {
     estado.cenarioId = id;
+    estado.modo = 'pratica';
     estado.turno = 0;
     estado.soma = 0;
     estado.escolhas = [];
     estado.ultimaQualidade = null;
     estado.travado = false;
+    document.getElementById('avisoConsulta').hidden = true;
     renderListaCenarios();
     renderCabecalhoChat();
     renderFicha();
     limparAvaliacao();
     document.getElementById('btnReiniciar').disabled = false;
     montarTurnoAtual(true);
+  }
+
+  function mostrarRoteiro(id) {
+    estado.cenarioId = id;
+    estado.modo = 'consulta';
+    estado.travado = true;
+    var c = buscarCenario(id);
+    renderListaCenarios();
+    renderCabecalhoChat();
+    renderFicha();
+    limparAvaliacao();
+    limparMensagens();
+    document.getElementById('opcoesResposta').innerHTML = '';
+    document.getElementById('btnReiniciar').disabled = true;
+    document.getElementById('avisoConsulta').hidden = false;
+
+    c.turnos.forEach(function (t) {
+      bolha(t.clienteAbertura, 'cliente');
+      var ideal = t.opcoes.filter(function (op) { return op.qualidade === 'ideal'; })[0];
+      var el = bolha(ideal.texto, 'vendedor roteiro');
+      el.insertAdjacentHTML('afterbegin', '<span class="roteiro-selo">✅ resposta recomendada</span>');
+    });
+    bolha(c.desfechos.otimo, 'cliente');
   }
 
   function renderCabecalhoChat() {
@@ -175,7 +241,9 @@
       '</div>' +
       '<div class="ficha-objetivo"><strong>Contexto:</strong> ' + escapar(c.resumo) + '</div>' +
       '<div class="ficha-objetivo" style="margin-top:8px"><strong>Seu objetivo:</strong> ' + escapar(c.objetivo) + '</div>' +
-      '<div class="ficha-objetivo" style="margin-top:8px;color:var(--text-3)">Passo ' + Math.min(estado.turno + 1, 3) + ' de 3</div>';
+      (estado.modo === 'pratica'
+        ? '<div class="ficha-objetivo" style="margin-top:8px;color:var(--text-3)">Passo ' + Math.min(estado.turno + 1, 3) + ' de 3</div>'
+        : '');
   }
 
   var caixaMensagens;
@@ -296,6 +364,11 @@
       if (e.key === 'Enter') tentarEntrar();
     });
     document.getElementById('btnReiniciar').onclick = reiniciarCenario;
+    document.getElementById('btnPraticarAgora').onclick = function () { iniciarCenario(estado.cenarioId); };
+    document.getElementById('buscaCenarios').addEventListener('input', function (e) {
+      estado.busca = e.target.value;
+      renderListaCenarios();
+    });
 
     if (!jaTemAcesso()) mostrarPortal(''); else esconderPortal();
 

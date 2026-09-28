@@ -66,15 +66,20 @@ h2.rotulo{ font-family:var(--f-mono); font-size:11px; letter-spacing:.12em; text
 
 /* ---- coluna de cenários ---- */
 .col-cenarios{ padding:16px }
+.busca-cenarios{ width:100%; padding:9px 12px; border-radius:10px; background:var(--panel-2);
+  border:1px solid var(--line-2); color:var(--text); font-family:var(--f-text); font-size:13px; margin-bottom:12px }
+.busca-cenarios:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft) }
 .abas-produto{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px }
 .aba{ background:var(--panel-2); border:1px solid var(--line); color:var(--text-2); border-radius:100px;
   padding:6px 12px; font-size:12.5px; cursor:pointer; font-family:var(--f-text) }
 .aba.ativa{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent-hi); font-weight:700 }
 .lista-cenarios{ display:flex; flex-direction:column; gap:8px; max-height:70vh; overflow-y:auto }
-.cartao-cenario{ text-align:left; width:100%; background:var(--panel-2); border:1px solid var(--line);
-  border-radius:var(--r); padding:12px 13px; cursor:pointer; font-family:var(--f-text); color:var(--text) }
-.cartao-cenario:hover{ border-color:var(--accent) }
+.vazio-busca{ color:var(--text-3); font-size:13px; padding:14px 4px }
+.cartao-cenario{ background:var(--panel-2); border:1px solid var(--line); border-radius:var(--r); overflow:hidden }
 .cartao-cenario.selecionado{ border-color:var(--accent); box-shadow:0 0 0 2px var(--accent-soft) }
+.cartao-corpo{ text-align:left; width:100%; background:none; border:none; padding:12px 13px 8px; cursor:pointer;
+  font-family:var(--f-text); color:var(--text) }
+.cartao-corpo:hover{ background:var(--accent-soft) }
 .cartao-topo{ display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:5px }
 .cartao-titulo{ font-weight:700; font-size:13.5px }
 .selos{ display:flex; gap:5px; flex-wrap:wrap; margin-bottom:6px }
@@ -85,6 +90,10 @@ h2.rotulo{ font-family:var(--f-mono); font-size:11px; letter-spacing:.12em; text
 .selo.dif-dificil{ color:var(--vermelho); border-color:currentColor }
 .cartao-resumo{ color:var(--text-2); font-size:12.5px; line-height:1.45 }
 .progresso-mini{ margin-top:7px; font-size:11px; color:var(--accent-hi); font-family:var(--f-mono) }
+.cartao-ver-script{ display:block; width:100%; text-align:left; background:none; border:none;
+  border-top:1px solid var(--line); padding:8px 13px; cursor:pointer; font-family:var(--f-text);
+  font-size:12px; color:var(--accent-hi); font-weight:700 }
+.cartao-ver-script:hover{ background:var(--accent-soft) }
 
 /* ---- coluna de conversa ---- */
 .col-chat{ display:flex; flex-direction:column; height:76vh; min-height:460px; overflow:hidden }
@@ -96,7 +105,14 @@ h2.rotulo{ font-family:var(--f-mono); font-size:11px; letter-spacing:.12em; text
 .bolha{ max-width:72%; padding:9px 13px; border-radius:16px; font-size:14px; line-height:1.4; white-space:pre-wrap }
 .bolha.cliente{ align-self:flex-start; background:var(--bolha-cliente); border:1px solid var(--line); border-bottom-left-radius:4px }
 .bolha.vendedor{ align-self:flex-end; background:var(--bolha-vendedor); color:#04101F; border-bottom-right-radius:4px }
-:root[data-tema="claro"] .bolha.vendedor, :root:not([data-tema="escuro"]).t-claro .bolha.vendedor{ color:#fff }
+:root[data-tema="claro"] .bolha.vendedor:not(.roteiro), :root:not([data-tema="escuro"]).t-claro .bolha.vendedor:not(.roteiro){ color:#fff }
+.bolha.roteiro{ align-self:flex-end; background:var(--panel-2); border:1.5px solid var(--verde); color:var(--text);
+  border-bottom-right-radius:4px }
+.bolha.roteiro .roteiro-selo{ display:block; font-family:var(--f-mono); font-size:10px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--verde); margin-bottom:3px }
+.aviso-consulta{ margin:0 16px 8px; padding:8px 12px; background:var(--accent-soft); border:1px dashed var(--accent);
+  border-radius:10px; font-size:12px; color:var(--accent-hi); display:flex; align-items:center; justify-content:space-between;
+  gap:10px; flex-wrap:wrap }
 .feedback-inline{ align-self:flex-start; max-width:88%; font-size:12.5px; line-height:1.4; padding:7px 12px;
   border-radius:10px; background:var(--panel-2); border:1px solid var(--line) }
 .feedback-inline.feedback-ideal{ color:var(--verde); border-color:currentColor }
@@ -172,7 +188,9 @@ h2.rotulo{ font-family:var(--f-mono); font-size:11px; letter-spacing:.12em; text
 
     <!-- coluna 1: cenários -->
     <div class="caixa col-cenarios">
-      <h2 class="rotulo">Cenários de prática</h2>
+      <h2 class="rotulo">Cenários e respostas</h2>
+      <input type="search" id="buscaCenarios" class="busca-cenarios"
+             placeholder="🔍 Buscar objeção (ex: caro, golpe, à vista, desistir)…">
       <div class="abas-produto" id="abasProduto"></div>
       <div class="lista-cenarios" id="listaCenarios"></div>
     </div>
@@ -186,7 +204,11 @@ h2.rotulo{ font-family:var(--f-mono); font-size:11px; letter-spacing:.12em; text
         </div>
       </div>
       <div class="mensagens" id="mensagens">
-        <div class="vazio-chat">Selecione um cenário na coluna à esquerda para começar a praticar.</div>
+        <div class="vazio-chat">Selecione um cenário na coluna à esquerda, ou busque uma objeção pra ver a resposta pronta na hora.</div>
+      </div>
+      <div class="aviso-consulta" id="avisoConsulta" hidden>
+        <span>📄 Modo consulta — roteiro recomendado, sem pontuação</span>
+        <button class="btn pequeno" id="btnPraticarAgora">🎮 Praticar este cenário</button>
       </div>
       <div class="opcoes-resposta" id="opcoesResposta"></div>
       <div class="acoes-chat">
