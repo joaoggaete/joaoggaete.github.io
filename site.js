@@ -4,6 +4,8 @@
    2. formulário de simulação: grava o pedido no servidor e abre o WhatsApp
    3. vídeos: carregam só no play, um por vez, com chamada no final
    4. barra fixa do celular some quando o formulário está na tela
+   5. do simulador para o formulário: "Continuar com estes valores" leva
+      modalidade, faixa, prazo e o valor exato — ninguém digita de novo
    ========================================================================== */
 (function () {
   'use strict';
@@ -55,7 +57,8 @@
     return 'Olá! Quero uma simulação da Astro.' +
       '\n\nNome: ' + d.nome +
       (d.modalidade ? '\nQuero conquistar: ' + (NOMES_MOD[d.modalidade] || d.modalidade) : '') +
-      (d.valor ? '\nCrédito: ' + (NOMES_VALOR[d.valor] || d.valor) : '') +
+      (d.valorExato ? '\nValor do crédito: ' + d.valorExato :
+        d.valor ? '\nCrédito: ' + (NOMES_VALOR[d.valor] || d.valor) : '') +
       (d.prazo ? '\nPrazo: ' + d.prazo.replace('Meses', 'meses') : '') +
       (d.lance ? '\nReserva para lance: ' + (NOMES_LANCE[d.lance] || d.lance) : '') +
       (d.exterior ? '\nMoro fora do Brasil' : '');
@@ -75,6 +78,11 @@
     if (q.get('valor')) { var v = form.querySelector('select[name=valor]'); if (v) v.value = q.get('valor'); }
     ajustaPrazos(form);
     form.querySelectorAll('input[name=modalidade]').forEach(function (r) { r.addEventListener('change', function () { ajustaPrazos(form); }); });
+    /* mexeu na modalidade ou na faixa depois de vir do simulador: o valor
+       exato deixa de valer (é o mesmo cuidado da página inicial) */
+    form.addEventListener('change', function (ev) {
+      if (ev.isTrusted && (ev.target.name === 'modalidade' || ev.target.name === 'valor')) esqueceSimulador(form);
+    });
 
     var comecou = false;
     form.addEventListener('focusin', function () {
@@ -95,7 +103,8 @@
         prazo: String(f.get('prazo') || ''),
         lance: String(f.get('lance') || ''),
         exterior: !!f.get('exterior'),
-        empresa_site: String(f.get('empresa_site') || '')
+        empresa_site: String(f.get('empresa_site') || ''),
+        valorExato: form.dataset.valorExato || ''
       };
       var problemas = [];
       if (!d.modalidade) problemas.push(['modalidade', 'Escolha o que você quer conquistar.']);
@@ -111,6 +120,7 @@
 
       var canal = d.exterior ? 'exterior' : (form.dataset.canal || 'formulario');
       var corpo = { nome: d.nome, whatsapp: d.whatsapp, modalidade: d.modalidade, valor: d.valor, prazo: d.prazo, lance: d.lance,
+        mensagem: d.valorExato ? 'Valor do simulador: ' + d.valorExato : '',
         canal: canal, pagina: location.pathname, origem: origem(), empresa_site: d.empresa_site };
 
       /* 1º grava no servidor — sem esperar: keepalive garante que o pedido
@@ -168,10 +178,51 @@
     });
   }
 
+  /* ---------------- 5. do simulador para o formulário ---------------- */
+  function faixaDe(v) {
+    return v <= 100000 ? '50-100' : v <= 200000 ? '100-200' : v <= 300000 ? '200-300' :
+      v <= 600000 ? '300-600' : v <= 1000000 ? '600-1m' : v <= 2000000 ? '1m-2m' : '2m+';
+  }
+  function esqueceSimulador(form) {
+    delete form.dataset.valorExato;
+    var r = form.querySelector('.lf-resumo'); if (r) r.hidden = true;
+  }
+  function iniciaSimuladorParaForm() {
+    var bt = document.getElementById('calcParaForm');
+    var form = document.querySelector('form.lead-form');
+    var slider = document.getElementById('calcValor');
+    if (!bt || !form || !slider || !window.AstroTaxas) return;
+    bt.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      var t = window.AstroTaxas, prazo = t.def().N, valor = Number(slider.value);
+      var brl = 'R$ ' + Math.round(valor).toLocaleString('pt-BR');
+      var r = form.querySelector('input[name=modalidade][value="' + t.modalidade + '"]');
+      if (r) { r.checked = true; ajustaPrazos(form); r.nextElementSibling.classList.remove('invalido'); }
+      var sv = form.querySelector('select[name=valor]'); if (sv) { sv.value = faixaDe(valor); sv.classList.remove('invalido'); }
+      var sp = form.querySelector('select[name=prazo]');
+      if (sp && sp.querySelector('option[value="' + prazo + ' Meses"]')) sp.value = prazo + ' Meses';
+      form.dataset.valorExato = brl + ' em ' + prazo + ' meses';
+      var resumo = form.querySelector('.lf-resumo');
+      if (!resumo) {
+        resumo = document.createElement('p');
+        resumo.className = 'lf-resumo';
+        form.insertBefore(resumo, form.firstChild);
+      }
+      resumo.innerHTML = 'Valores trazidos do simulador: <strong></strong> em <strong></strong>.';
+      resumo.querySelectorAll('strong')[0].textContent = brl;
+      resumo.querySelectorAll('strong')[1].textContent = prazo + ' meses';
+      resumo.hidden = false;
+      (form.closest('section') || form).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      var nome = form.querySelector('input[name=nome]');
+      if (nome) setTimeout(function () { try { nome.focus({ preventScroll: true }); } catch (e) {} }, 600);
+    });
+  }
+
   /* ---------------- 4. barra fixa do celular ---------------- */
   function iniciaBarraFixa() {
     var barra = document.querySelector('.cta-fixo');
-    var alvos = document.querySelectorAll('.lead-caixa, .rodape');
+    /* some também enquanto o simulador está na tela: ele já é a chamada */
+    var alvos = document.querySelectorAll('.lead-caixa, .rodape, #calculadora');
     if (!barra || !alvos.length || !('IntersectionObserver' in window)) return;
     var visiveis = new Set();
     var io = new IntersectionObserver(function (entradas) {
@@ -185,6 +236,7 @@
     iniciaConsentimento();
     document.querySelectorAll('form.lead-form').forEach(iniciaFormulario);
     document.querySelectorAll('.video-palco[data-src]').forEach(iniciaVideo);
+    iniciaSimuladorParaForm();
     iniciaBarraFixa();
     document.querySelectorAll('a[href*="wa.me"]').forEach(function (a) {
       a.addEventListener('click', function () { window.rastrear('Contact', { origem: 'link', pagina: location.pathname }); });

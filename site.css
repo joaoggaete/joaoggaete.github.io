@@ -1,8 +1,12 @@
 /* ==========================================================================
-   SITE.CSS — sistema visual das páginas de conteúdo
+   SITE.CSS — a estrutura das páginas de conteúdo
    (imoveis, veiculos, maquinario, videos, simular, sobre, contato, duvidas).
-   Mesmos tokens de cor e tipografia do resto do site; a diferença é que
-   aqui tudo vem de um arquivo só, em vez de 200 KB de CSS por página.
+   A IDENTIDADE vem da página inicial, pelo estetica.css (gerado do
+   index.html e carregado DEPOIS deste arquivo): fita no fundo, cartão de
+   vidro, títulos, tokens de cor dos dois temas e o simulador. Aqui fica só o
+   que é destas páginas — grades, herói, passos, vídeos, formulário.
+   Os tokens abaixo são a base; os que o index também define são
+   sobrescritos pelo estetica.css, para as cores baterem com a home.
    Menu e rodapé continuam no nav.css.
    ========================================================================== */
 :root{
@@ -56,7 +60,18 @@ h1, h2, h3{ font-family:var(--f-display); color:var(--text); text-wrap:balance; 
 h1{ font-size:clamp(34px,5.2vw,60px); line-height:1.04; letter-spacing:-.035em }
 h2{ font-size:clamp(26px,3.4vw,40px); line-height:1.1; letter-spacing:-.028em }
 h3{ font-size:clamp(18px,1.6vw,21px); line-height:1.25; letter-spacing:-.012em }
-h1 em, h2 em{ font-style:normal; background:linear-gradient(100deg,var(--ouro-hi),var(--ouro)); -webkit-background-clip:text; background-clip:text; color:transparent }
+h1 em, h2 em{ font-style:normal; background:linear-gradient(100deg,var(--ouro-hi),var(--ouro)); -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent; text-shadow:none }
+/* títulos de seção na escala e no degradê dos títulos da página inicial
+   (.section-title): o destaque em azul-claro, o dourado fica para o herói */
+.secao-cab h2, .faixa-cta h2, .lead-lado h2{ font-size:clamp(28px,4vw,48px); line-height:1.06; letter-spacing:-.028em }
+.secao-cab h2 em, .faixa-cta h2 em, .lead-lado h2 em{ background-image:var(--grad-destaque) }
+/* no claro o degradê azul-claro some no branco: vira o azul de tinta que a
+   home usa no .section-title span (dentro do vidro o token já é o certo) */
+:root[data-tema="claro"] :is(.secao-cab, .lead-lado) h2 em{ background-image:linear-gradient(100deg,#1B6FCC,#0E4F9E 44%,#154E93) }
+/* a fita passa por trás dos textos soltos na página (fora do vidro): no
+   escuro eles ganham a mesma sombra justa dos títulos da home */
+:root[data-tema="escuro"] :is(.heroi, .secao-cab, .lead-lado, .migalhas) :is(h1, h2, .lede, p, li):not(.vidro, .vidro *){ text-shadow:0 1px 3px rgba(4,8,18,.9) }
+:root[data-tema="escuro"] :is(.heroi, .secao-cab, .lead-lado) :is(h1, h2) em{ text-shadow:none }
 p{ margin:0 0 14px; color:var(--text-2) }
 strong{ color:var(--text) }
 .lede{ font-size:clamp(17px,1.5vw,19.5px); color:var(--text-2); max-width:62ch; margin-top:18px }
@@ -87,11 +102,17 @@ strong{ color:var(--text) }
 .migalhas a:hover{ color:var(--text) }
 
 /* ---------- herói ---------- */
-.heroi{ position:relative; padding:clamp(36px,6vw,84px) 0 clamp(40px,6vw,80px); overflow:hidden }
-.heroi::before{
-  content:""; position:absolute; inset:-20% -10% auto; height:120%; z-index:-1; pointer-events:none;
-  background:radial-gradient(60% 50% at 75% 20%, rgba(59,143,224,.20), transparent 70%),
-             radial-gradient(40% 40% at 10% 0%, rgba(217,169,78,.10), transparent 70%);
+.heroi{ position:relative; padding:clamp(36px,6vw,84px) 0 clamp(40px,6vw,80px) }
+/* o brilho próprio do herói saiu: a atmosfera agora é a fita da home, e o
+   recorte dele na borda da seção virava uma faixa atravessando a tela */
+/* O VÉU da coluna de texto — o mesmo do herói da home (.hero-lado-txt):
+   elipse com raio x última parada <= 50% da caixa, para não virar linha */
+.heroi .container > div:first-child, .heroi .container.secao-cab{ position:relative; isolation:isolate }
+:root[data-tema="escuro"] .heroi .container > div:first-child::before,
+:root[data-tema="escuro"] .heroi .container.secao-cab::before{
+  content:""; position:absolute; z-index:-1; pointer-events:none; inset:-4% -12%;
+  background:radial-gradient(ellipse 58% 58% at 50% 46%,
+    rgba(3,6,15,.72) 0%, rgba(3,6,15,.54) 48%, rgba(3,6,15,.20) 72%, rgba(3,6,15,0) 85%);
 }
 .heroi-grade{ display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); gap:clamp(28px,5vw,64px); align-items:center }
 .heroi-visual{ position:relative }
@@ -103,7 +124,8 @@ strong{ color:var(--text) }
 
 /* ---------- seções ---------- */
 .secao{ padding:clamp(56px,7vw,104px) 0; position:relative }
-.secao-alt{ background:linear-gradient(180deg, transparent, var(--panel-2) 12%, var(--panel-2) 88%, transparent) }
+/* sem faixa de fundo: como na home, a fita aparece por trás de todas as seções */
+.secao-alt{ background:none }
 .secao-cab{ max-width:760px; margin-bottom:clamp(28px,4vw,48px) }
 .secao-cab.centro{ margin-inline:auto; text-align:center }
 .secao-cab.centro .lede{ margin-inline:auto }
@@ -113,17 +135,15 @@ strong{ color:var(--text) }
 .grade-3{ grid-template-columns:repeat(3,minmax(0,1fr)) }
 .grade-4{ grid-template-columns:repeat(4,minmax(0,1fr)) }
 
-.cartao{
-  background:var(--panel-2); border:1px solid var(--line); border-radius:var(--r-l);
-  padding:26px 24px; position:relative;
-}
+/* fundo, aro, sombra e raio vêm do .vidro (estetica.css) */
+.cartao{ padding:26px 24px; position:relative }
 .cartao h3{ margin-bottom:10px }
 .cartao p:last-child{ margin-bottom:0 }
 .cartao-icone{ width:44px; height:44px; border-radius:12px; display:grid; place-items:center; margin-bottom:16px;
   background:var(--accent-soft); color:var(--accent-hi); border:1px solid var(--accent-line) }
 .cartao-icone svg{ width:22px; height:22px }
-a.cartao{ text-decoration:none; transition:transform .3s var(--ease), border-color .3s var(--ease) }
-a.cartao:hover{ transform:translateY(-3px); border-color:var(--accent-line) }
+a.cartao{ display:block; text-decoration:none; transition:transform .3s var(--ease) }
+a.cartao:hover{ transform:translateY(-3px) }
 .cartao .mais{ display:inline-flex; gap:6px; margin-top:12px; font-weight:700; font-size:14.5px; color:var(--accent-hi) }
 
 .lista-check{ list-style:none; margin:0; padding:0; display:grid; gap:12px }
@@ -133,16 +153,20 @@ a.cartao:hover{ transform:translateY(-3px); border-color:var(--accent-line) }
   border:1px solid var(--accent-line) }
 
 /* números-chave */
-.numeros{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--r-l); overflow:hidden }
-.numeros div{ background:var(--panel); padding:24px 22px }
+.numeros{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)) }
+/* divisórias finas: a sombra de fora à esquerda e em cima de cada célula; o
+   overflow do vidro corta as da borda */
+.numeros div{ padding:24px 22px; box-shadow:-1px 0 0 var(--line), 0 -1px 0 var(--line) }
 .numeros b{ display:block; font-family:var(--f-display); font-size:clamp(26px,3vw,36px); letter-spacing:-.03em; color:var(--text); line-height:1.1 }
 .numeros span{ display:block; margin-top:6px; font-size:14px; color:var(--text-2) }
 .nota-rodape{ font-size:13px; color:var(--text-3); margin-top:14px }
 
 /* passo a passo */
 .passos{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px; counter-reset:p }
-.passos li{ counter-increment:p; background:var(--panel-2); border:1px solid var(--line); border-radius:var(--r-l); padding:24px 22px }
-.passos li::before{ content:counter(p,decimal-leading-zero); display:block; font-family:var(--f-mono); font-size:13px; letter-spacing:.14em; color:var(--ouro-hi); margin-bottom:14px }
+.passos li{ counter-increment:p; padding:24px 22px }
+/* o número do passo mora no ::before, que o .vidro usa para o aro: vai
+   num contador do h3 */
+.passos li h3::before{ content:counter(p,decimal-leading-zero); display:block; font-family:var(--f-mono); font-size:13px; font-weight:500; letter-spacing:.14em; color:var(--ouro); margin-bottom:14px }
 .passos h3{ margin-bottom:8px }
 .passos p{ margin:0; font-size:15px }
 
@@ -154,7 +178,7 @@ a.cartao:hover{ transform:translateY(-3px); border-color:var(--accent-line) }
 .aviso strong{ color:var(--text) }
 
 /* ---------- vídeos ---------- */
-.video-card{ background:var(--panel-2); border:1px solid var(--line); border-radius:var(--r-l); overflow:hidden; display:flex; flex-direction:column }
+.video-card{ overflow:hidden; display:flex; flex-direction:column }
 .video-palco{ position:relative; aspect-ratio:16/9; background:#000 }
 .video-palco video, .video-palco .video-capa{ position:absolute; inset:0; width:100%; height:100% }
 .video-capa{ padding:0; border:0; cursor:pointer; background:#000; display:block }
@@ -187,8 +211,7 @@ a.cartao:hover{ transform:translateY(-3px); border-color:var(--accent-line) }
 
 /* ---------- perguntas (details nativo: funciona sem JS) ---------- */
 .faq{ display:grid; gap:10px }
-.faq details{ background:var(--panel-2); border:1px solid var(--line); border-radius:var(--r); padding:0 20px; transition:border-color .3s var(--ease) }
-.faq details[open]{ border-color:var(--accent-line) }
+.faq details{ padding:0 22px; border-radius:var(--r) }
 .faq summary{ list-style:none; cursor:pointer; padding:18px 0; font-family:var(--f-display); font-weight:600; font-size:17px; color:var(--text);
   display:flex; justify-content:space-between; gap:16px; align-items:center }
 .faq summary::-webkit-details-marker{ display:none }
@@ -202,9 +225,8 @@ a.cartao:hover{ transform:translateY(-3px); border-color:var(--accent-line) }
 
 /* ---------- faixa de chamada ---------- */
 .faixa-cta{
-  border-radius:var(--r-xl); padding:clamp(28px,4vw,52px);
-  background:radial-gradient(80% 120% at 100% 0%, rgba(59,143,224,.22), transparent 60%), var(--panel-2);
-  border:1px solid var(--accent-line); display:grid; grid-template-columns:minmax(0,1.3fr) auto; gap:24px; align-items:center;
+  padding:clamp(28px,4vw,52px);
+  display:grid; grid-template-columns:minmax(0,1.3fr) auto; gap:24px; align-items:center;
 }
 .faixa-cta h2{ font-size:clamp(24px,2.8vw,34px) }
 .faixa-cta p{ margin:10px 0 0 }
@@ -214,7 +236,11 @@ a.cartao:hover{ transform:translateY(-3px); border-color:var(--accent-line) }
 .lead-bloco{ display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:clamp(28px,5vw,64px); align-items:start }
 .lead-lado h2{ margin-bottom:12px }
 .lead-lado .lista-check{ margin-top:22px }
-.lead-caixa{ background:var(--panel); border:1px solid var(--line); border-radius:var(--r-xl); padding:clamp(22px,3vw,34px); box-shadow:var(--sombra) }
+.lead-caixa{ padding:clamp(22px,3vw,34px) }
+/* o que veio do simulador ("Continuar com estes valores") */
+.lf-resumo{ margin:0; padding:11px 14px; border-radius:12px; font-size:14px; line-height:1.5;
+  color:var(--text-2); background:var(--accent-soft); border:1px solid var(--accent-line) }
+.lf-resumo strong{ color:var(--text) }
 .lead-form{ display:grid; gap:18px }
 .lf-grupo{ border:0; margin:0; padding:0; min-width:0 }
 .lf-grupo legend, .lf-rotulo{ display:block; font-size:14px; font-weight:700; color:var(--text); margin-bottom:9px; padding:0 }

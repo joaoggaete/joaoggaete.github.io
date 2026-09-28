@@ -19,11 +19,13 @@
 <meta name="twitter:card" content="summary_large_image">
 <script>
 /* Antes de qualquer pintura: sem isto a página nasce escura e pisca para o
-   claro. Fica inline de propósito. */
+   claro. Fica inline de propósito. A MESMA regra da página inicial: escuro
+   por padrão, e a escolha do visitante vale para o site inteiro. */
 (function(){try{
-  var t=localStorage.getItem("astro-tema");
-  if(t==="claro"||t==="escuro") document.documentElement.setAttribute("data-tema",t);
-  var claro = t==="claro" || (t!=="escuro" && window.matchMedia("(prefers-color-scheme: light)").matches);
+  var t=localStorage.getItem("astro-tema-v2");
+  if(t!=="claro"&&t!=="escuro") t="escuro";
+  document.documentElement.setAttribute("data-tema",t);
+  var claro = t==="claro";
   document.documentElement.classList.toggle("t-claro", claro);
   document.documentElement.style.colorScheme = claro ? "light" : "dark";
 }catch(e){}})();
@@ -33,8 +35,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/nav.css">
 <link rel="stylesheet" href="/site.css">
+<!-- a estética da página inicial (fita, vidro, títulos, simulador): gerada do index.html -->
+<link rel="stylesheet" href="/estetica.css">
+<script src="/taxas.js" defer></script>
 <script src="/nav.js" defer></script>
 <script src="/site.js" defer></script>
+<script src="/estetica.js" defer></script>
 <script type="application/ld+json">
 {
  "@context": "https://schema.org",
@@ -202,6 +208,11 @@
       <path d="M13.2 193L12.7 191.3L12.7 189.4L13 187.2L13.7 184.7L15 181.9L16.7 178.9L18.9 175.7L21.6 172.4L24.9 169L28.8 165.5L33.1 162L37.8 158.3L43 154.6L48.6 150.9L54.6 147L61 143.2L67.7 139.4L74.8 135.5L82.2 131.7L90 127.8L98 124L106.3 120.2L114.9 116.6L123.6 113L132.6 109.5L141.8 106L151 102.7L160.4 99.4L169.9 96.2L179.5 93.2L189.1 90.3L198.7 87.5L208.3 84.8L217.8 82.3L227.3 80L236.7 77.8L246 75.8L255.1 74L264.1 72.3L272.8 70.8L281.4 69.5L289.7 68.4L297.7 67.5L305.4 66.8L312.9 66.3L320 66L326.7 65.8L333.1 65.9L339.1 66.2L344.6 66.6L349.8 67.3L354.5 68.1L358.7 69.2L362.5 70.4L365.7 71.7L368.5 73.3L370.8 74.9L372.6 76.5L374.1 78.3L375.1 80.3L375.6 82.4L375.6 84.8L375.1 87.3L374.2 90L372.7 92.9L370.7 95.8L368.2 98.9L365.2 102.2L361.8 105.5L357.9 108.9L353.5 112.4L348.7 116L343.4 119.5L337.7 123.2L331.7 126.9L325.2 130.6L318.4 134.3L311.2 137.9L303.7 141.6L295.9 145.3L287.8 149L279.5 152.6L270.9 156.2L262.1 159.7L253.1 163.2L244 166.5L234.7 169.8L225.3 173.1L215.8 176.2L206.3 179.2L196.7 182.1L187.1 184.7L177.5 187.3L168 189.8L158.5 192.2L149.2 194.4L139.9 196.3L130.8 198L121.8 199.6L113.1 201L104.6 202.3L96.3 203.4L88.3 204.4L80.7 205.2L73.3 205.9L66.2 206.3L59.5 206.5L53.2 206.4L47.3 206.2L41.8 205.7L36.7 205.1L32.1 204.3L27.9 203.3L24.3 202.1L21.2 200.7L18.6 199.3L16.6 197.7L15.1 196.2L13.9 194.6L13.2 193Z M6.8 195L8 198L9.9 200.6L12.3 202.9L15.2 204.9L18.5 206.5L22.2 207.9L26.4 209.2L30.9 210.2L35.8 211.1L41.2 211.7L46.9 212.1L53.1 212.3L59.6 212.3L66.5 212.2L73.7 211.8L81.2 211.4L89 210.7L97.1 209.8L105.5 208.7L114.1 207.3L122.9 205.7L131.9 203.8L141.1 201.8L150.4 199.7L159.8 197.4L169.3 195.1L178.9 192.6L188.5 189.8L198.1 186.9L207.8 183.9L217.3 180.8L226.9 177.6L236.3 174.3L245.6 170.9L254.8 167.4L263.7 163.8L272.5 160.1L281.1 156.4L289.5 152.6L297.6 148.8L305.3 145L312.8 141.1L320 137.2L326.8 133.3L333.2 129.5L339.3 125.6L345 121.8L350.2 118.1L355 114.4L359.4 110.8L363.4 107.2L366.9 103.8L369.9 100.4L372.5 97.1L374.5 93.9L376.1 90.9L377.2 87.9L377.8 85L377.8 82.2L377.4 79.5L376.5 77L374.9 74.6L372.8 72.4L370.2 70.5L367.1 68.9L363.5 67.5L359.5 66.3L355 65.3L350.2 64.5L344.9 63.9L339.2 63.5L333.1 63.3L326.7 63.3L319.9 63.5L312.7 63.9L305.2 64.5L297.4 65.3L289.4 66.3L281.1 67.5L272.5 68.8L263.7 70.4L254.7 72.1L245.6 74L236.3 76.1L226.9 78.3L217.4 80.7L207.8 83.2L198.2 85.8L188.6 88.6L179 91.6L169.4 94.6L159.9 97.8L150.5 101.1L141.2 104.4L132 107.9L123 111.4L114.2 115L105.6 118.7L97.2 122.3L89.1 126L81.2 129.7L73.7 133.4L66.5 137.1L59.6 140.8L53.1 144.5L46.9 148.2L41.2 151.9L35.8 155.5L30.9 159.1L26.4 162.7L22.4 166.2L18.7 169.6L15.5 172.8L12.7 176L10.3 179.2L8.5 182.4L7.2 185.5L6.5 188.7L6.3 191.9L6.8 195Z" fill="url(#anelOuro)" fill-rule="evenodd"/>
   </symbol>
 </svg>
+<div class="ambiente" aria-hidden="true">
+  <div class="ambiente-glow"></div>
+  <video id="fluxo" muted playsinline loop preload="none" disablepictureinpicture disableremoteplayback aria-hidden="true" tabindex="-1"></video>
+</div>
+<div class="grao" aria-hidden="true"></div>
 <!-- #cabecalho (gerado por ferramentas/layout.js a partir de parciais/cabecalho.html — não edite aqui) -->
 <nav id="nav" aria-label="Principal">
   <div class="nav-inner">
@@ -345,7 +356,7 @@
       <h1>Casa, terreno ou obra — <em>sem os juros do financiamento.</em></h1>
       <p class="lede">Compra, construção, reforma ou quitação de financiamento. A Astro escolhe o grupo pelo histórico de contemplação e monta a estratégia de lance para o seu prazo.</p>
       <div class="acoes">
-        <a class="btn btn-primario" href="#simular">Simular meu crédito</a>
+        <a class="btn btn-primario" href="#calculadora">Simular meu crédito</a>
         <a class="btn btn-fantasma" href="#videos">Ver os vídeos</a>
       </div>
       <ul class="selos"><li>Fiscalizado pelo Banco Central</li><li>FGTS no imóvel residencial</li><li>Sem consulta ao SPC/Serasa na simulação</li></ul>
@@ -356,18 +367,192 @@
   </div>
 </section><section class="secao" style="padding-top:0">
   <div class="container">
-    <div class="numeros"><div><b>0%</b><span>de juros — o custo é a taxa de administração, diluída</span></div><div><b>até 30%</b><span>do crédito pode virar lance embutido, na maioria das administradoras</span></div><div><b>INCC</b><span>corrige o crédito uma vez por ano, acompanhando o preço dos imóveis</span></div><div><b>60 a 240</b><span>meses de prazo, conforme o grupo e a parcela que cabe no orçamento</span></div></div>
-    <p class="nota-rodape">Referências de mercado usadas pelo simulador do site; as condições exatas dependem da administradora e do grupo. <a href="/#calculadora">Compare o custo total com o financiamento →</a></p>
+    <div class="numeros vidro"><div><b>0%</b><span>de juros — o custo é a taxa de administração, diluída</span></div><div><b>até 30%</b><span>do crédito pode virar lance embutido, na maioria das administradoras</span></div><div><b>INCC</b><span>corrige o crédito uma vez por ano, acompanhando o preço dos imóveis</span></div><div><b>60 a 240</b><span>meses de prazo, conforme o grupo e a parcela que cabe no orçamento</span></div></div>
+    <p class="nota-rodape">Referências de mercado usadas pelo simulador abaixo; as condições exatas dependem da administradora e do grupo.</p>
   </div>
-</section><section class="secao secao-alt">
+</section><!-- #simulador modo=imovel (gerado por ferramentas/layout.js a partir da seção #calculadora do index.html — não edite aqui) -->
+<section id="calculadora" class="secao" data-modo-inicial="imovel">
+  <div class="container">
+    <div class="sec-head centro">
+      <div class="eyebrow">Simulador</div>
+      <h2 class="section-title">Escolha valor e prazo e veja <span>a simulação mudar</span></h2>
+      <p class="section-sub centro">Parcela, custo total e gráfico usam as mesmas escolhas. <span class="marca">Tudo se atualiza na hora</span>.</p>
+    </div>
+
+    <div class="simulador vidro">
+      <div class="simulador-controle">
+        <div class="sim-entrada">
+        <div class="calc-modo" role="group" aria-label="Escolha a modalidade">
+          <button type="button" class="calc-modo-bt ativo" data-modo="imovel" aria-pressed="true">Imóvel</button>
+          <button type="button" class="calc-modo-bt" data-modo="carro" aria-pressed="false">Automóvel</button>
+          <button type="button" class="calc-modo-bt" data-modo="maquinario" aria-pressed="false">Maquinário</button>
+        </div>
+        <label class="calc-label" for="calcValor">Valor do bem que você quer</label>
+        <input type="text" inputmode="numeric" class="calc-valor calc-valor-input" id="calcValorTexto" value="R$ 300.000" aria-label="Valor do crédito — clique pra digitar um número exato">
+        <input type="range" id="calcValor" min="50000" max="2000000" step="1000" value="300000"
+               aria-label="Valor do crédito desejado">
+        <div class="calc-escala"><span>R$ 50 mil</span><span>R$ 2 mi</span></div>
+        <p class="calc-dica" id="calcDica">◀ &nbsp;arraste ou toque num valor&nbsp; ▶</p>
+        <div class="calc-atalhos">
+          <button type="button" data-v="50000">50 mil</button>
+          <button type="button" data-v="150000">150 mil</button>
+          <button type="button" data-v="300000">300 mil</button>
+          <button type="button" data-v="500000">500 mil</button>
+          <button type="button" data-v="800000">800 mil</button>
+          <button type="button" data-v="1000000">1 mi</button>
+        </div>
+        <div class="calc-prazo" id="calcPrazoBloco">
+          <div class="calc-prazo-cab">
+            <span>Prazo da simulação</span>
+            <small>Escolha para recalcular tudo</small>
+          </div>
+          <div class="calc-prazo-opcoes" id="calcPrazoOpcoes" role="group" aria-label="Prazo da simulação"></div>
+        </div>
+        </div>
+
+        <div class="calc-resultado" id="calcResultado">
+          <div class="res-alto">
+            <span class="res-rot">Sua parcela no consórcio</span>
+            <div class="res-linha-num">
+              <strong class="res-num" id="resParcela">R$ 3.126</strong>
+              <span class="res-mes">por mês</span>
+            </div>
+          </div>
+          <div class="res-grade">
+            <div class="res-item"><span>Parcelas</span><b id="resPrazo">Prazo selecionado</b></div>
+            <div class="res-item"><span>Custo total</span><b id="resTotal">R$ 375.075</b></div>
+            <div class="res-item"><span>Reajuste anual</span><b id="resIndice">INCC</b></div>
+            <div class="res-item res-banco"><span>No banco seria</span><b id="resBanco">R$ 4.318</b></div>
+          </div>
+        </div>
+
+        <div class="calc-comparacao-aviso" id="calcComparacaoAviso" role="note" hidden>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/></svg>
+          <span><strong>Comparação bancária sob consulta.</strong> Em maquinário, juros, seguros e condições mudam conforme a linha rural ou industrial, o bem e o perfil da empresa. Por isso, mostramos aqui apenas a estimativa do consórcio até recebermos os parâmetros do seu caso.</span>
+        </div>
+
+        <div class="composicao" id="composicao">
+          <button class="comp-abre" id="compAbre" type="button" aria-expanded="false" aria-controls="compCorpo">
+            <span>Ver a comparação completa</span>
+            <span class="comp-sinal" aria-hidden="true"></span>
+          </button>
+          <div class="comp-corpo" id="compCorpo" hidden>
+            <div class="calc-barras">
+              <div class="calc-barra ruim">
+                <div class="calc-barra-tit"><span>Financiamento</span><b id="calcFin">R$ 516.494</b></div>
+                <div class="calc-barra-trilho"><div class="calc-barra-fill" id="calcBarFin"></div></div>
+                <p class="calc-barra-sub">custo total estimado</p>
+              </div>
+              <div class="calc-barra bom">
+                <div class="calc-barra-tit"><span>Consórcio</span><b id="calcCon">R$ 354.000</b></div>
+                <div class="calc-barra-trilho"><div class="calc-barra-fill" id="calcBarCon"></div></div>
+                <p class="calc-barra-sub">custo total estimado</p>
+              </div>
+            </div>
+
+            <p class="comp-intro">Parcela média no prazo escolhido, com <strong class="marca">todas as linhas
+              abertas</strong> nos dois lados. Nenhuma taxa escondida, nem a nossa.</p>
+
+            <div class="comp-lados">
+              <div class="comp-lado bom">
+                <div class="comp-cab">Consórcio<b id="compParcCon">R$ 3.126</b></div>
+                <div class="comp-lin"><span>Crédito (fundo comum)</span><b id="cCredito">R$ 2.500</b></div>
+                <div class="comp-lin"><span>Taxa de administração <em>20%</em></span><b id="cAdm">R$ 500</b></div>
+                <div class="comp-lin"><span>Fundo de reserva <em>2%</em></span><b id="cFundo">R$ 50</b></div>
+                <div class="comp-lin"><span>Seguro prestamista</span><b id="cSeg">R$ 76</b></div>
+                <div class="comp-lin comp-juros"><span>Juros</span><b>R$ 0</b></div>
+              </div>
+
+              <div class="comp-lado ruim">
+                <div class="comp-cab">Financiamento<b id="compParcFin">R$ 4.264</b></div>
+                <div class="comp-lin"><span>Amortização do bem</span><b id="fAmort">R$ 2.500</b></div>
+                <div class="comp-lin comp-alerta"><span>Juros <em>0,95% ao mês</em></span><b id="fJuros">R$ 1.700</b></div>
+                <div class="comp-lin"><span>Seguro MIP + DFI</span><b id="fSeg">R$ 89</b></div>
+                <div class="comp-lin"><span>Taxa mensal do banco</span><b id="fAdm">R$ 25</b></div>
+                <div class="comp-lin comp-juros"><span>Fundo de reserva</span><b>R$ 0</b></div>
+              </div>
+            </div>
+
+            <div class="comp-rende">
+              <p class="comp-rende-tit">O dinheiro que não virou entrada</p>
+              <p>Um financiamento pediria <strong id="rEntrada">R$ 60.000</strong> de entrada.
+                O consórcio não pede. Aplicado a 100% do CDI e já descontado o imposto de renda,
+                esse valor chegaria a <strong id="rFinal">R$ 196.180</strong> em
+                <span id="rPrazo">prazo escolhido</span>.</p>
+              <p class="comp-rende-ganho">Só de rendimento: <strong id="rGanho">R$ 136.180</strong></p>
+              <p class="comp-aviso"><strong>Projeção pela taxa de hoje</strong>, com o CDI a 13,90% ao
+                ano e a Selic a 14,00%. Juro muda, e ninguém garante que essa taxa se mantenha por
+                todo o prazo. E o outro lado precisa ser dito: no consórcio o bem só chega na
+                contemplação, por sorteio ou por lance. Sem entrada não significa sem espera.</p>
+            </div>
+
+            <p class="comp-aviso"><strong>Cada grupo tem regra própria.</strong> Estes são valores
+              aproximados, de referência de mercado: taxa de administração entre 18% e 22% em imóvel,
+              fundo de reserva entre 1% e 3%, seguro conforme a idade. Do lado do banco, juros e
+              seguros variam por perfil e por instituição. O número exato do seu caso vem por
+              escrito, da administradora, antes de qualquer assinatura.</p>
+          </div>
+        </div>
+
+        <div class="calc-economia">
+          Diferença no custo total:
+          <strong id="calcEcon" data-eco>R$ 162.494</strong>
+        </div>
+
+        <a href="#simular" id="calcParaForm" class="btn btn-primario btn-largo calc-cta" onclick="rastrear('InitiateCheckout')">Continuar com estes valores</a>
+      </div>
+
+      <div class="simulador-emenda" aria-hidden="true"><span></span></div>
+
+        <div class="regua" id="regua">
+          <div class="regua-topo">
+            <div class="regua-titulo">
+              <div class="regua-mes" id="reguaMes">Prazo selecionado</div>
+              </div>
+            <div class="regua-legenda">
+              <span class="regua-chave fin">Financiamento <b id="reguaFin">R$ 516.495</b></span>
+              <span class="regua-chave con">Consórcio <b id="reguaCon">R$ 354.000</b></span>
+            </div>
+          </div>
+
+          <svg class="regua-svg" id="reguaSvg" viewBox="0 0 1000 115" role="img"
+               aria-label="Gráfico comparativo conforme valor e prazo selecionados.">
+            <defs>
+              <linearGradient id="gradCunha" x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0%"   stop-color="#A8763A" stop-opacity="0"/>
+                <stop offset="100%" stop-color="#A8763A" stop-opacity=".26"/>
+              </linearGradient>
+            </defs>
+            <g id="reguaGrade"></g>
+            <polygon class="regua-cunha-ghost" id="reguaGhostWedge" points="4,190 996,20 996,73.4"/>
+            <line class="regua-l-ghost" id="reguaGhostFin" x1="4" y1="190" x2="996" y2="20"/>
+            <line class="regua-l-ghost" id="reguaGhostCon" x1="4" y1="190" x2="996" y2="73.4"/>
+            <polygon class="regua-cunha" id="reguaWedge" points="4,190 996,20 996,73.4"/>
+            <line class="regua-l-fin" id="reguaLinhaFin" x1="4" y1="190" x2="996" y2="20"/>
+            <line class="regua-l-con" id="reguaLinhaCon" x1="4" y1="190" x2="996" y2="73.4"/>
+            <line class="regua-cabeca" id="reguaCabeca" x1="996" y1="8" x2="996" y2="198"/>
+            <circle class="regua-halo" id="reguaHaloFin" cx="996" cy="20"   r="7" stroke="#A8763A" opacity=".4"/>
+            <circle class="regua-halo" id="reguaHaloCon" cx="996" cy="73.4" r="7" stroke="#7FD4FF" opacity=".4"/>
+            <circle class="regua-ponto-fin" id="reguaPontoFin" cx="996" cy="20"   r="4"/>
+            <circle class="regua-ponto-con" id="reguaPontoCon" cx="996" cy="73.4" r="4"/>
+            <text class="regua-cunha-rot" id="reguaCunhaTxt" x="700" y="74" text-anchor="middle">juros R$ 162.495</text>
+          </svg>
+        </div>
+
+      <p class="calc-nota">Esta é uma simulação breve, só pra você ter uma ideia — os números reais variam de administradora pra administradora e de grupo pra grupo. <a href="https://wa.me/554599999999?text=Ol%C3%A1!%20Fiz%20uma%20simula%C3%A7%C3%A3o%20no%20site%20e%20quero%20confirmar%20os%20n%C3%BAmeros%20do%20meu%20caso." target="_blank" rel="noopener noreferrer" class="marca" style="text-decoration:underline;">Fale com um dos nossos vendedores</a> pra confirmar os números certos do seu caso antes de qualquer decisão.</p>
+
+    </div>
+  </div>
+</section>
+<!-- /simulador --><section class="secao secao-alt">
   <div class="container">
     <div class="secao-cab"><p class="eyebrow">Para o que serve</p><h2>Onde o crédito imobiliário entra</h2><p class="lede">Com a carta contemplada, você compra à vista — e negocia como quem tem o dinheiro na mão.</p></div>
-    <div class="grade grade-4"><article class="cartao"><div class="cartao-icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9.5h12V10"/></svg></div><h3>Casa, apartamento ou terreno</h3><p>Para morar, para investir ou para a família — você compra à vista.</p></article><article class="cartao"><div class="cartao-icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg></div><h3>Construção e reforma</h3><p>Construir no terreno que você já tem ou reformar o imóvel atual.</p></article><article class="cartao"><div class="cartao-icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 9h6v12h-6"/><path d="M8 7h2M8 11h2M8 15h2"/></svg></div><h3>Comercial e galpões</h3><p>Salas, lojas e galpões para a empresa ou para gerar renda de aluguel.</p></article><article class="cartao"><div class="cartao-icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13M17 9l-3-3M17 9l-3 3"/><path d="M20 15H7M7 15l3-3M7 15l3 3"/></svg></div><h3>Quitar um financiamento</h3><p>Trocar os juros do banco pela taxa de administração do consórcio.</p></article></div>
+    <div class="grade grade-4"><article class="cartao vidro"><div class="cartao-icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9.5h12V10"/></svg></div><h3>Casa, apartamento ou terreno</h3><p>Para morar, para investir ou para a família — você compra à vista.</p></article><article class="cartao vidro"><div class="cartao-icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg></div><h3>Construção e reforma</h3><p>Construir no terreno que você já tem ou reformar o imóvel atual.</p></article><article class="cartao vidro"><div class="cartao-icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 9h6v12h-6"/><path d="M8 7h2M8 11h2M8 15h2"/></svg></div><h3>Comercial e galpões</h3><p>Salas, lojas e galpões para a empresa ou para gerar renda de aluguel.</p></article><article class="cartao vidro"><div class="cartao-icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13M17 9l-3-3M17 9l-3 3"/><path d="M20 15H7M7 15l3-3M7 15l3 3"/></svg></div><h3>Quitar um financiamento</h3><p>Trocar os juros do banco pela taxa de administração do consórcio.</p></article></div>
   </div>
 </section><section class="secao" id="videos">
   <div class="container">
     <div class="secao-cab"><p class="eyebrow">Entenda em menos de um minuto</p><h2>Três jeitos inteligentes de usar o consórcio de imóvel</h2><p class="lede">Cada vídeo mostra um uso real — com os riscos ditos às claras.</p></div>
-    <div class="grade grade-3"><article class="video-card" id="v-financiamento">
+    <div class="grade grade-3"><article class="video-card vidro" id="v-financiamento">
   <div class="video-palco" data-id="v-financiamento" data-src="/video/astro-v3.mp4" data-poster="/img/video3-capa.jpg">
     <button type="button" class="video-capa" aria-label="Assistir: Trocar o financiamento pelo consórcio (17 segundos)">
       <picture><source srcset="/img/video3-capa.webp" type="image/webp"><img src="/img/video3-capa.jpg" width="960" height="540" loading="lazy" decoding="async" alt="Apollo aponta para a frase Pague menos: quite o saldo com o consórcio e pague só taxa de administração"></picture>
@@ -385,7 +570,7 @@
     <details><summary>Ler o roteiro</summary><p>Se você já está pagando financiamento, dá pra fazer diferente. Usa o consórcio pra quitar o saldo devedor, e passa a pagar taxa de administração, em vez dos juros do banco.
 Quanto antes você fizer isso no contrato, mais juros você deixa de pagar.</p></details>
   </div>
-</article><article class="video-card" id="v-imovel-renda">
+</article><article class="video-card vidro" id="v-imovel-renda">
   <div class="video-palco" data-id="v-imovel-renda" data-src="/video/astro-v5.mp4" data-poster="/img/video5-capa.jpg">
     <button type="button" class="video-capa" aria-label="Assistir: Imóvel contemplado que ajuda a pagar a parcela (19 segundos)">
       <picture><source srcset="/img/video5-capa.webp" type="image/webp"><img src="/img/video5-capa.jpg" width="960" height="540" loading="lazy" decoding="async" alt="Apollo aponta para a frase Imóvel rende: alugue antes de morar nele e o aluguel ajuda a pagar a parcela"></picture>
@@ -403,7 +588,7 @@ Quanto antes você fizer isso no contrato, mais juros você deixa de pagar.</p><
     <details><summary>Ler o roteiro</summary><p>Comprou um imóvel pelo consórcio e ele já foi contemplado? Enquanto você não precisa morar nele, dá pra alugar — o aluguel ajuda a pagar a parcela.
 Ele pode não cobrir o valor inteiro, e claro, existe o risco de ficar um tempo vago. Mas é uma forma de fazer o imóvel trabalhar por você antes mesmo de morar nele.</p></details>
   </div>
-</article><article class="video-card" id="v-a-vista">
+</article><article class="video-card vidro" id="v-a-vista">
   <div class="video-palco" data-id="v-a-vista" data-src="/video/astro-v2.mp4" data-poster="/img/video2-capa.jpg">
     <button type="button" class="video-capa" aria-label="Assistir: Tem o dinheiro? Deixe rendendo (17 segundos)">
       <picture><source srcset="/img/video2-capa.webp" type="image/webp"><img src="/img/video2-capa.jpg" width="960" height="540" loading="lazy" decoding="async" alt="Apollo aponta para a frase Renda mais: use a carta de crédito no lugar do dinheiro à vista"></picture>
@@ -428,10 +613,10 @@ Assim você mantém o poder de negociação de quem compra à vista, sem abrir m
   <div class="container">
     <div class="secao-cab"><p class="eyebrow">Como a Astro trabalha o seu caso</p><h2>Qualquer um vende uma carta. <em>O resultado está na estratégia.</em></h2></div>
     <ol class="passos">
-      <li><h3>Entender o que você quer</h3><p>Qual bem, em quanto tempo, qual parcela cabe no orçamento e se há recurso para lance.</p></li>
-      <li><h3>Escolher o grupo certo</h3><p>Histórico de contemplação, comportamento dos lances e saúde do grupo — antes de indicar qualquer cota.</p></li>
-      <li><h3>Montar a estratégia de lance</h3><p>Quanto ofertar, em qual assembleia e com qual modalidade de lance — com base em probabilidade, não em sorte.</p></li>
-      <li><h3>Acompanhar até a contemplação</h3><p>A cada assembleia, você recebe a posição do grupo e a orientação de lance.</p></li>
+      <li class="vidro"><h3>Entender o que você quer</h3><p>Qual bem, em quanto tempo, qual parcela cabe no orçamento e se há recurso para lance.</p></li>
+      <li class="vidro"><h3>Escolher o grupo certo</h3><p>Histórico de contemplação, comportamento dos lances e saúde do grupo — antes de indicar qualquer cota.</p></li>
+      <li class="vidro"><h3>Montar a estratégia de lance</h3><p>Quanto ofertar, em qual assembleia e com qual modalidade de lance — com base em probabilidade, não em sorte.</p></li>
+      <li class="vidro"><h3>Acompanhar até a contemplação</h3><p>A cada assembleia, você recebe a posição do grupo e a orientação de lance.</p></li>
     </ol>
     <div class="acoes"><a class="btn btn-fantasma" href="/como-funciona.html">Ver o método completo</a><a class="btn btn-fantasma" href="/lances.html">Sorteio, lance fixo e lance livre</a></div>
   </div>
@@ -444,7 +629,7 @@ Assim você mantém o poder de negociação de quem compra à vista, sem abrir m
       <ul class="lista-check"><li>Simulação por escrito: crédito, parcela, prazo e taxa</li><li>Grupo indicado pelo histórico de contemplação</li><li>Estratégia com lance próprio, embutido ou os dois</li></ul>
     </div>
     <!-- #formulario modalidade=imovel canal=formulario (gerado por ferramentas/layout.js a partir de parciais/formulario.html — não edite aqui) -->
-<div class="lead-caixa">
+<div class="lead-caixa vidro">
   <form class="lead-form" data-modalidade="imovel" data-canal="formulario" novalidate>
     <fieldset class="lf-grupo">
       <legend>O que você quer conquistar?</legend>
@@ -516,12 +701,12 @@ Assim você mantém o poder de negociação de quem compra à vista, sem abrir m
 </section><section class="secao">
   <div class="container estreito">
     <div class="secao-cab"><p class="eyebrow">Perguntas frequentes</p><h2>Consórcio de imóvel: o que mais perguntam</h2></div>
-    <div class="faq"><details><summary>Posso usar o meu FGTS?</summary><div><p>Sim, exclusivamente nas modalidades ligadas a imóvel residencial, seguindo as regras de liberação vigentes da Caixa Econômica Federal.</p></div></details><details><summary>Como funciona o reajuste das parcelas?</summary><div><p>O crédito imobiliário é corrigido uma vez por ano pelo INCC, para manter o seu poder de compra atualizado com o preço dos imóveis.</p></div></details><details><summary>O que é o lance embutido?</summary><div><p>É usar uma parte da sua própria carta de crédito para compor o lance, sem tirar o valor do bolso na hora — na maioria das administradoras, até 30% em imóvel e 25% em veículo e maquinário. Esse valor sai do seu crédito, então você recebe menos. Não existe "lance grátis", mas em muitos casos é a forma mais inteligente de antecipar a contemplação.</p></div></details><details><summary>Preciso dar entrada?</summary><div><p>Não. O financiamento costuma pedir 20% a 30% do valor do bem antes de começar; o consórcio não pede nada. A conta completa: sem entrada e sem lance, a contemplação depende de sorteio. Quem quer o bem em prazo curto usa lance — do bolso ou embutido, que reduz o crédito recebido.</p></div></details><details><summary>Dá para quitar um financiamento que eu já tenho?</summary><div><p>Sim. Contemplado, o crédito pode quitar o saldo devedor do financiamento bancário — e você passa a pagar taxa de administração em vez de juros. Quanto antes no contrato, mais juros deixa de pagar.</p></div></details><details><summary>Em quanto tempo eu sou contemplado?</summary><div><p>Ninguém pode garantir. A contemplação acontece por sorteio ou por lance, conforme as regras de cada grupo, e o prazo varia de pessoa para pessoa. O que a Astro faz é escolher o grupo pelo histórico e montar a estratégia de lance para aumentar a probabilidade — com número na mesa, não com promessa.</p></div></details></div>
+    <div class="faq"><details class="vidro"><summary>Posso usar o meu FGTS?</summary><div><p>Sim, exclusivamente nas modalidades ligadas a imóvel residencial, seguindo as regras de liberação vigentes da Caixa Econômica Federal.</p></div></details><details class="vidro"><summary>Como funciona o reajuste das parcelas?</summary><div><p>O crédito imobiliário é corrigido uma vez por ano pelo INCC, para manter o seu poder de compra atualizado com o preço dos imóveis.</p></div></details><details class="vidro"><summary>O que é o lance embutido?</summary><div><p>É usar uma parte da sua própria carta de crédito para compor o lance, sem tirar o valor do bolso na hora — na maioria das administradoras, até 30% em imóvel e 25% em veículo e maquinário. Esse valor sai do seu crédito, então você recebe menos. Não existe "lance grátis", mas em muitos casos é a forma mais inteligente de antecipar a contemplação.</p></div></details><details class="vidro"><summary>Preciso dar entrada?</summary><div><p>Não. O financiamento costuma pedir 20% a 30% do valor do bem antes de começar; o consórcio não pede nada. A conta completa: sem entrada e sem lance, a contemplação depende de sorteio. Quem quer o bem em prazo curto usa lance — do bolso ou embutido, que reduz o crédito recebido.</p></div></details><details class="vidro"><summary>Dá para quitar um financiamento que eu já tenho?</summary><div><p>Sim. Contemplado, o crédito pode quitar o saldo devedor do financiamento bancário — e você passa a pagar taxa de administração em vez de juros. Quanto antes no contrato, mais juros deixa de pagar.</p></div></details><details class="vidro"><summary>Em quanto tempo eu sou contemplado?</summary><div><p>Ninguém pode garantir. A contemplação acontece por sorteio ou por lance, conforme as regras de cada grupo, e o prazo varia de pessoa para pessoa. O que a Astro faz é escolher o grupo pelo histórico e montar a estratégia de lance para aumentar a probabilidade — com número na mesa, não com promessa.</p></div></details></div>
     <p class="nota-rodape"><a href="/duvidas.html">Ver todas as perguntas</a></p>
   </div>
 </section><section class="secao">
   <div class="container">
-    <div class="faixa-cta">
+    <div class="faixa-cta vidro">
       <div><h2>Prefere conversar antes de simular?</h2><p>Reunião por vídeo de cerca de uma hora, sem custo — ou uma mensagem no WhatsApp.</p></div>
       <div class="acoes"><a class="btn btn-primario" href="/agendar.html">Agendar reunião por vídeo</a><a class="btn btn-wa" href="https://wa.me/554599999999?text=Ol%C3%A1%21%20Quero%20conversar%20sobre%20cons%C3%B3rcio%20de%20im%C3%B3vel." target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.11.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.24-8.23a8.23 8.23 0 0 1 0 16.47Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.24-1.47-1.38-1.72-.15-.25-.02-.38.11-.5.11-.11.25-.29.37-.44.12-.14.16-.24.25-.41.08-.16.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43h-.47c-.16 0-.43.06-.65.31-.22.25-.86.84-.86 2.05s.88 2.38 1 2.54c.12.16 1.73 2.64 4.19 3.7.59.25 1.04.4 1.4.52.59.18 1.12.16 1.54.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.06-.11-.22-.17-.47-.29Z"/></svg>WhatsApp</a></div>
     </div>
@@ -596,7 +781,7 @@ Assim você mantém o poder de negociação de quem compra à vista, sem abrir m
 </div>
 <!-- /rodape -->
 
-<div class="cta-fixo"><a class="btn btn-primario" href="#simular">Simular meu imóvel</a><a class="btn btn-wa" href="https://wa.me/554599999999?text=Ol%C3%A1%21%20Quero%20simular%20um%20cons%C3%B3rcio%20de%20im%C3%B3vel." target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.11.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.24-8.23a8.23 8.23 0 0 1 0 16.47Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.24-1.47-1.38-1.72-.15-.25-.02-.38.11-.5.11-.11.25-.29.37-.44.12-.14.16-.24.25-.41.08-.16.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43h-.47c-.16 0-.43.06-.65.31-.22.25-.86.84-.86 2.05s.88 2.38 1 2.54c.12.16 1.73 2.64 4.19 3.7.59.25 1.04.4 1.4.52.59.18 1.12.16 1.54.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.06-.11-.22-.17-.47-.29Z"/></svg></a></div>
+<div class="cta-fixo"><a class="btn btn-primario" href="#calculadora">Simular meu imóvel</a><a class="btn btn-wa" href="https://wa.me/554599999999?text=Ol%C3%A1%21%20Quero%20simular%20um%20cons%C3%B3rcio%20de%20im%C3%B3vel." target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.11.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.24-8.23a8.23 8.23 0 0 1 0 16.47Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.24-1.47-1.38-1.72-.15-.25-.02-.38.11-.5.11-.11.25-.29.37-.44.12-.14.16-.24.25-.41.08-.16.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43h-.47c-.16 0-.43.06-.65.31-.22.25-.86.84-.86 2.05s.88 2.38 1 2.54c.12.16 1.73 2.64 4.19 3.7.59.25 1.04.4 1.4.52.59.18 1.12.16 1.54.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.06-.11-.22-.17-.47-.29Z"/></svg></a></div>
 <div class="consent" id="consent" role="region" aria-label="Aviso de cookies" hidden>
   <p class="consent-txt">Usamos cookies para medir como o site é usado e, quando houver,
     mensurar nossos anúncios. Você pode recusar sem perder nada do site.

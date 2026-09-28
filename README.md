@@ -10,6 +10,8 @@ reuniões, assistente Apollo e o painel da equipe.
 | `nav.css`, `nav.js` | menu, busca, tema e rodapé compartilhados |
 | `site.css`, `site.js` | páginas de conteúdo, formulário de simulação e vídeos |
 | `parciais/` | fonte única do menu, rodapé e formulário (carimbados por `ferramentas/layout.js`) |
+| `estetica.css`, `estetica.js` | **gerados do `index.html`**: fita do fundo, vidro, títulos e o simulador, usados pelas outras páginas — não edite, ajuste no index e rode `node ferramentas/layout.js` |
+| `taxas.js` | taxas de referência do simulador (fonte única: home, lances e páginas de imóvel, veículo e maquinário) |
 | `api/` | endpoints PHP: `leads.php`, `agenda.php`, `apollo.php`, `painel.php` |
 | `app/` | código do servidor, configuração e dados — bloqueado para a web |
 | `painel/` | painel da equipe (contatos, funil, agenda, equipe, auditoria) e instalador |

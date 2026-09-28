@@ -9,7 +9,16 @@
        <!-- #cabecalho … -->  …  <!-- /cabecalho -->
        <!-- #rodape … -->     …  <!-- /rodape -->
        <!-- #formulario modalidade=imovel … --> … <!-- /formulario -->
+       <!-- #simulador modo=carro … -->     …  <!-- /simulador -->
    O HTML final continua estático (bom para Google e para quem está sem JS).
+
+   A ESTÉTICA vem da página inicial: o fundo animado (a fita), o vidro, os
+   títulos e o simulador com a régua são recortados do index.html por
+   ferramentas/estetica.js e viram estetica.css + estetica.js, que as outras
+   páginas carregam. O simulador das páginas (#simulador) é a MESMA marcação
+   da seção #calculadora do index, com a modalidade da página já escolhida.
+   Ajustou o visual ou o simulador no index? Rode este script e o resto do
+   site acompanha.
 
    USO (na pasta do site, com Node instalado):
      node ferramentas/layout.js              atualiza todas as páginas
@@ -24,6 +33,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const Estetica = require('./estetica.js');
 
 const RAIZ = path.join(__dirname, '..');
 const WHATSAPP = '554599999999';
@@ -81,7 +91,10 @@ function montar(nome, pagina, cfg, params) {
   return html;
 }
 
-const BLOCO = /<!-- #(cabecalho|rodape|formulario)([^>]*?)-->[\s\S]*?<!-- \/\1 -->/g;
+const BLOCO = /<!-- #(cabecalho|rodape|formulario|simulador)([^>]*?)-->[\s\S]*?<!-- \/\1 -->/g;
+
+/* lido uma vez: é dele que saem a estética e o simulador das outras páginas */
+const INDEX = ler('index.html');
 
 function processar(pagina, cfg) {
   const antes = ler(pagina);
@@ -89,6 +102,10 @@ function processar(pagina, cfg) {
     const params = {};
     resto.replace(/(\w+)=([\w-]+)/g, (m, k, v) => { params[k] = v; });
     const cabecaParams = Object.keys(params).map(k => ' ' + k + '=' + params[k]).join('');
+    if (nome === 'simulador') {
+      return '<!-- #simulador' + cabecaParams + ' (gerado por ferramentas/layout.js a partir da seção #calculadora do index.html — não edite aqui) -->\n' +
+        Estetica.marcacaoSimulador(INDEX, params) + '\n<!-- /simulador -->';
+    }
     return '<!-- #' + nome + cabecaParams + ' (gerado por ferramentas/layout.js a partir de parciais/' + nome + '.html — não edite aqui) -->\n' +
       montar(nome, pagina, cfg, params) + '\n<!-- /' + nome + ' -->';
   });
@@ -118,6 +135,17 @@ for (const [pagina, cfg] of Object.entries(PAGINAS)) {
   if (r.antes !== r.depois) {
     desatualizadas.push(pagina);
     if (!VERIFICAR) fs.writeFileSync(path.join(RAIZ, pagina), r.depois);
+  }
+}
+
+/* estetica.css e estetica.js: recortados do index a cada rodada */
+for (const [arquivo, gerar] of [['estetica.css', Estetica.gerarCss], ['estetica.js', Estetica.gerarJs]]) {
+  const novo = gerar(INDEX);
+  const caminho = path.join(RAIZ, arquivo);
+  const velho = fs.existsSync(caminho) ? fs.readFileSync(caminho, 'utf8') : '';
+  if (novo !== velho) {
+    desatualizadas.push(arquivo);
+    if (!VERIFICAR) fs.writeFileSync(caminho, novo);
   }
 }
 
